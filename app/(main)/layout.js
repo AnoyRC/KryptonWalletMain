@@ -1,8 +1,10 @@
 export const metadata = {
-  title: 'Krypton',
-  description: 'By Bankless DAO',
+  title: "Krypton",
+  description: "By Bankless DAO",
 };
 
 export default function LandingLayout({ children }) {
-  return <>{children}</>;
+  return (
+    <div className="w-full 2xl:px-[18%] px-20 flex flex-col">{children}</div>
+  );
 }
