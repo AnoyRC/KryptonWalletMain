@@ -24,4 +24,40 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+  font-family: 'grotesque', sans-serif;
+}
+
+::-webkit-scrollbar {
+  background: #141414;
+  width: 3px;
+}
+
+::-webkit-scrollbar-thumb {
+  width: 2px;
+  background-color: #c1c1c1;
+}
+
+::-moz-selection {
+  color: #121212;
+  background: #c96267;
+}
+
+::selection {
+  color: #121212;
+  background: #c96267;
+}
+
+.prevent-select {
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.hide-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.hide-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
