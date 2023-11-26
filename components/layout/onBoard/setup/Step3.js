@@ -40,7 +40,7 @@ export default function Step3() {
           Passkey
         </div>
         {twoFactorAddress && selectedTwoFactor === 0 && (
-          <Checkbox checked={checked} />
+          <Checkbox checked={checked} onChange={() => {}} />
         )}
       </Button>
       <Button
@@ -64,7 +64,7 @@ export default function Step3() {
           Polygon ID
         </div>
         {twoFactorAddress && selectedTwoFactor === 1 && (
-          <Checkbox checked={checked} />
+          <Checkbox checked={checked} onChange={() => {}} />
         )}
       </Button>
       <Button
@@ -82,7 +82,7 @@ export default function Step3() {
           Aadhar Card
         </div>
         {twoFactorAddress && selectedTwoFactor === 2 && (
-          <Checkbox checked={checked} />
+          <Checkbox checked={checked} onChange={() => {}} />
         )}
       </Button>
 

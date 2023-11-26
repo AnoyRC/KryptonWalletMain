@@ -22,6 +22,11 @@ export default function Step4() {
   const [isDeploying, setIsDeploying] = useState(false);
   const [isDeployed, setIsDeployed] = useState(false);
   const [steps, setSteps] = useState(0);
+  const twoFactorAddress = useSelector((state) => state.setup.twoFactorAddress);
+  const selectedTwoFactor = useSelector(
+    (state) => state.setup.selectedTwoFactor
+  );
+  const [isError, setIsError] = useState(false);
 
   const demoProcess = () => {
     setTimeout(() => {
@@ -31,8 +36,11 @@ export default function Step4() {
       setSteps(2);
     }, 3000);
     setTimeout(() => {
-      setIsDeployed(true);
+      setSteps(3);
     }, 5000);
+    setTimeout(() => {
+      setIsDeployed(true);
+    }, 7000);
   };
 
   return (
@@ -68,10 +76,22 @@ export default function Step4() {
 
       <div className="flex gap-5">
         <h2 className="text-xl w-[150px]">2FA</h2>
-        <Chip value="Enabled" className="w-fit" />
+        <div className="flex gap-2">
+          {!twoFactorAddress && <Chip value="disabled" className="w-fit" />}
+          {twoFactorAddress && <Chip value="enabled" className="w-fit" />}
+          {twoFactorAddress && selectedTwoFactor === 0 && (
+            <Chip value="Passkey" className="w-fit" />
+          )}
+          {twoFactorAddress && selectedTwoFactor === 1 && (
+            <Chip value="Polygon ID" className="w-fit" />
+          )}
+          {twoFactorAddress && selectedTwoFactor === 2 && (
+            <Chip value="Anon Aadhar" className="w-fit" />
+          )}
+        </div>
       </div>
 
-      {!isDeploying && !isDeployed && (
+      {!isDeploying && !isDeployed && !isError && (
         <>
           <CardFooter className="flex flex-col gap-4 -mt-2 px-0 pb-0">
             <Typography color="gray">
@@ -81,7 +101,6 @@ export default function Step4() {
           </CardFooter>
 
           <Button
-            color="lightBlue"
             size="lg"
             className=""
             onClick={() => {
@@ -96,9 +115,11 @@ export default function Step4() {
           </Button>
         </>
       )}
-      {isDeploying && !isDeployed && (
+
+      {isDeploying && !isDeployed && !isError && (
         <div className="mt-5 flex flex-col w-full justify-center items-center gap-4">
           <Stepper activeStep={steps}>
+            <Step className="h-4 w-4" />
             <Step className="h-4 w-4" />
             <Step className="h-4 w-4" />
             <Step className="h-4 w-4" />
@@ -107,8 +128,10 @@ export default function Step4() {
           <div className="font-uni flex items-center gap-2 text-lg">
             {steps === 0 && "Deploying Krypton"}
             {steps === 1 && "Registering to Dataverse OS"}
-            {steps === 2 && "Krypton Deployed"}
-            {steps !== 2 && (
+            {steps === 2 &&
+              (twoFactorAddress ? "Setting up 2FA" : "2FA Disabled, Skipping")}
+            {steps === 3 && "Krypton Deployed"}
+            {steps !== 3 && (
               <Image
                 src="/images/onboard/setup/loading.svg"
                 width={20}
@@ -117,22 +140,34 @@ export default function Step4() {
                 className="opacity-50 animate-spin"
               />
             )}
-            {steps === 2 && (
+            {steps === 3 && (
               <CheckIcon className="text-black w-5 h-5 animate-bounce" />
             )}
           </div>
         </div>
       )}
 
-      {isDeployed && (
+      {isDeployed && !isError && (
         <div className="mt-5 flex flex-col w-full justify-center items-center gap-4">
           <div className="font-uni flex items-center gap-2 text-lg">
             Krypton Deployed
             <CheckIcon className="text-black w-5 h-5 animate-bounce" />
           </div>
 
-          <Button color="lightBlue" size="lg" className="w-full">
+          <Button size="lg" className="w-full">
             Step into your Krypton
+          </Button>
+        </div>
+      )}
+
+      {isError && (
+        <div className="mt-5 flex flex-col w-full justify-center items-center gap-4">
+          <div className="font-uni flex items-center gap-2 text-lg">
+            Error Deploying Krypton
+          </div>
+
+          <Button size="lg" className="w-full">
+            Try Again
           </Button>
         </div>
       )}

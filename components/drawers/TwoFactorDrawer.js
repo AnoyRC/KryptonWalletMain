@@ -11,6 +11,8 @@ import {
 } from "@material-tailwind/react";
 import { useDispatch, useSelector } from "react-redux";
 import Passkey from "./twoFactorDrawer/Passkey";
+import PolygonID from "./twoFactorDrawer/PolygonID";
+import Aadhar from "./twoFactorDrawer/Aadhar";
 
 export default function TwoFacterDrawer() {
   const dispatch = useDispatch();
@@ -53,6 +55,8 @@ export default function TwoFacterDrawer() {
 
         <div className="flex flex-col mt-5 gap-4">
           {selectedTwoFactor === 0 && <Passkey />}
+          {selectedTwoFactor === 1 && <PolygonID />}
+          {selectedTwoFactor === 2 && <Aadhar />}
         </div>
       </Drawer>
     </>

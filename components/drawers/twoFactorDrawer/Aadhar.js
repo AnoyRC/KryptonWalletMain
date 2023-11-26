@@ -6,11 +6,11 @@ import {
 import { Button, Input } from "@material-tailwind/react";
 import { useDispatch } from "react-redux";
 
-export default function Passkey() {
+export default function Aadhar() {
   const dispatch = useDispatch();
   return (
     <>
-      <h6 className="font-uni text-lg font-bold text-black">Enter Passkey</h6>
+      <h6 className="font-uni text-lg font-bold text-black">Upload Aadhar</h6>
       <Input
         size="lg"
         placeholder="XXX-XXX"
@@ -18,17 +18,19 @@ export default function Passkey() {
         labelProps={{
           className: "before:content-none after:content-none",
         }}
-        type="password"
+        type="file"
       />
-      <h6 className="font-uni text-lg font-bold text-black">Confirm Passkey</h6>
+      <h6 className="font-uni text-lg font-bold text-black">
+        Upload Certificate
+      </h6>
       <Input
         size="lg"
         placeholder="XXX-XXX"
-        className=" !border-t-blue-gray-200 focus:!border-t-gray-900 -my-2"
+        className=" !border-t-blue-gray-200 focus:!border-t-gray-900 -my-2 "
         labelProps={{
           className: "before:content-none after:content-none",
         }}
-        type="password"
+        type="file"
       />
 
       <Button
@@ -40,7 +42,7 @@ export default function Passkey() {
         size="lg"
       >
         {" "}
-        Confirm Passkey{" "}
+        Confirm Aadhar Card{" "}
       </Button>
     </>
   );
