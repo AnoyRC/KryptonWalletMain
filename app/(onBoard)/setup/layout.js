@@ -1,6 +1,6 @@
 export const metadata = {
-  title: 'Krypton | Login',
-  description: 'By Bankless DAO',
+  title: "Krypton | Setup",
+  description: "By Bankless DAO",
 };
 
 export default function LoginLayout({ children }) {

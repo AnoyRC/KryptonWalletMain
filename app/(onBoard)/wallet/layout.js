@@ -1,8 +1,8 @@
 export const metadata = {
-  title: "Krypton | Login",
+  title: "Krypton | Wallet",
   description: "By Bankless DAO",
 };
 
-export default function SetupLayout({ children }) {
+export default function LoginLayout({ children }) {
   return <>{children}</>;
 }
