@@ -1,3 +1,4 @@
+import TwoFacterDrawer from "@/components/drawers/TwoFactorDrawer";
 import OnBoardContainer from "@/components/layout/onBoard/onBoardContainer";
 
 export const metadata = {
@@ -8,6 +9,7 @@ export const metadata = {
 export default function OnBoardLayout({ children }) {
   return (
     <>
+      <TwoFacterDrawer />
       <OnBoardContainer>{children}</OnBoardContainer>
     </>
   );

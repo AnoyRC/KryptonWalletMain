@@ -1,36 +1,57 @@
 "use client";
-import { setActiveStep } from "@/redux/slice/setupSlice";
+import {
+  openTwoFADrawer,
+  setActiveStep,
+  setSelectedTwoFactor,
+} from "@/redux/slice/setupSlice";
 import { CreditCardIcon, KeyIcon } from "@heroicons/react/24/outline";
 import { Button, Checkbox, Chip } from "@material-tailwind/react";
 import Image from "next/image";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Step3() {
   const dispatch = useDispatch();
   const checked = true;
+  const twoFactorAddress = useSelector((state) => state.setup.twoFactorAddress);
+  const selectedTwoFactor = useSelector(
+    (state) => state.setup.selectedTwoFactor
+  );
 
   return (
     <div className="w-full flex flex-col gap-4">
       <div className="font-uni text-lg font-bold flex gap-2">
         2FA
-        <Chip value="disabled"></Chip>
+        {twoFactorAddress && <Chip value="enabled"></Chip>}
+        {!twoFactorAddress && <Chip value="disabled"></Chip>}
         {/* <Chip value="enabled"></Chip> */}
       </div>
       <Button
         size="lg"
         variant="outlined"
         className="flex items-center justify-between  capitalize text-lg font-uni"
+        onClick={() => {
+          dispatch(setSelectedTwoFactor(0));
+          dispatch(openTwoFADrawer());
+        }}
+        disabled={twoFactorAddress ? true : false}
       >
         <div className="flex gap-3">
           <KeyIcon className="h-7 w-7" />
           Passkey
         </div>
-        <Checkbox checked={checked} />
+        {twoFactorAddress && selectedTwoFactor === 0 && (
+          <Checkbox checked={checked} />
+        )}
       </Button>
       <Button
         size="lg"
         variant="outlined"
         className="flex items-center justify-between capitalize text-lg font-uni"
+        onClick={() => {
+          dispatch(setSelectedTwoFactor(1));
+          dispatch(openTwoFADrawer());
+        }}
+        disabled={twoFactorAddress ? true : false}
       >
         <div className="flex gap-3">
           <Image
@@ -42,18 +63,27 @@ export default function Step3() {
           />
           Polygon ID
         </div>
-        {/* <Checkbox checked={checked} /> */}
+        {twoFactorAddress && selectedTwoFactor === 1 && (
+          <Checkbox checked={checked} />
+        )}
       </Button>
       <Button
         size="lg"
         variant="outlined"
         className="flex items-center  capitalize justify-between text-lg font-uni mb-1"
+        onClick={() => {
+          dispatch(setSelectedTwoFactor(2));
+          dispatch(openTwoFADrawer());
+        }}
+        disabled={twoFactorAddress ? true : false}
       >
         <div className="flex gap-3">
           <CreditCardIcon className="h-7 w-7" />
           Aadhar Card
         </div>
-        {/* <Checkbox checked={checked} /> */}
+        {twoFactorAddress && selectedTwoFactor === 2 && (
+          <Checkbox checked={checked} />
+        )}
       </Button>
 
       <div className="flex justify-between">
