@@ -10,6 +10,7 @@ const setupSlice = createSlice({
     twoFactorAddress: null,
     selectedTwoFactor: 0,
     twoFADrawer: false,
+    guardianWalletDialog: false,
   },
 
   reducers: {
@@ -46,6 +47,9 @@ const setupSlice = createSlice({
     setTwoFactorAddress: (state, action) => {
       state.twoFactorAddress = action.payload;
     },
+    handleGuardianWalletDialog: (state) => {
+      state.guardianWalletDialog = !state.guardianWalletDialog;
+    },
   },
 });
 
@@ -61,6 +65,7 @@ export const {
   closeTwoFADrawer,
   setSelectedTwoFactor,
   setTwoFactorAddress,
+  handleGuardianWalletDialog,
 } = setupSlice.actions;
 
 export default setupSlice.reducer;
