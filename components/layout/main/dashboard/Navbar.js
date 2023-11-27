@@ -1,6 +1,24 @@
 import Link from 'next/link';
 import CustomMenu from './Navbar/CustomMenu';
 
+const SubMenuHeading = [
+  {
+    heading: 'Your Account Options',
+    paragraph:
+      "Check what you've spent, chat securely, and handle guardian requests effortlessly.",
+  },
+  {
+    heading: 'Wallet Utilities',
+    paragraph:
+      'Move money between wallets and trade tokens effortlessly. Your assets, your call.',
+  },
+  {
+    heading: 'Account Setting',
+    paragraph:
+      'Customize your experience and amp up security with Two-Factor Authentication.',
+  },
+];
+
 const UtilityMenu = [
   {
     title: 'Transfer',
@@ -58,16 +76,19 @@ export default function Navbar() {
 
           <CustomMenu
             title="Accounts"
+            subMenu={SubMenuHeading[0]}
             menuItems={AccountMenu}
             image="account"
           />
           <CustomMenu
             title="Utilities"
+            subMenu={SubMenuHeading[1]}
             menuItems={UtilityMenu}
             image="utilities"
           />
           <CustomMenu
             title="Settings"
+            subMenu={SubMenuHeading[2]}
             menuItems={SettingsMenu}
             image="setting"
           />

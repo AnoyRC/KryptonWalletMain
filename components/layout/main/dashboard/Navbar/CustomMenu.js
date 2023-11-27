@@ -13,10 +13,18 @@ import { ChevronDownIcon } from '@heroicons/react/24/outline';
 import Image from 'next/image';
 import { useState } from 'react';
 
-export default function CustomMenu({ title, menuItems, image }) {
+export default function CustomMenu({ title, subMenu, menuItems, image }) {
   const [openMenu, setOpenMenu] = useState(false);
   return (
-    <Menu open={openMenu} handler={setOpenMenu} allowHover>
+    <Menu
+      open={openMenu}
+      handler={setOpenMenu}
+      allowHover
+      animate={{
+        mount: { y: 4 },
+        unmount: { y: -24 },
+      }}
+    >
       <MenuHandler>
         <Button
           variant="text"
@@ -35,14 +43,11 @@ export default function CustomMenu({ title, menuItems, image }) {
       <MenuList className="hidden w-fit grid-cols-8 gap-4 overflow-visible lg:grid">
         <Card
           shadow={false}
-          className="col-span-4 flex h-full w-full rounded-2xl p-4 outline-none max-w-xs space-y-10 bg-[rgb(255,248,248)]"
+          className="col-span-4 flex h-full w-full rounded-md p-4 outline-none max-w-xs space-y-10 bg-[rgb(255,248,248)]"
         >
           <div className=" space-y-2">
-            <p className="font-uni text-lg font-bold">Your Account</p>
-            <p className="font-uni text-md">
-              Check what you've spent, chat securely, and handle guardian
-              requests effortlessly.
-            </p>
+            <p className="font-uni text-lg font-bold">{subMenu.heading}</p>
+            <p className="font-uni text-md">{subMenu.paragraph}</p>
           </div>
 
           <Image
@@ -50,6 +55,7 @@ export default function CustomMenu({ title, menuItems, image }) {
             width={200}
             height={200}
             className="aspect-square mx-auto"
+            alt={image}
           />
         </Card>
 
