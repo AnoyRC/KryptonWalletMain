@@ -1,9 +1,5 @@
-import TransactionsMain from '@/components/layout/main/dashboard/transaction/TransactionMain';
+import TransactionsContainer from '@/components/layout/main/dashboard/transaction/TransactionsContainer';
 
 export default function Transactions() {
-  return (
-    <>
-      <TransactionsMain />
-    </>
-  );
+  return <TransactionsContainer />;
 }
