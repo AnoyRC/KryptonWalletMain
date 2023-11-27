@@ -1,3 +1,4 @@
+import DashboardHolder from "@/components/layout/main/dashboard/DashboardHolder";
 import Navbar from "@/components/layout/main/dashboard/Navbar";
 
 export const metadata = {
@@ -7,9 +8,9 @@ export const metadata = {
 
 export default function LandingLayout({ children }) {
   return (
-    <div className="w-full flex flex-col">
+    <div className="w-full h-screen flex flex-col">
       <Navbar />
-      {children}
+      <DashboardHolder>{children}</DashboardHolder>
     </div>
   );
 }

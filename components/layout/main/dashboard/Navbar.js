@@ -1,58 +1,58 @@
-import Link from 'next/link';
-import CustomMenu from './Navbar/CustomMenu';
+import Link from "next/link";
+import CustomMenu from "./Navbar/CustomMenu";
 
 const SubMenuHeading = [
   {
-    heading: 'Your Account Options',
+    heading: "Your Account Options",
     paragraph:
       "Check what you've spent, chat securely, and handle guardian requests effortlessly.",
   },
   {
-    heading: 'Wallet Utilities',
+    heading: "Wallet Utilities",
     paragraph:
-      'Move money between wallets and trade tokens effortlessly. Your assets, your call.',
+      "Move money between wallets and trade tokens effortlessly. Your assets, your call.",
   },
   {
-    heading: 'Account Setting',
+    heading: "Account Setting",
     paragraph:
-      'Customize your experience and amp up security with Two-Factor Authentication.',
+      "Customize your experience and amp up security with Two-Factor Authentication.",
   },
 ];
 
 const UtilityMenu = [
   {
-    title: 'Transfer',
-    description: 'Transfer your funds to another wallet.',
+    title: "Transfer",
+    description: "Transfer your funds to another wallet.",
   },
   {
-    title: 'Swap',
-    description: 'Swap your tokens for another.',
+    title: "Swap",
+    description: "Swap your tokens for another.",
   },
 ];
 
 const AccountMenu = [
   {
-    title: 'Transactions',
-    description: 'View your transactions.',
+    title: "Transactions",
+    description: "View your transactions.",
   },
   {
-    title: 'Chats',
-    description: 'View your chats.',
+    title: "Chats",
+    description: "View your chats.",
   },
   {
-    title: 'Requests',
-    description: 'View all of your guardian requests and recovery requests',
+    title: "Requests",
+    description: "View all of your guardian requests and recovery requests",
   },
 ];
 
 const SettingsMenu = [
   {
-    title: 'General',
-    description: 'Change your general settings.',
+    title: "General",
+    description: "Change your general settings.",
   },
   {
-    title: '2FA',
-    description: 'Enable / Change your 2FA settings.',
+    title: "2FA",
+    description: "Enable / Change your 2FA settings.",
   },
 ];
 
@@ -66,12 +66,12 @@ export default function Navbar() {
 
         <div className="flex items-center mt-2 ml-7">
           <Link
-            href={'/home'}
+            href={"/home"}
             id=":RkrqukqH2:"
             variant="text"
-            className="align-middle select-none text-center transition-all disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none py-3 px-6 rounded-lg text-gray-900 hover:bg-gray-900/10 active:bg-gray-900/20 flex items-center gap-3 text-base font-normal capitalize tracking-normal font-uni outline-none"
+            className="align-middle select-none text-center transition-all mr-4 disabled:opacity-50 disabled:shadow-none disabled:pointer-events-none py-3 px-6 rounded-lg text-gray-900 hover:bg-gray-900/10 active:bg-gray-900/20 flex items-center gap-3 text-base font-normal capitalize tracking-normal font-uni outline-none"
           >
-            Home{' '}
+            Home{" "}
           </Link>
 
           <CustomMenu
