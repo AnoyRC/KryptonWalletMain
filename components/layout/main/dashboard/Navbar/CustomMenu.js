@@ -30,7 +30,7 @@ export default function CustomMenu({ title, menuItems, image }) {
           />
         </Button>
       </MenuHandler>
-      <MenuList className="hidden w-[25rem] grid-cols-7 gap-3 overflow-visible lg:grid">
+      <MenuList className="hidden w-[26rem] grid-cols-7 gap-1 overflow-visible lg:grid">
         <Card
           shadow={false}
           className="col-span-3 flex h-full w-full items-center justify-center rounded-2xl p-4 outline-none"
