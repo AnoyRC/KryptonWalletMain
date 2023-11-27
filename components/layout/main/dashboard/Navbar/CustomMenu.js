@@ -9,18 +9,17 @@ import {
   Typography,
 } from "@material-tailwind/react";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
-import { CursorArrowRaysIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
-import Spline from "@splinetool/react-spline";
+import Image from "next/image";
 
-export default function CustomMenu({ title, menuItems, sceneLink }) {
+export default function CustomMenu({ title, menuItems, image }) {
   const [openMenu, setOpenMenu] = useState(false);
   return (
     <Menu open={openMenu} handler={setOpenMenu} allowHover>
       <MenuHandler>
         <Button
           variant="text"
-          className="flex items-center gap-3 text-base font-normal capitalize tracking-normal font-uni"
+          className="flex items-center gap-3 text-base font-normal capitalize tracking-normal font-uni outline-none"
         >
           {title}{" "}
           <ChevronDownIcon
@@ -31,16 +30,21 @@ export default function CustomMenu({ title, menuItems, sceneLink }) {
           />
         </Button>
       </MenuHandler>
-      <MenuList className="hidden w-[26rem] grid-cols-7 gap-3 overflow-visible lg:grid">
+      <MenuList className="hidden w-[25rem] grid-cols-7 gap-3 overflow-visible lg:grid">
         <Card
           shadow={false}
-          className="col-span-3 flex h-full w-full items-center justify-center rounded-2xl p-4 bg-transparent"
+          className="col-span-3 flex h-full w-full items-center justify-center rounded-2xl p-4 outline-none"
         >
-          <div className="w-full h-full">
-            <Spline scene={sceneLink} />
+          <div className="w-[80%] h-[80%]">
+            <Image
+              src={"/images/main/dashboard/navbar/" + image + ".svg"}
+              layout="fill"
+              objectFit="contain"
+              className="rounded-2xl"
+            />
           </div>
         </Card>
-        <ul className="col-span-4 flex w-full flex-col gap-1">
+        <ul className="col-span-4 flex w-full flex-col gap-1 outline-none">
           {menuItems.map(({ title, description }) => (
             <a href="#" key={title}>
               <MenuItem>

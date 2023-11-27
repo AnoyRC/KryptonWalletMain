@@ -41,27 +41,9 @@ export default function Navbar() {
           Krypton
         </h1>
         <div className="flex items-center mt-2 ml-5">
-          <CustomMenu
-            title="Utilities"
-            menuItems={UtilityMenu}
-            sceneLink={
-              "https://prod.spline.design/hl0V1EihIzWfPCO0/scene.splinecode"
-            }
-          />
-          <CustomMenu
-            title="Accounts"
-            menuItems={AccountMenu}
-            sceneLink={
-              "https://prod.spline.design/hl0V1EihIzWfPCO0/scene.splinecode"
-            }
-          />
-          <CustomMenu
-            title="Settings"
-            menuItems={SettingsMenu}
-            sceneLink={
-              "https://prod.spline.design/hl0V1EihIzWfPCO0/scene.splinecode"
-            }
-          />
+          <CustomMenu title="Utilities" menuItems={UtilityMenu} image="logo1" />
+          <CustomMenu title="Accounts" menuItems={AccountMenu} image="logo2" />
+          <CustomMenu title="Settings" menuItems={SettingsMenu} image="logo3" />
         </div>
       </div>
     </div>
