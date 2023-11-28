@@ -42,28 +42,30 @@ export default function Tokens() {
               placeholder="Enter Amount"
             />
 
-            <Select
-              size="md"
-              labelProps={{
-                className: "before:content-none after:content-none",
-              }}
-              className="border-transparent text-white font-uni font-extrabold text-2xl py-0 "
-              containerProps={{
-                className: "pb-3 min-w-0 w-[180px]",
-              }}
-              value={selected}
-              onChange={(e) => setSelected(e)}
-            >
-              <Option className="font-uni" value="MATIC">
-                MATIC
-              </Option>
-              <Option className="font-uni" value="USDT">
-                USDT
-              </Option>
-              <Option className="font-uni" value="USDC">
-                USDC
-              </Option>
-            </Select>
+            <div className="[&>*]:min-w-0 w-[180px]">
+              <Select
+                size="md"
+                labelProps={{
+                  className: "before:content-none after:content-none",
+                }}
+                className="border-transparent text-white font-uni font-extrabold text-2xl py-0 "
+                containerProps={{
+                  className: "pb-3 min-w-0 w-[180px]",
+                }}
+                value={selected}
+                onChange={(e) => setSelected(e)}
+              >
+                <Option className="font-uni" value="MATIC">
+                  MATIC
+                </Option>
+                <Option className="font-uni" value="USDT">
+                  USDT
+                </Option>
+                <Option className="font-uni" value="USDC">
+                  USDC
+                </Option>
+              </Select>
+            </div>
           </div>
 
           <div className="flex w-full my-5 justify-center relative">
@@ -81,28 +83,31 @@ export default function Tokens() {
 
           <div className="w-full flex items-center justify-between gap-3">
             <p className=" text-2xl font-extrabold w-full text-white ">0.00</p>
-            <Select
-              size="md"
-              labelProps={{
-                className: "before:content-none after:content-none",
-              }}
-              className="border-transparent text-white font-uni font-extrabold text-2xl py-0 "
-              containerProps={{
-                className: "pb-3 min-w-0 w-[180px]",
-              }}
-              value={selected2}
-              onChange={(e) => setSelected2(e)}
-            >
-              <Option className="font-uni" value="MATIC">
-                MATIC
-              </Option>
-              <Option className="font-uni" value="USDT">
-                USDT
-              </Option>
-              <Option className="font-uni" value="USDC">
-                USDC
-              </Option>
-            </Select>
+
+            <div className="[&>*]:min-w-0 w-[180px]">
+              <Select
+                size="md"
+                labelProps={{
+                  className: "before:content-none after:content-none",
+                }}
+                className="border-transparent text-white font-uni font-extrabold text-2xl py-0 "
+                containerProps={{
+                  className: "pb-3 min-w-0 w-[180px]",
+                }}
+                value={selected2}
+                onChange={(e) => setSelected2(e)}
+              >
+                <Option className="font-uni" value="MATIC">
+                  MATIC
+                </Option>
+                <Option className="font-uni" value="USDT">
+                  USDT
+                </Option>
+                <Option className="font-uni" value="USDC">
+                  USDC
+                </Option>
+              </Select>
+            </div>
           </div>
         </Card>
 
