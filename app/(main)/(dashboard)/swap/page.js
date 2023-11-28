@@ -1,6 +1,10 @@
 "use client";
-import { ArrowsRightLeftIcon } from "@heroicons/react/24/outline";
-import { Card, Input, Button, Select, Option } from "@material-tailwind/react";
+import {
+  ArrowsRightLeftIcon,
+  ExclamationTriangleIcon,
+} from "@heroicons/react/24/outline";
+import { Card, Alert, Button, Select, Option } from "@material-tailwind/react";
+import Image from "next/image";
 import { useState } from "react";
 
 export default function Tokens() {
@@ -11,10 +15,23 @@ export default function Tokens() {
   return (
     <div className="w-full h-full z-10 flex items-center justify-center">
       <Card className="w-[30rem] p-4 flex flex-col gap-4">
-        <h6 className="font-uni text-3xl text-black font-bold">Swap</h6>
-        <p className="font-uni text-lg text-black/60 -mt-3">
-          Swap your tokens for other tokens
-        </p>
+        <div className="w-full flex justify-between items-center">
+          <div className="flex flex-col gap-4">
+            <h6 className="font-uni text-3xl text-black font-bold">Swap</h6>
+            <p className="font-uni text-lg text-black/60 -mt-3">
+              Swap your tokens for other tokens
+            </p>
+          </div>
+          <Card className="flex gap-1 font-uni bg-black/80 text-white flex-row p-3">
+            <Image
+              src="/images/main/dashboard/swap/fuel.svg"
+              width={20}
+              height={20}
+              alt="fuel"
+            />
+            0.004
+          </Card>
+        </div>
         <Card className="w-full flex flex-col p-6 py-8 gap-3 bg-black/80">
           <h6 className="font-uni text-lg text-white/60 ">Send</h6>
           <div className="w-full flex items-center justify-between gap-3">
@@ -92,6 +109,17 @@ export default function Tokens() {
         <Button size="lg" className="bg-black/80">
           Swap
         </Button>
+
+        <Alert
+          variant="gradient"
+          icon={<ExclamationTriangleIcon className="h-8 w-8" />}
+          className="mb-2 mr-0"
+        >
+          <h6 className="font-bold text-lg mb-2">Same Tokens</h6>
+          <p className="text-sm">
+            Swapping is not available with the same tokens
+          </p>
+        </Alert>
       </Card>
     </div>
   );
