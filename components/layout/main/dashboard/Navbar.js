@@ -1,5 +1,6 @@
 import Link from "next/link";
 import CustomMenu from "./Navbar/CustomMenu";
+import WalletMenu from "./Navbar/WalletMenu";
 
 const SubMenuHeading = [
   {
@@ -94,6 +95,7 @@ export default function Navbar() {
           />
         </div>
       </div>
+      <WalletMenu />
     </div>
   );
 }
