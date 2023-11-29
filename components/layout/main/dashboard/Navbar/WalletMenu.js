@@ -9,6 +9,7 @@ import {
   Card,
 } from "@material-tailwind/react";
 import {
+  ArrowPathRoundedSquareIcon,
   ChevronDownIcon,
   DocumentDuplicateIcon,
 } from "@heroicons/react/24/outline";
@@ -69,6 +70,15 @@ export default function WalletMenu() {
         </Card>
 
         <ul className="col-span-4 flex max-w-xs flex-col w-full items-end gap-1 outline-none">
+          <Button
+            size="sm"
+            className="w-full my-2 capitalize text-lg font-uni -mb-1 flex gap-1 items-center justify-center"
+            variant="outlined"
+          >
+            <ArrowPathRoundedSquareIcon className="h-5 w-5" />
+            Change Network
+          </Button>
+
           <Button size="sm" className="w-full my-2 capitalize text-lg font-uni">
             Connect
           </Button>

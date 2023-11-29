@@ -29,6 +29,10 @@ const UtilityMenu = [
     title: "Swap",
     description: "Swap your tokens for another.",
   },
+  {
+    title: "Tokens",
+    description: "View all of your tokens.",
+  },
 ];
 
 const AccountMenu = [
