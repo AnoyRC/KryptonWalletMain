@@ -1,8 +1,8 @@
 "use client";
+import StatusCard from "@/components/layout/guardian/StatusCard";
 import {
   ArrowUpRightIcon,
   ArrowsRightLeftIcon,
-  ClipboardDocumentIcon,
   CurrencyDollarIcon,
   DocumentDuplicateIcon,
   PaperAirplaneIcon,
@@ -15,14 +15,15 @@ import {
   Popover,
   PopoverContent,
   PopoverHandler,
-  Button,
 } from "@material-tailwind/react";
 import Image from "next/image";
 
 export default function Home() {
+  const status = "Good";
   return (
     <div className="w-full h-full z-10 flex items-center justify-center">
       <Card className="w-[30rem] p-4 flex flex-col gap-4">
+        <StatusCard status={status} />
         <CardHeader
           variant="gradient"
           color="gray"

@@ -1,17 +1,10 @@
 "use client";
-import RecoveryRequests from "@/components/layout/main/dashboard/requests/RecoveryRequests";
-import { CheckIcon, InformationCircleIcon } from "@heroicons/react/24/outline";
-import {
-  Alert,
-  Button,
-  Card,
-  CardHeader,
-  Input,
-  List,
-  ListItem,
-  Stepper,
-  Step,
-} from "@material-tailwind/react";
+import ExecuteRecovery from "@/components/layout/guardian/ExecuteRecovery";
+import GuardianTransfer from "@/components/layout/guardian/GuardianTransfer";
+import InitiateRecovery from "@/components/layout/guardian/InitiateRecovery";
+import StatusCard from "@/components/layout/guardian/StatusCard";
+import { InformationCircleIcon } from "@heroicons/react/24/outline";
+import { Alert, Button, Card, Stepper, Step } from "@material-tailwind/react";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -34,21 +27,13 @@ const RecoveryRequestsData = [
 ];
 
 export default function Guardian() {
-  const [selected, setSelected] = useState([]);
   const [isExecuting, setIsExecuting] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
-  const threshold = 3;
   const twoFactor = true;
-  const setSelectedItem = (address) => {
-    if (selected.includes(address)) {
-      setSelected(selected.filter((item) => item !== address));
-    } else {
-      setSelected([...selected, address]);
-    }
-  };
+
   const sampleLink =
     "https://app.spline.design/file/e2cc7718-0c00-4034-b04d-c0c3307f01a3";
-  const status = "Good";
+  const status = "Recovery";
 
   const demoProcess = () => {
     setIsExecuting(true);
@@ -58,142 +43,27 @@ export default function Guardian() {
     }, 1000);
     setTimeout(() => {
       setActiveStep(2);
-    }, 2000);
+    }, 3000);
     setTimeout(() => {
       setIsExecuting(false);
       setActiveStep(0);
-    }, 3000);
+    }, 5000);
   };
 
   return (
     <div className="w-full h-full z-10 flex items-center justify-center">
       <Card className="w-[30rem] p-4 flex flex-col gap-4">
-        {status === "Good" && (
-          <CardHeader className="mt-4 flex flex-col p-3 mx-0 my-0 bg-green-500/30 border-green-500 border-[2px]">
-            <h1 className="font-uni text-black/70 text-xl font-extrabold">
-              Status
-            </h1>
-            <h1 className="font-uni text-black/70 text-7xl font-extrabold">
-              Good
-            </h1>
-          </CardHeader>
-        )}
-        {status === "Transfer" && (
-          <CardHeader className="mt-4 flex flex-col p-3 mx-0 my-0 bg-yellow-500/30 border-yellow-500 border-[2px]">
-            <h1 className="font-uni text-black/70 text-xl font-extrabold">
-              Status
-            </h1>
-            <h1 className="font-uni text-black/70 text-7xl font-extrabold">
-              In Transfer
-            </h1>
-          </CardHeader>
-        )}
-        {status === "Recovery" && (
-          <CardHeader className="mt-4 flex flex-col p-3 mx-0 my-0 bg-red-500/30 border-red-500 border-[2px]">
-            <h1 className="font-uni text-black/70 text-xl font-extrabold">
-              Status
-            </h1>
-            <h1 className="font-uni text-black/70 text-7xl font-extrabold">
-              In Recovery
-            </h1>
-          </CardHeader>
-        )}
+        <StatusCard status={status} />
 
-        {status === "Good" && (
-          <>
-            <h6 className="font-uni text-lg font-bold">Guardian Transfer</h6>
-            <Input
-              size="lg"
-              placeholder="new-guardian-address"
-              className=" !border-t-blue-gray-200 focus:!border-t-gray-900 -my-2"
-              labelProps={{
-                className: "before:content-none after:content-none",
-              }}
-            />
+        {status === "Good" && <GuardianTransfer />}
 
-            <Button className="-mt-2 bg-black/80">Send Transfer Request</Button>
-
-            <Alert
-              className="bg-black/80 -mt-1"
-              icon={<InformationCircleIcon className="h-6 w-6 mt-0.5" />}
-            >
-              Initiate a transfer request to a new guardian. This will require
-              approval from the owner of the wallet.
-            </Alert>
-          </>
-        )}
-
-        {status !== "Recovery" && (
-          <>
-            <h6 className="font-uni text-lg font-bold">Proposed Owner</h6>
-            <Input
-              size="lg"
-              placeholder="new-owner-address"
-              className=" !border-t-blue-gray-200 focus:!border-t-gray-900 -my-2"
-              labelProps={{
-                className: "before:content-none after:content-none",
-              }}
-            />
-            <Button className="-mt-2 bg-black/80">Initiate Recovery</Button>
-            <Alert
-              className="bg-black/80 -mt-1"
-              icon={<InformationCircleIcon className="h-6 w-6 mt-0.5" />}
-            >
-              Initiate a recovery request to a new owner. This means that the
-              current owner has not enabled 2FA.
-            </Alert>
-          </>
-        )}
+        {status !== "Recovery" && !twoFactor && <InitiateRecovery />}
 
         {status === "Recovery" && !isExecuting && (
-          <>
-            <div className="flex items-center justify-between -my-1 -mb-3 px-2">
-              <h6 className="font-uni text-lg font-bold">Select Requests</h6>
-              <p>
-                {selected.length} out of {threshold} selected
-              </p>
-            </div>
-
-            <List className="p-0">
-              {RecoveryRequestsData.map((data, index) => (
-                <ListItem
-                  key={index}
-                  className="flex items-center w-full p-2 justify-between gap-2 relative"
-                  onClick={() => setSelectedItem(data.address)}
-                  selected={selected.includes(data.address)}
-                  style={{
-                    backgroundColor: selected.includes(data.address)
-                      ? "rgba(0, 255, 255, 0.1)"
-                      : "transparent",
-                    borderRadius: "0.5rem",
-                    border: selected.includes(data.address)
-                      ? "1px solid rgba(0, 255, 255, 1)"
-                      : "",
-                  }}
-                >
-                  {selected.includes(data.address) && (
-                    <div className="absolute top-0 right-0 w-7 h-7 rounded-bl-xl bg-[#00ffff] grid place-items-center z-10">
-                      <CheckIcon className="h-4 w-4 ml-0.5 mb-0.5 text-black" />
-                    </div>
-                  )}
-
-                  <RecoveryRequests
-                    name={data.name}
-                    address={data.address}
-                    proposedOwner={data.proposedOwner}
-                  />
-                </ListItem>
-              ))}
-            </List>
-
-            <Button
-              className="-mt-2 mx-2 bg-black/80"
-              size="lg"
-              onClick={demoProcess}
-            >
-              Execute Recovery
-            </Button>
-          </>
+          <ExecuteRecovery
+            RecoveryRequestsData={RecoveryRequestsData}
+            executeFunction={demoProcess}
+          />
         )}
 
         {isExecuting && (
