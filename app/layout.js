@@ -4,6 +4,7 @@ import ReduxProvider from "@/providers/ReduxProvider";
 import { WagmiProvider } from "@/providers/wagmiProviders";
 import "./globals.css";
 import SignatureManagerDrawer from "@/components/drawers/SignatureManagerDrawer";
+import { Toaster } from "react-hot-toast";
 
 const fhtotal = localFont({
   src: "../public/fonts/FH-total/FHTotalDisplay-Test-Black.woff2",
@@ -56,6 +57,21 @@ export default function RootLayout({ children }) {
       <body className="overflow-x-hidden font-uni">
         <ReduxProvider store={store}>
           <WagmiProvider>
+            <Toaster
+              position="bottom-center"
+              reverseOrder={false}
+              toastOptions={{
+                style: {
+                  fontFamily: "var(--font-uni)",
+                  background: "#333",
+                  color: "#fff",
+                },
+                iconTheme: {
+                  primary: "#ffffff",
+                  secondary: "#333",
+                },
+              }}
+            />
             <SignatureManagerDrawer />
             {children}
           </WagmiProvider>

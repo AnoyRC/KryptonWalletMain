@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import { Card } from "@material-tailwind/react";
-import Spline from "@splinetool/react-spline";
+import { Card } from '@material-tailwind/react';
+import Spline from '@splinetool/react-spline';
 
 export default function DashboardHolder({ children }) {
   return (
-    <div className="w-full h-full pt-3 pb-6 ">
+    <div className="w-full h-full py-3">
       <Card className="w-full h-full overflow-hidden shadow-none relative bg-transparent">
         <div className="w-full h-full absolute top-0 left-0 ">
           <Spline
