@@ -10,7 +10,7 @@ export default function RecoveryRequests({ name, address, proposedOwner }) {
     <Button
       size="lg"
       variant="outlined"
-      className="flex flex-col  justify-between gap-1 capitalize text-lg font-uni"
+      className="flex flex-col w-full justify-between gap-1 capitalize text-lg font-uni"
     >
       <div className="flex items-center gap-3">
         <ArrowUpRightIcon className="h-6 w-6 text-black" />
