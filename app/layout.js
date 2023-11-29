@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import ReduxProvider from "@/providers/ReduxProvider";
 import { WagmiProvider } from "@/providers/wagmiProviders";
 import "./globals.css";
+import SignatureManagerDrawer from "@/components/drawers/SignatureManagerDrawer";
 
 const fhtotal = localFont({
   src: "../public/fonts/FH-total/FHTotalDisplay-Test-Black.woff2",
@@ -54,7 +55,10 @@ export default function RootLayout({ children }) {
     <html className={`${fhtotal.variable} ${uni.variable}`} lang="en">
       <body className="overflow-x-hidden font-uni">
         <ReduxProvider store={store}>
-          <WagmiProvider>{children}</WagmiProvider>
+          <WagmiProvider>
+            <SignatureManagerDrawer />
+            {children}
+          </WagmiProvider>
         </ReduxProvider>
       </body>
     </html>

@@ -59,6 +59,10 @@ const SettingsMenu = [
     title: "2FA",
     description: "Enable / Change your 2FA settings.",
   },
+  {
+    title: "Guardians",
+    description: "Manage your guardians.",
+  },
 ];
 
 export default function Navbar() {

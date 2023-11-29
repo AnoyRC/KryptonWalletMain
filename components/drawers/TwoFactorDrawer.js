@@ -1,14 +1,7 @@
 "use client";
 import { closeTwoFADrawer } from "@/redux/slice/setupSlice";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import {
-  Drawer,
-  Button,
-  Typography,
-  IconButton,
-  Input,
-  Textarea,
-} from "@material-tailwind/react";
+import { Drawer, IconButton } from "@material-tailwind/react";
 import { useDispatch, useSelector } from "react-redux";
 import Passkey from "./twoFactorDrawer/Passkey";
 import PolygonID from "./twoFactorDrawer/PolygonID";

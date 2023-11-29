@@ -33,7 +33,7 @@ export default function General() {
           color="gray"
           className="mt-4 grid h-20 place-items-center mx-0 my-0"
         >
-          <h1 className="font-uni text-white text-3xl font-bold">Settings</h1>
+          <h1 className="font-uni text-white text-3xl font-bold">General</h1>
         </CardHeader>
 
         <h6 className="font-uni text-lg font-bold">Wallet Name</h6>

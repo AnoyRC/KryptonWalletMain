@@ -3,7 +3,13 @@ import GuardianWalletButton from "@/components/layout/onBoard/wallet/GuardianWal
 import WalletButton from "@/components/layout/onBoard/wallet/WalletButton";
 import { handleGuardianWalletDialog } from "@/redux/slice/setupSlice";
 import { PlusIcon } from "@heroicons/react/24/outline";
-import { CardHeader, CardBody, Button } from "@material-tailwind/react";
+import {
+  CardHeader,
+  CardBody,
+  Button,
+  CardFooter,
+  Typography,
+} from "@material-tailwind/react";
 import { useDispatch } from "react-redux";
 
 export default function Setup() {
@@ -13,10 +19,12 @@ export default function Setup() {
 
   const demoWallet = [
     {
+      name: "Awesome Wallet",
       address: "0x3C700d88616C9e186aed7dd59B2e7f60819bf863",
       chain: "1",
     },
     {
+      name: "Another Wallet",
       address: "0x3C700d88616C9e186aed7dd59B2e7f60819bf863",
       chain: "3",
     },
@@ -32,12 +40,20 @@ export default function Setup() {
         <h1 className="font-uni text-white text-3xl font-bold">Wallets</h1>
       </CardHeader>
       <CardBody className="flex flex-col gap-4">
+        <Button
+          size="lg"
+          className="flex items-center justify-center -mt-2 gap-3 capitalize text-lg font-uni"
+        >
+          Connect Wallet
+        </Button>
+
         <div className="flex flex-col gap-4">
           {demoWallet.map((wallet, index) => (
             <WalletButton
               key={index}
               address={wallet.address}
               chain={wallet.chain}
+              name={wallet.name}
             />
           ))}
         </div>
@@ -74,6 +90,15 @@ export default function Setup() {
           <PlusIcon className="w-6 h-6 text-white" />
         </Button>
       </CardBody>
+
+      <CardFooter className="flex flex-col gap-4 -mt-9 -mb-6 text-center">
+        <Typography color="gray">
+          Lost your Wallet{" "}
+          <span className="text-blue-500 hover:cursor-pointer">
+            Initiate a Recovery
+          </span>
+        </Typography>
+      </CardFooter>
     </>
   );
 }

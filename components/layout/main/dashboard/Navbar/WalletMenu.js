@@ -113,6 +113,9 @@ export default function WalletMenu() {
               {walletAddress.slice(0, 6) + "..." + walletAddress.slice(-4)}
             </p>
           </Card>
+          <Button size="sm" className="w-full mt-2 capitalize text-lg font-uni">
+            Back to Menu
+          </Button>
         </ul>
       </MenuList>
     </Menu>
