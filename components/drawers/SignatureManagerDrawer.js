@@ -1,7 +1,11 @@
 "use client";
 
 import { closeDrawer } from "@/redux/slice/sigManagerSlice";
-import { XMarkIcon } from "@heroicons/react/24/outline";
+import {
+  CreditCardIcon,
+  KeyIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import {
   Drawer,
   IconButton,
@@ -13,6 +17,7 @@ import {
 } from "@material-tailwind/react";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
+import Image from "next/image";
 
 export default function SignatureManagerDrawer() {
   const dispatch = useDispatch();
@@ -53,7 +58,11 @@ export default function SignatureManagerDrawer() {
           <div className="flex flex-col  gap-4">
             {/* Passkey */}
             <Accordion open={activeTab === 0}>
-              <AccordionHeader onClick={() => setActiveTab(0)}>
+              <AccordionHeader
+                onClick={() => setActiveTab(0)}
+                className="justify-start items-center"
+              >
+                <KeyIcon className="h-5 w-5 mr-2 mb-1" />
                 Passkey
               </AccordionHeader>
               <AccordionBody className="flex flex-col gap-3">
@@ -82,7 +91,17 @@ export default function SignatureManagerDrawer() {
 
             {/* Polygon ID */}
             <Accordion open={activeTab === 1}>
-              <AccordionHeader onClick={() => setActiveTab(1)}>
+              <AccordionHeader
+                onClick={() => setActiveTab(1)}
+                className="justify-start"
+              >
+                <Image
+                  src="/images/onboard/setup/polygonID.svg"
+                  width={35}
+                  height={45}
+                  alt="google"
+                  className="-ml-2 opacity-70"
+                />
                 Polygon ID
               </AccordionHeader>
               <AccordionBody className="flex flex-col gap-3">
@@ -98,7 +117,11 @@ export default function SignatureManagerDrawer() {
 
             {/* Aadhar */}
             <Accordion open={activeTab === 2}>
-              <AccordionHeader onClick={() => setActiveTab(2)}>
+              <AccordionHeader
+                onClick={() => setActiveTab(2)}
+                className="justify-start"
+              >
+                <CreditCardIcon className="h-5 w-5 mr-2 mb-1" />
                 Anon Aadhar
               </AccordionHeader>
               <AccordionBody className="flex flex-col gap-3">

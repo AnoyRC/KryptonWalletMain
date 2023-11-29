@@ -12,12 +12,26 @@ import {
   Card,
   CardHeader,
   Input,
+  Checkbox,
 } from "@material-tailwind/react";
 import { useState } from "react";
 import Image from "next/image";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  openTwoFADrawer,
+  setActiveStep,
+  setSelectedTwoFactor,
+} from "@/redux/slice/setupSlice";
+import { openDrawer } from "@/redux/slice/sigManagerSlice";
 
 export default function General() {
   const [cooldown, setCooldown] = useState(30);
+  const checked = true;
+  const twoFactorAddress = useSelector((state) => state.setup.twoFactorAddress);
+  const selectedTwoFactor = useSelector(
+    (state) => state.setup.selectedTwoFactor
+  );
+  const dispatch = useDispatch();
 
   const isTwoFactor = true;
 
@@ -94,16 +108,29 @@ export default function General() {
               size="lg"
               variant="outlined"
               className="flex items-center justify-between  capitalize text-lg font-uni"
+              onClick={() => {
+                dispatch(setSelectedTwoFactor(0));
+                dispatch(openTwoFADrawer());
+              }}
+              disabled={twoFactorAddress ? true : false}
             >
               <div className="flex gap-3">
                 <KeyIcon className="h-7 w-7" />
                 Passkey
               </div>
+              {twoFactorAddress && selectedTwoFactor === 0 && (
+                <Checkbox checked={checked} onChange={() => {}} />
+              )}
             </Button>
             <Button
               size="lg"
               variant="outlined"
               className="flex items-center justify-between capitalize text-lg font-uni"
+              onClick={() => {
+                dispatch(setSelectedTwoFactor(1));
+                dispatch(openTwoFADrawer());
+              }}
+              disabled={twoFactorAddress ? true : false}
             >
               <div className="flex gap-3">
                 <Image
@@ -115,25 +142,39 @@ export default function General() {
                 />
                 Polygon ID
               </div>
+              {twoFactorAddress && selectedTwoFactor === 1 && (
+                <Checkbox checked={checked} onChange={() => {}} />
+              )}
             </Button>
             <Button
               size="lg"
               variant="outlined"
               className="flex items-center  capitalize justify-between text-lg font-uni mb-1"
+              onClick={() => {
+                dispatch(setSelectedTwoFactor(2));
+                dispatch(openTwoFADrawer());
+              }}
+              disabled={twoFactorAddress ? true : false}
             >
               <div className="flex gap-3">
                 <CreditCardIcon className="h-7 w-7" />
                 Aadhar Card
               </div>
-            </Button>
-            <Button
-              className="w-full text-white font-bold bg-black/80"
-              size="lg"
-            >
-              Change Two Factor
+              {twoFactorAddress && selectedTwoFactor === 2 && (
+                <Checkbox checked={checked} onChange={() => {}} />
+              )}
             </Button>
           </>
         )}
+        <Button
+          className="w-full text-white font-bold -mt-2 bg-black/80"
+          size="lg"
+          onClick={() => {
+            dispatch(openDrawer());
+          }}
+        >
+          Change Two Factor
+        </Button>
       </Card>
     </div>
   );

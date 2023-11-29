@@ -1,4 +1,5 @@
 "use client";
+import { ArrowLeftOnRectangleIcon } from "@heroicons/react/24/outline";
 import {
   CardHeader,
   CardBody,
@@ -86,6 +87,14 @@ export default function Login() {
             alt="wallet connect"
           />
           Wallet Connect
+        </Button>
+        <Button
+          size="lg"
+          variant="outlined"
+          className="flex items-center gap-3 capitalize text-lg font-uni"
+        >
+          <ArrowLeftOnRectangleIcon className="h-7 w-7" />
+          Disconnect
         </Button>
       </CardBody>
       <CardFooter className="flex flex-col gap-4 -mt-7 text-center">
