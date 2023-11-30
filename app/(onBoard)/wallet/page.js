@@ -29,12 +29,12 @@ export default function Setup() {
     {
       name: "Awesome Wallet",
       address: "0x3C700d88616C9e186aed7dd59B2e7f60819bf863",
-      chain: "1",
+      chain: "137",
     },
     {
       name: "Another Wallet",
       address: "0x3C700d88616C9e186aed7dd59B2e7f60819bf863",
-      chain: "3",
+      chain: "80001",
     },
   ];
 

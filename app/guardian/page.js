@@ -33,7 +33,7 @@ export default function Guardian() {
 
   const sampleLink =
     "https://app.spline.design/file/e2cc7718-0c00-4034-b04d-c0c3307f01a3";
-  const status = "Recovery";
+  const status = "Good";
 
   const demoProcess = () => {
     setIsExecuting(true);

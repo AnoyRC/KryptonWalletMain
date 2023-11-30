@@ -6,8 +6,8 @@ export function PolygonChip() {
   return <Chip value="Polygon" color="deep-purple" className="w-fit" />;
 }
 
-export function PolygonZKChip() {
-  return <Chip value="Polygon ZK" color="purple" className="w-fit" />;
+export function MumbaiChip() {
+  return <Chip value="Mumbai" color="purple" className="w-fit" />;
 }
 
 export function ArbitrumChip() {
@@ -26,15 +26,16 @@ export function ScrollChip() {
   return <Chip value="Scroll" color="blue-gray" className="w-fit" />;
 }
 
+export function UnsupportedChip() {
+  return <Chip value="Unsupported" color="gray" className="w-fit" />;
+}
+
 export function ChipsInId({ chain }) {
   return (
     <>
-      {chain === "1" && <PolygonChip />}
-      {chain === "2" && <PolygonZKChip />}
-      {chain === "3" && <ArbitrumChip />}
-      {chain === "4" && <CeloChip />}
-      {chain === "5" && <BaseChip />}
-      {chain === "6" && <ScrollChip />}
+      {chain === "137" && <PolygonChip />}
+      {chain === "80001" && <MumbaiChip />}
+      {chain !== "137" && chain !== "80001" && <UnsupportedChip />}
     </>
   );
 }

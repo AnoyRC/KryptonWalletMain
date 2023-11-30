@@ -3,6 +3,7 @@ import {
   ArbitrumChip,
   BaseChip,
   CeloChip,
+  MumbaiChip,
   PolygonChip,
   PolygonZKChip,
   ScrollChip,
@@ -68,23 +69,11 @@ export default function Step1() {
         value={chain}
         onChange={(e) => dispatch(setChain(e))}
       >
-        <Option value="1">
+        <Option value="137">
           <PolygonChip />
         </Option>
-        <Option value="2">
-          <PolygonZKChip />
-        </Option>
-        <Option value="3">
-          <ArbitrumChip />
-        </Option>
-        <Option value="4">
-          <CeloChip />
-        </Option>
-        <Option value="5">
-          <BaseChip />
-        </Option>
-        <Option value="6">
-          <ScrollChip />
+        <Option value="80001">
+          <MumbaiChip />
         </Option>
       </Select>
 

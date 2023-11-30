@@ -11,7 +11,7 @@ import { oAuthConnector } from "@/wagmi/oAuthConnector";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [polygon],
+  [polygon, polygonMumbai],
   [publicProvider()]
 );
 

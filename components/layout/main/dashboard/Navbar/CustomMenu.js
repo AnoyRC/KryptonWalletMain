@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   Menu,
@@ -7,14 +7,16 @@ import {
   MenuItem,
   Button,
   Card,
-} from '@material-tailwind/react';
-import { ChevronDownIcon } from '@heroicons/react/24/outline';
+} from "@material-tailwind/react";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
-import Image from 'next/image';
-import { useState } from 'react';
+import Image from "next/image";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function CustomMenu({ title, subMenu, menuItems, image }) {
   const [openMenu, setOpenMenu] = useState(false);
+  const router = useRouter();
   return (
     <Menu
       open={openMenu}
@@ -30,11 +32,11 @@ export default function CustomMenu({ title, subMenu, menuItems, image }) {
           variant="text"
           className="flex items-center gap-3 text-base font-normal capitalize tracking-normal font-uni outline-none"
         >
-          {title}{' '}
+          {title}{" "}
           <ChevronDownIcon
             strokeWidth={2.5}
             className={`h-3.5 w-3.5 transition-transform ${
-              openMenu ? 'rotate-180' : ''
+              openMenu ? "rotate-180" : ""
             }`}
           />
         </Button>
@@ -51,7 +53,7 @@ export default function CustomMenu({ title, subMenu, menuItems, image }) {
           </div>
 
           <Image
-            src={'/images/main/dashboard/navbar/' + image + '.png'}
+            src={"/images/main/dashboard/navbar/" + image + ".png"}
             width={200}
             height={200}
             className="aspect-square mx-auto"
@@ -60,9 +62,13 @@ export default function CustomMenu({ title, subMenu, menuItems, image }) {
         </Card>
 
         <ul className="col-span-4 flex max-w-xs flex-col gap-1 outline-none">
-          {menuItems.map(({ title, description }) => (
+          {menuItems.map(({ title, description, link }) => (
             <a href="#" key={title}>
-              <MenuItem>
+              <MenuItem
+                onClick={() => {
+                  router.push(link);
+                }}
+              >
                 <p className="font-uni text-lg font-bold">{title}</p>
 
                 <p className="font-uni text-md">{description}</p>
