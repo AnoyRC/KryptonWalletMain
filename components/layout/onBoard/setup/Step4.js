@@ -1,6 +1,7 @@
 "use client";
 
 import { ChipsInId } from "@/components/ui/chainChips";
+import { setActiveStep } from "@/redux/slice/setupSlice";
 import { CheckIcon } from "@heroicons/react/24/outline";
 import {
   Chip,
@@ -12,8 +13,9 @@ import {
   Step,
 } from "@material-tailwind/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function Step4() {
   const chain = useSelector((state) => state.setup.chain);
@@ -26,6 +28,8 @@ export default function Step4() {
   const selectedTwoFactor = useSelector(
     (state) => state.setup.selectedTwoFactor
   );
+  const dispatch = useDispatch();
+  const router = useRouter();
   const [isError, setIsError] = useState(false);
 
   const demoProcess = () => {
@@ -110,7 +114,16 @@ export default function Step4() {
           >
             Create Krypton
           </Button>
-          <Button color="gray" variant="outlined" size="lg" className="">
+          <Button
+            color="gray"
+            variant="outlined"
+            size="lg"
+            className=""
+            onClick={() => {
+              dispatch(setActiveStep(0));
+              router.push("/wallet");
+            }}
+          >
             Cancel
           </Button>
         </>

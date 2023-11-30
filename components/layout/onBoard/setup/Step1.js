@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/chainChips";
 import { setActiveStep, setChain, setName } from "@/redux/slice/setupSlice";
 import { Button, Input, Select, Option, Alert } from "@material-tailwind/react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -33,6 +34,7 @@ export default function Step1() {
   const dispatch = useDispatch();
   const chain = useSelector((state) => state.setup.chain);
   const name = useSelector((state) => state.setup.name);
+  const router = useRouter();
 
   return (
     <div className="w-full flex flex-col gap-4">
@@ -105,6 +107,9 @@ export default function Step1() {
           size="md"
           variant="outlined"
           className="capitalize font-uni font-bold"
+          onClick={() => {
+            router.push("/wallet");
+          }}
         >
           Cancel
         </Button>
