@@ -1,4 +1,5 @@
 "use client";
+import { DataverseConnector } from "@dataverse/dataverse-connector";
 import { ArrowLeftOnRectangleIcon } from "@heroicons/react/24/outline";
 import {
   CardHeader,
@@ -18,12 +19,24 @@ export default function Login() {
   const { connect, connectors } = useConnect();
   const { isConnected } = useAccount();
   const router = useRouter();
+  const dataverseConnector = new DataverseConnector();
+  // const provider = useEthersProvider()
 
   useEffect(() => {
     if (isConnected) {
       router.push("/wallet");
+      // const pkh = await dataverseConnector.connectWallet({
+      //   provider,
+      // });
+      // Set pkh to redux
     }
   }, [isConnected]);
+
+  // useEffect(() => {
+  //   if (pkh) {
+  //     router.push("/wallet");
+  //   }
+  // }, [Get pkh from redux]);
 
   return (
     <>
@@ -73,11 +86,11 @@ export default function Login() {
               size="lg"
               variant="outlined"
               className="flex items-center gap-3 capitalize text-lg font-uni"
-              onClick={() =>
+              onClick={async () => {
                 connect({
                   connector: connectors[0],
-                })
-              }
+                });
+              }}
             >
               <Image
                 src="/images/onboard/login/metamask.svg"
