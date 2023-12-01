@@ -10,6 +10,10 @@
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "^2.1.2",
+    "@dataverse/dataverse-connector": "^1.0.30",
+    "@dataverse/dataverse-contracts-sdk": "^1.0.17-alpha.13",
+    "@dataverse/hooks": "^1.0.32",
+    "@dataverse/model-parser": "^1.0.2",
     "@heroicons/react": "^2.0.18",
     "@material-tailwind/react": "^2.1.4",
     "@pushprotocol/restapi": "^1.4.40",
