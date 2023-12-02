@@ -1,26 +1,23 @@
-'use client';
+"use client";
 
-import { ethers } from 'ethers';
-import { useSelector } from 'react-redux';
-import { useState, useEffect } from 'react';
-import { PushAPI, CONSTANTS } from '@pushprotocol/restapi';
+import { ethers } from "ethers";
+import { useSelector } from "react-redux";
+import { useState, useEffect } from "react";
+import { PushAPI, CONSTANTS } from "@pushprotocol/restapi";
 
-import ChatBackground from './ChatBackground';
-import ChatBox from './chatBox/ChatBox';
-import { Card } from '@material-tailwind/react';
-import { useEthersSigner } from '@/wagmi/EthersSigner';
-import { useWalletClient } from 'wagmi';
+import ChatBackground from "./ChatBackground";
+import ChatBox from "./chatBox/ChatBox";
+import { Card } from "@material-tailwind/react";
+import { useEthersSigner } from "@/wagmi/EthersSigner";
+import { useAccount, useWalletClient } from "wagmi";
 
 const ChatContainer = () => {
   const currentContact = useSelector((state) => state.contacts.currentContact);
-  const signer = useEthersSigner({ chainId: 80001 });
-  // const { data } = useWalletClient();
-  // console.log(data);
-  // console.log(signer);
+  const signer = useEthersSigner();
+  const { isConnected } = useAccount();
 
   useEffect(() => {
     const initializeUser = async () => {
-      const wallet = ethers.Wallet.createRandom();
       const user = await PushAPI.initialize(signer, {
         env: CONSTANTS.ENV.STAGING,
       });
@@ -37,13 +34,13 @@ const ChatContainer = () => {
       );
 
       stream.on(CONSTANTS.STREAM.CONNECT, (a) => {
-        console.log('Stream Connected');
+        console.log("Stream Connected");
       });
 
       await stream.connect();
 
       stream.on(CONSTANTS.STREAM.DISCONNECT, () => {
-        console.log('Stream Disconnected');
+        console.log("Stream Disconnected");
       });
 
       stream.on(CONSTANTS.STREAM.CHAT, (data) => {
@@ -55,8 +52,10 @@ const ChatContainer = () => {
       });
     };
 
-    initializeUser();
-  }, []);
+    if (isConnected && signer) {
+      initializeUser();
+    }
+  }, [isConnected, signer]);
 
   return (
     <Card className="h-full flex-1">
