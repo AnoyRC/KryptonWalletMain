@@ -1,6 +1,6 @@
 'use client';
 
-import { RESOURCE } from '@dataverse/dataverse-connector';
+import { RESOURCE, SYSTEM_CALL } from '@dataverse/dataverse-connector';
 import { DataverseConnector } from '@dataverse/dataverse-connector';
 
 export function useDataverse() {

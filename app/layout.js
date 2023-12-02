@@ -57,8 +57,8 @@ export default function RootLayout({ children }) {
     <html className={`${fhtotal.variable} ${uni.variable}`} lang="en">
       <body className="overflow-x-hidden font-uni">
         <ReduxProvider store={store}>
+          {/* <DataverseProvider> */}
           <WagmiProvider>
-            {/* <DataverseProvider> */}
             <Toaster
               position="bottom-center"
               reverseOrder={false}
@@ -76,8 +76,8 @@ export default function RootLayout({ children }) {
             />
             <SignatureManagerDrawer />
             {children}
-            {/* </DataverseProvider> */}
           </WagmiProvider>
+          {/* </DataverseProvider> */}
         </ReduxProvider>
       </body>
     </html>

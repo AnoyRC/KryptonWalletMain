@@ -4,35 +4,6 @@ const Requests = () => {
   return (
     <>
       <RequestsItem />
-      <RequestsItem />
-      <RequestsItem />
-      <RequestsItem />
-      <RequestsItem />
-      <RequestsItem />
-      <RequestsItem />
-      <RequestsItem />
-      <RequestsItem />
-      <RequestsItem />
-      <RequestsItem />
-      <RequestsItem />
-      <RequestsItem />
-      <RequestsItem />
-      <RequestsItem />
-      <RequestsItem />
-      <RequestsItem />
-      <RequestsItem />
-      <RequestsItem />
-      <RequestsItem />
-      <RequestsItem />
-      <RequestsItem />
-      <RequestsItem />
-      <RequestsItem />
-      <RequestsItem />
-      <RequestsItem />
-      <RequestsItem />
-      <RequestsItem />
-      <RequestsItem />
-      <RequestsItem />
     </>
   );
 };
