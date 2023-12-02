@@ -1,66 +1,52 @@
 'use client';
 
-import { ethers } from 'ethers';
+import { Card } from '@material-tailwind/react';
+
+import { useAccount } from 'wagmi';
 import { useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
-import { PushAPI, CONSTANTS } from '@pushprotocol/restapi';
-
-import ChatBackground from './ChatBackground';
-import ChatBox from './chatBox/ChatBox';
-import { Card } from '@material-tailwind/react';
 import { useEthersSigner } from '@/wagmi/EthersSigner';
-import { useWalletClient } from 'wagmi';
+
+import { usePush } from '@/hooks/usePush';
+
+import PushCard from './PushCard';
+import ChatBox from './chatBox/ChatBox';
+import ChatBackground from './ChatBackground';
 
 const ChatContainer = () => {
   const currentContact = useSelector((state) => state.contacts.currentContact);
-  const signer = useEthersSigner({ chainId: 80001 });
-  // const { data } = useWalletClient();
-  // console.log(data);
-  // console.log(signer);
+  const signer = useEthersSigner();
+  const { isConnected } = useAccount();
+  const { initializePush } = usePush();
+
+  const [isSigned, setIsSigned] = useState(null);
 
   useEffect(() => {
-    const initializeUser = async () => {
-      const wallet = ethers.Wallet.createRandom();
-      const user = await PushAPI.initialize(signer, {
-        env: CONSTANTS.ENV.STAGING,
-      });
-
-      const stream = await user.initStream(
-        [
-          CONSTANTS.STREAM.CHAT,
-          CONSTANTS.STREAM.CHAT_OPS,
-          CONSTANTS.STREAM.NOTIF,
-          CONSTANTS.STREAM.CONNECT,
-          CONSTANTS.STREAM.DISCONNECT,
-        ],
-        {}
-      );
-
-      stream.on(CONSTANTS.STREAM.CONNECT, (a) => {
-        console.log('Stream Connected');
-      });
-
-      await stream.connect();
-
-      stream.on(CONSTANTS.STREAM.DISCONNECT, () => {
-        console.log('Stream Disconnected');
-      });
-
-      stream.on(CONSTANTS.STREAM.CHAT, (data) => {
-        console.log(data);
-      });
-
-      stream.on(CONSTANTS.STREAM.CHAT_OPS, (data) => {
-        console.log(data);
-      });
+    const initialize = async () => {
+      try {
+        await initializePush();
+        setIsSigned(true);
+      } catch (e) {
+        setIsSigned(false);
+      }
     };
 
-    initializeUser();
-  }, []);
+    if (isConnected && signer) {
+      initialize();
+    }
+  }, [isConnected, signer]);
 
   return (
     <Card className="h-full flex-1">
-      {currentContact ? <ChatBox /> : <ChatBackground />}
+      {isSigned ? (
+        currentContact ? (
+          <ChatBox />
+        ) : (
+          <ChatBackground />
+        )
+      ) : (
+        <PushCard setIsSigned={setIsSigned} />
+      )}
     </Card>
   );
 };
