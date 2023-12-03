@@ -4,7 +4,7 @@ const contactsSlice = createSlice({
   name: 'contacts',
   initialState: {
     pushSign: null,
-    currertContact: null,
+    currentContact: null,
   },
 
   reducers: {
@@ -12,18 +12,18 @@ const contactsSlice = createSlice({
       state.pushSign = action.payload;
     },
 
-    setCurrertContact: (state, action) => {
-      state.currertContact = action.payload;
+    setCurrentContact: (state, action) => {
+      state.currentContact = action.payload;
     },
 
     resetContacts: (state) => {
-      state.currertContact = null;
+      state.currentContact = null;
       state.pushSign = null;
     },
   },
 });
 
-export const { setPushSign, setCurrertContact, resetContacts } =
+export const { setPushSign, setCurrentContact, resetContacts } =
   contactsSlice.actions;
 
 export default contactsSlice.reducer;

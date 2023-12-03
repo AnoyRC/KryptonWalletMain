@@ -1,6 +1,6 @@
 'use client';
 
-import { DocumentDuplicateIcon } from '@heroicons/react/24/solid';
+import { useSelector } from 'react-redux';
 
 import ChatHeaderMenu from './ChatHeaderMenu';
 
@@ -22,6 +22,8 @@ const HeaderLoader = () => {
 };
 
 const ChatHeader = () => {
+  const currentContact = useSelector((state) => state.contacts.currentContact);
+
   return (
     <div className="flex justify-between items-center w-full py-2 px-5 border-b border-primary-white relative z-10">
       <div className="flex gap-3">
@@ -34,26 +36,28 @@ const ChatHeader = () => {
               ></div> */}
 
         <div className="flex flex-col justify-center">
-          <h3 className="text-xl font-bold text-black">Gautam Raj</h3>
+          <h3 className="text-xl font-bold text-black">
+            {currentContact?.did.split(':')[1]}
+          </h3>
 
           {/* <p className="text-xs font-medium text-primary-white/60">
                 {status ? 'Active' : 'Not Active'}
               </p> */}
 
-          <div className="text-xs flex items-center gap-2">
+          {/* <div className="text-xs flex items-center gap-2">
             <p className="font-semibold text-gray-800">Public Key: </p>
 
             <button
               className={`flex flex-start text-gray-600 text-[12px] hover:cursor-pointer`}
-              // onClick={() => {
-              //   navigator.clipboard.writeText(id ? id : '00000000');
-              //   Info('Copied to clipboard');
-              // }}
+              onClick={() => {
+                navigator.clipboard.writeText(id ? id : '00000000');
+                Info('Copied to clipboard');
+              }}
             >
               0xfheljlkekljesnklsdjgnkl344
               <DocumentDuplicateIcon className="w-3 h-3 mt-px ml-1 text-gray-600" />
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
 

@@ -16,7 +16,7 @@ const ChatBox = () => {
 
   return (
     <>
-      <ChatHeader />
+      <ChatHeader currentContact={currentContact} />
 
       <section className="px-5 py-2 h-full flex flex-col gap-3">
         <div className="flex flex-1 w-full bg-blue-gray-100"></div>

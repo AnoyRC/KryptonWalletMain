@@ -1,5 +1,3 @@
-'use client';
-
 import { ChatBubbleLeftIcon } from '@heroicons/react/24/outline';
 
 import MessageInput from './MessageInput';
