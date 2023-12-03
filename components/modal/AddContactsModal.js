@@ -11,15 +11,14 @@ import {
 } from '@material-tailwind/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 
+import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { toggleAddContactModal } from '@/redux/slice/modalsSlice';
 import { useState } from 'react';
-import { useToaster } from 'react-hot-toast';
 
 const AddContactsModal = () => {
   const dispatch = useDispatch();
-  const toast = useToaster();
 
   const open = useSelector((state) => state.modals.openAddContact);
   const pushSign = useSelector((state) => state.contacts.pushSign);
