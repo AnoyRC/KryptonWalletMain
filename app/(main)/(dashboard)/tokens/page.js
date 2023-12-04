@@ -1,27 +1,11 @@
 "use client";
 import TokenButton from "@/components/layout/main/dashboard/tokens/TokenButton";
-import { CurrencyDollarIcon } from "@heroicons/react/24/outline";
-import { Button, Card, CardHeader, CardBody } from "@material-tailwind/react";
-import Image from "next/image";
-
-const tokens = [
-  {
-    Name: "Polygon",
-    Balance: "0.245",
-    Symbol: "MATIC",
-    Icon: "polygon",
-    USDBalance: "0.245",
-  },
-  {
-    Name: "Tether USD",
-    Balance: "420",
-    Symbol: "USDT",
-    Icon: "tether",
-    USDBalance: "420",
-  },
-];
+import { ChainConfig } from "@/lib/chainConfig";
+import { Card, CardHeader, CardBody } from "@material-tailwind/react";
+import { useSearchParams } from "next/navigation";
 
 export default function Tokens() {
+  const searchParams = useSearchParams();
   return (
     <div className="w-full h-full z-10 flex items-center justify-center">
       <Card className="w-[30rem] p-4 flex flex-col gap-4">
@@ -34,13 +18,21 @@ export default function Tokens() {
         </CardHeader>
 
         <CardBody className="flex flex-col gap-4 p-0">
-          {tokens.map((token, index) => (
+          {ChainConfig.find(
+            (chain) =>
+              chain.chainId.toString() ===
+              searchParams.get("wallet")?.split(":")[0]
+          )?.tokens.map((token, index) => (
             <TokenButton
-              Name={token.Name}
-              Balance={token.Balance}
-              Symbol={token.Symbol}
-              Icon={token.Icon}
-              USDBalance={token.USDBalance}
+              id={index}
+              wallet={searchParams.get("wallet")?.split(":")[1]}
+              chainId={searchParams.get("wallet")?.split(":")[0]}
+              Name={token.nativeName}
+              Symbol={token.name}
+              Icon={token.icon}
+              feedId={token.feedId}
+              isNative={token.isNative}
+              address={token.address}
               key={index}
             />
           ))}

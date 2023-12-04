@@ -26,6 +26,7 @@ import {
 } from "wagmi";
 import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
+import { ChainConfig } from "@/lib/chainConfig";
 
 export default function WalletMenu() {
   const [openMenu, setOpenMenu] = useState(false);
@@ -41,6 +42,7 @@ export default function WalletMenu() {
   });
   const { data: kryptonBalance } = useBalance({
     address: searchParams.get("wallet")?.split(":")[1] || "0",
+    chainId: Number(searchParams.get("wallet")?.split(":")[0] || "0"),
     watch: true,
   });
 
@@ -84,8 +86,8 @@ export default function WalletMenu() {
 
           <Image
             src={"/images/main/dashboard/navbar/briefcase.png"}
-            width={200}
-            height={200}
+            width={175}
+            height={175}
             className="aspect-square mx-auto"
             alt="wallet"
           />
@@ -96,8 +98,11 @@ export default function WalletMenu() {
             !(
               searchParams.get("wallet")?.split(":")[0] ===
                 chain?.id.toString() &&
-              (searchParams.get("wallet")?.split(":")[0] === "137" ||
-                searchParams.get("wallet")?.split(":")[0] === "80001")
+              ChainConfig.find(
+                (chain) =>
+                  chain.chainId.toString() ===
+                  searchParams.get("wallet")?.split(":")[0]
+              )
             ) && (
               <Button
                 size="sm"
@@ -106,8 +111,11 @@ export default function WalletMenu() {
                 onClick={() => {
                   if (searchParams.get("wallet")) {
                     if (
-                      searchParams.get("wallet")?.split(":")[0] === "137" ||
-                      searchParams.get("wallet")?.split(":")[0] === "80001"
+                      ChainConfig.find(
+                        (chain) =>
+                          chain.chainId.toString() ===
+                          searchParams.get("wallet")?.split(":")[0]
+                      )
                     ) {
                       switchNetwork(searchParams.get("wallet")?.split(":")[0]);
                     } else {
@@ -132,7 +140,25 @@ export default function WalletMenu() {
           )}
 
           {isConnected && (
-            <Card className="w-full shadow-none items-end gap-1 bg-purple-400/20 border-purple-400 border-[1px] p-2 px-4">
+            <Card
+              className="w-full shadow-none items-end gap-1 border-[1px] p-2 px-4"
+              style={{
+                backgroundColor: ChainConfig.find(
+                  (network) => network.chainId === Number(chain?.id)
+                )
+                  ? ChainConfig.find(
+                      (network) => network.chainId === Number(chain?.id)
+                    )?.color + "1A"
+                  : "#0000001A",
+                borderColor: ChainConfig.find(
+                  (network) => network.chainId === Number(chain?.id)
+                )
+                  ? ChainConfig.find(
+                      (network) => network.chainId === Number(chain?.id)
+                    )?.color + "FF"
+                  : "#000000FF",
+              }}
+            >
               <div className="flex w-full items-center justify-between text-center">
                 <ChipsInId chain={chain?.id.toString()} />
                 <p className="font-uni text-2xl font-extrabold">
@@ -176,7 +202,31 @@ export default function WalletMenu() {
             <div className="w-[20%] bg-black h-[1px]" />
           </div>
 
-          <Card className="w-full shadow-none items-end gap-1 bg-transparent border-blue-gray-200 border-[1px] p-2 px-4">
+          <Card
+            className="w-full shadow-none items-end gap-1 border-[1px] p-2 px-4"
+            style={{
+              backgroundColor: ChainConfig.find(
+                (network) =>
+                  network.chainId == searchParams.get("wallet")?.split(":")[0]
+              )
+                ? ChainConfig.find(
+                    (network) =>
+                      network.chainId ==
+                      searchParams.get("wallet")?.split(":")[0]
+                  )?.color + "1A"
+                : "#0000001A",
+              borderColor: ChainConfig.find(
+                (network) =>
+                  network.chainId == searchParams.get("wallet")?.split(":")[0]
+              )
+                ? ChainConfig.find(
+                    (network) =>
+                      network.chainId ==
+                      searchParams.get("wallet")?.split(":")[0]
+                  )?.color + "FF"
+                : "#000000FF",
+            }}
+          >
             <div className="flex w-full items-center justify-between text-center">
               <ChipsInId
                 chain={searchParams.get("wallet")?.split(":")[0] || "0"}
