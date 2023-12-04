@@ -10,13 +10,17 @@ const MessageInput = () => {
   const currentContact = useSelector((state) => state.contacts.currentContact);
   const pushSign = useSelector((state) => state.contacts.pushSign);
 
-  const sendMessage = async () => {
+  const pubKey = currentContact.did.split(':')[1];
+
+  const sendMessage = async (e) => {
+    e.preventDefault();
+
     if (!pushSign || !message.trim()) return;
 
-    const aliceMessagesBob = await pushSign.chat.send(
-      `chatId:${currentContact.chatId}`,
+    const messagePush = await pushSign.chat.send(
+      currentContact.did.split(':')[1],
       {
-        content: message,
+        content: `${pubKey}::${message}`,
         type: 'Text',
       }
     );
@@ -37,7 +41,7 @@ const MessageInput = () => {
       <button
         type="submit"
         className="rounded-full flex justify-center items-center bg-[#ffd5b1] py-1.5 pl-2 pr-1"
-        onClick={sendMessage}
+        onClick={(e) => sendMessage(e)}
       >
         <PaperAirplaneIcon className="h-6 w-6" />
       </button>

@@ -34,7 +34,9 @@ const MessageWithDate = ({ message, previousMessage }) => {
               : 'bg-gray-200 rounded-tl-none'
           }`}
         >
-          <p className="max-w-[260px]">{message.messageContent}</p>
+          <p className="max-w-[260px]">
+            {message.messageContent.split('::')[1] || message.messageContent}
+          </p>
           <div className="text-xs text-gray-500 prevent-select">
             {messageTime}
           </div>
