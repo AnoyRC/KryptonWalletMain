@@ -5,17 +5,32 @@ import {
 } from "@heroicons/react/24/outline";
 import { Card, Alert, Button, Select, Option } from "@material-tailwind/react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { ChainConfig } from "@/lib/chainConfig";
+import { useSearchParams } from "next/navigation";
 
 export default function Tokens() {
   const [amount, setAmount] = useState("0.00");
-  const [selected, setSelected] = useState("MATIC");
+  const [selected, setSelected] = useState("");
   const [recipient, setRecipient] = useState("");
 
   const [errorTitle, setErrorTitle] = useState("Invalid Recipient");
   const [errorDescription, setErrorDescription] = useState(
     "Please check the recipient address and try again."
   );
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    if (searchParams.get("wallet")) {
+      setSelected(
+        ChainConfig.find(
+          (chain) =>
+            chain.chainId.toString() ===
+            searchParams.get("wallet")?.split(":")[0]
+        )?.tokens[0].name
+      );
+    }
+  }, [searchParams]);
 
   return (
     <div className="w-full h-full z-10 flex items-center justify-center">
@@ -48,28 +63,38 @@ export default function Tokens() {
             />
 
             <div className="[&>*]:min-w-0 w-[180px]">
-              <Select
-                size="md"
-                labelProps={{
-                  className: "before:content-none after:content-none",
-                }}
-                className="border-transparent text-white font-uni font-extrabold text-2xl py-0 "
-                containerProps={{
-                  className: "pb-3 min-w-0 w-[180px]",
-                }}
-                value={selected}
-                onChange={(e) => setSelected(e)}
-              >
-                <Option className="font-uni" value="MATIC">
-                  MATIC
-                </Option>
-                <Option className="font-uni" value="USDT">
-                  USDT
-                </Option>
-                <Option className="font-uni" value="USDC">
-                  USDC
-                </Option>
-              </Select>
+              {ChainConfig.find(
+                (chain) =>
+                  chain.chainId.toString() ===
+                  searchParams.get("wallet")?.split(":")[0]
+              ) && (
+                <Select
+                  size="md"
+                  labelProps={{
+                    className: "before:content-none after:content-none",
+                  }}
+                  className="border-transparent text-white font-uni font-extrabold text-2xl py-0 "
+                  containerProps={{
+                    className: "pb-3 min-w-0 w-[180px]",
+                  }}
+                  value={selected}
+                  onChange={(e) => setSelected(e)}
+                >
+                  {ChainConfig.find(
+                    (chain) =>
+                      chain.chainId.toString() ===
+                      searchParams.get("wallet")?.split(":")[0]
+                  )?.tokens.map((token) => (
+                    <Option
+                      key={token.name}
+                      value={token.name}
+                      className="flex items-center gap-2"
+                    >
+                      {token.name}
+                    </Option>
+                  ))}
+                </Select>
+              )}
             </div>
           </div>
 
