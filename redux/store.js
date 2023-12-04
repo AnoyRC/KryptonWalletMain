@@ -1,11 +1,12 @@
-'use client';
+"use client";
 
-import { configureStore } from '@reduxjs/toolkit';
+import { configureStore } from "@reduxjs/toolkit";
 
-import setupReducer from './slice/setupSlice';
-import sigManagerReducer from './slice/sigManagerSlice';
-import contactReducer from './slice/contactsSlice';
-import modalsReducer from './slice/modalsSlice';
+import setupReducer from "./slice/setupSlice";
+import sigManagerReducer from "./slice/sigManagerSlice";
+import contactReducer from "./slice/contactsSlice";
+import modalsReducer from "./slice/modalsSlice";
+import balanceReducer from "./slice/balanceSlice";
 
 export const store = configureStore({
   reducer: {
@@ -13,6 +14,7 @@ export const store = configureStore({
     sigManager: sigManagerReducer,
     contacts: contactReducer,
     modals: modalsReducer,
+    balance: balanceReducer,
   },
 
   middleware: (getDefaultMiddleware) =>

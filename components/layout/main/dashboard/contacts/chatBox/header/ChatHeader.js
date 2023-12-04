@@ -3,6 +3,8 @@
 import { useSelector } from 'react-redux';
 
 import ChatHeaderMenu from './ChatHeaderMenu';
+import Image from 'next/image';
+import { DocumentDuplicateIcon } from '@heroicons/react/24/outline';
 
 const HeaderLoader = () => {
   return (
@@ -25,9 +27,16 @@ const ChatHeader = () => {
   const currentContact = useSelector((state) => state.contacts.currentContact);
 
   return (
-    <div className="flex justify-between items-center w-full py-2 px-5 border-b border-primary-white relative z-10">
+    <div className="flex justify-between items-center w-full py-2 px-5 border-b border-primary-white relative z-10 font-uni">
       <div className="flex gap-3">
-        <div className="w-11 h-11 aspect-square rounded-full bg-red-200"></div>
+        <div className="w-11 h-11 aspect-square rounded-full overflow-hidden">
+          <Image
+            src={currentContact.profilePicture}
+            width={44}
+            height={44}
+            alt="Profile"
+          />
+        </div>
 
         {/* <div
                 className={`absolute top-0.5 right-1 border-primary-white border rounded-full w-1.5 h-1.5 ${
@@ -45,7 +54,7 @@ const ChatHeader = () => {
               </p> */}
 
           {/* <div className="text-xs flex items-center gap-2">
-            <p className="font-semibold text-gray-800">Public Key: </p>
+            <p className="font-semibold text-gray-800">Active Wallet: </p>
 
             <button
               className={`flex flex-start text-gray-600 text-[12px] hover:cursor-pointer`}

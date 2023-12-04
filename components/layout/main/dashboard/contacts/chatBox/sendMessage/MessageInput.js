@@ -17,7 +17,7 @@ const MessageInput = () => {
       `chatId:${currentContact.chatId}`,
       {
         content: message,
-        type: 'TEXT',
+        type: 'Text',
       }
     );
 

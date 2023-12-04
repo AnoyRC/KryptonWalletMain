@@ -23,17 +23,10 @@ export default function Setup() {
   const { isConnected } = useAccount();
   const { disconnect } = useDisconnect();
 
-  const address = "0x3C700d88616C9e186aed7dd59B2e7f60819bf863";
-
   const demoWallet = [
     {
-      name: "Awesome Wallet",
-      address: "0x3C700d88616C9e186aed7dd59B2e7f60819bf863",
-      chain: "137",
-    },
-    {
       name: "Another Wallet",
-      address: "0x3C700d88616C9e186aed7dd59B2e7f60819bf863",
+      address: "0xc8248E8949A4b0B5bB4b11e8ab8CA525a6e232aa",
       chain: "80001",
     },
   ];
