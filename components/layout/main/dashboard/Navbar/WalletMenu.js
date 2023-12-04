@@ -84,8 +84,8 @@ export default function WalletMenu() {
 
           <Image
             src={"/images/main/dashboard/navbar/briefcase.png"}
-            width={200}
-            height={200}
+            width={175}
+            height={175}
             className="aspect-square mx-auto"
             alt="wallet"
           />
