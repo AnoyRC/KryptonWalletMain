@@ -7,7 +7,9 @@ import { updateMessages } from '@/redux/slice/contactsSlice';
 
 const MessageInput = () => {
   const dispatch = useDispatch();
+
   const [message, setMessage] = useState('');
+  const [disabled, setDisabled] = useState(false);
 
   const pushSign = useSelector((state) => state.contacts.pushSign);
   const currentContact = useSelector((state) => state.contacts.currentContact);
@@ -19,24 +21,32 @@ const MessageInput = () => {
 
     if (!pushSign || !message.trim()) return;
 
-    const messagePush = await pushSign.chat.send(
-      currentContact.did.split(':')[1],
-      {
-        content: `${pubKey}::${message}`,
-        type: 'Text',
-      }
-    );
+    if (disabled) return;
 
-    const filteredMessage = {
-      fromDID: messagePush.fromDID,
-      timestamp: messagePush.timestamp,
-      messageContent: `${pubKey}::${message}`,
-      messageType: messagePush.messageType,
-    };
+    try {
+      setDisabled(true);
+      const messagePush = await pushSign.chat.send(
+        currentContact.did.split(':')[1],
+        {
+          content: `${pubKey}::${message}`,
+          type: 'Text',
+        }
+      );
 
-    dispatch(updateMessages(filteredMessage));
+      const filteredMessage = {
+        fromDID: messagePush.fromDID,
+        timestamp: messagePush.timestamp,
+        messageContent: `${pubKey}::${message}`,
+        messageType: messagePush.messageType,
+      };
 
-    setMessage('');
+      dispatch(updateMessages(filteredMessage));
+
+      setMessage('');
+      setDisabled(false);
+    } catch (err) {
+      toast.error('Error sending message');
+    }
   };
 
   return (
@@ -46,7 +56,8 @@ const MessageInput = () => {
         placeholder="Type your message here..."
         value={message}
         onChange={(e) => setMessage(e.target.value)}
-        className="bg-transparent flex-1 pl-4 text-black focus:outline-none text-primary-white placeholder:text-gray-700"
+        disabled={disabled}
+        className="bg-transparent flex-1 pl-4 text-black focus:outline-none text-primary-white placeholder:text-gray-700 disabled:cursor-not-allowed disabled:opacity-50"
       />
 
       <button

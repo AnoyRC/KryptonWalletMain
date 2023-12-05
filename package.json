@@ -21,6 +21,7 @@
     "@reduxjs/toolkit": "^1.9.7",
     "@splinetool/react-spline": "^2.2.6",
     "@splinetool/runtime": "^0.9.508",
+    "anon-aadhaar-react": "^0.1.11",
     "axios": "^1.6.2",
     "ethers": "5.7",
     "next": "14.0.3",

@@ -6,7 +6,10 @@ const MessageWithDate = ({ message, nextMessage, index }) => {
   const pushSign = useSelector((state) => state.contacts.pushSign);
 
   const messageDate = new Date(message.timestamp).toLocaleDateString();
-  const messageTime = new Date(message.timestamp).toLocaleTimeString();
+  const messageTime = new Date(message.timestamp).toLocaleTimeString([], {
+    hour: '2-digit',
+    minute: '2-digit',
+  });
 
   const nextMessageDate = nextMessage
     ? new Date(nextMessage.timestamp).toLocaleDateString()

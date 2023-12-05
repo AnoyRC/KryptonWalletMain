@@ -32,26 +32,21 @@ export function usePush() {
 
     stream.on(CONSTANTS.STREAM.CONNECT, (a) => {
       console.log('Stream Connected');
-
-      // console.log("Sending message to 'test' channel");
-      // user.chat.send('0x01545d12C90464B7075d58952Cad5923a5be0860', {
-      //   content: 'Hello World!',
-      // });
     });
-
-    await stream.connect();
 
     stream.on(CONSTANTS.STREAM.DISCONNECT, () => {
       console.log('Stream Disconnected');
     });
 
-    // stream.on(CONSTANTS.STREAM.CHAT, (data) => {
-    //   console.log('Stream Chat Connected:' + data);
-    // });
+    stream.on(CONSTANTS.STREAM.CHAT, (data) => {
+      console.log(data);
+    });
 
-    // stream.on(CONSTANTS.STREAM.CHAT_OPS, (data) => {
-    //   console.log('Stream Chat OPS Connected:' + data);
-    // });
+    stream.on(CONSTANTS.STREAM.CHAT_OPS, (data) => {
+      console.log(data);
+    });
+
+    await stream.connect();
   };
 
   return {

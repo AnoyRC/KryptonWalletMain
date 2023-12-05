@@ -5,6 +5,7 @@ import { WagmiProvider } from '@/providers/wagmiProviders';
 import './globals.css';
 import SignatureManagerDrawer from '@/components/drawers/SignatureManagerDrawer';
 import { Toaster } from 'react-hot-toast';
+import AnonProvider from '@/providers/AnonProvider';
 // import DataverseProvider from '@/providers/DataverseProvider';
 
 const fhtotal = localFont({
@@ -59,23 +60,25 @@ export default function RootLayout({ children }) {
         <ReduxProvider store={store}>
           {/* <DataverseProvider> */}
           <WagmiProvider>
-            <Toaster
-              position="bottom-center"
-              reverseOrder={false}
-              toastOptions={{
-                style: {
-                  fontFamily: 'var(--font-uni)',
-                  background: '#333',
-                  color: '#fff',
-                },
-                iconTheme: {
-                  primary: '#ffffff',
-                  secondary: '#333',
-                },
-              }}
-            />
-            <SignatureManagerDrawer />
-            {children}
+            <AnonProvider>
+              <Toaster
+                position="bottom-center"
+                reverseOrder={false}
+                toastOptions={{
+                  style: {
+                    fontFamily: 'var(--font-uni)',
+                    background: '#333',
+                    color: '#fff',
+                  },
+                  iconTheme: {
+                    primary: '#ffffff',
+                    secondary: '#333',
+                  },
+                }}
+              />
+              <SignatureManagerDrawer />
+              {children}
+            </AnonProvider>
           </WagmiProvider>
           {/* </DataverseProvider> */}
         </ReduxProvider>
