@@ -1,19 +1,13 @@
 'use client';
 
 import { useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
 
+import Chat from './Chat';
 import ChatHeader from './header/ChatHeader';
 import SendMessageContainer from './sendMessage/SendMessageContainer';
-import Chat from './Chat';
 
 const ChatBox = () => {
   const currentContact = useSelector((state) => state.contacts.currentContact);
-
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {}, [currentContact]);
 
   return (
     <>

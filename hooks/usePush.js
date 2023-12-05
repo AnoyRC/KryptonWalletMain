@@ -6,9 +6,11 @@ import { PushAPI, CONSTANTS } from '@pushprotocol/restapi';
 
 import {
   setPushSign,
+  setRecentContact,
   updateMessages,
   updateRecentRequest,
 } from '@/redux/slice/contactsSlice';
+import toast from 'react-hot-toast';
 
 export function usePush() {
   const signer = useEthersSigner();
@@ -48,7 +50,11 @@ export function usePush() {
               messageType: data.message.type,
             })
           )
-        : dispatch(updateRecentRequest(data));
+        : data.event.includes('request')
+        ? dispatch(updateRecentRequest(data))
+        : data.event.includes('accept')
+        ? dispatch(setRecentContact(data))
+        : toast.error('Your request has been rejected');
     });
 
     stream.on(CONSTANTS.STREAM.CHAT_OPS, (data) => {
