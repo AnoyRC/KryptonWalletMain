@@ -6,9 +6,9 @@ import {
   setTwoFactorAddress,
 } from "@/redux/slice/setupSlice";
 import {
-  ArrowPathIcon,
   CreditCardIcon,
   KeyIcon,
+  TrashIcon,
 } from "@heroicons/react/24/outline";
 import { Button, Checkbox, Chip } from "@material-tailwind/react";
 import Image from "next/image";
@@ -38,7 +38,7 @@ export default function Step3() {
               dispatch(setTwoFactorAddress(null));
             }}
           >
-            <ArrowPathIcon className="h-4 w-4" />
+            <TrashIcon className="h-4 w-4" />
           </Button>
         )}
       </div>
