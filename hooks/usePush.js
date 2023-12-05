@@ -1,5 +1,6 @@
 'use client';
 
+import toast from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEthersSigner } from '@/wagmi/EthersSigner';
 import { PushAPI, CONSTANTS } from '@pushprotocol/restapi';
@@ -10,7 +11,6 @@ import {
   updateMessages,
   updateRecentRequest,
 } from '@/redux/slice/contactsSlice';
-import toast from 'react-hot-toast';
 
 export function usePush() {
   const signer = useEthersSigner();
@@ -36,9 +36,7 @@ export function usePush() {
       {}
     );
 
-    stream.on(CONSTANTS.STREAM.CONNECT, (a) => {
-      console.log('Stream Connected');
-    });
+    stream.on(CONSTANTS.STREAM.CONNECT, (a) => {});
 
     stream.on(CONSTANTS.STREAM.CHAT, (data) => {
       data.event.includes('message')
@@ -57,15 +55,11 @@ export function usePush() {
         : toast.error('Your request has been rejected');
     });
 
-    stream.on(CONSTANTS.STREAM.CHAT_OPS, (data) => {
-      console.log(data);
-    });
+    stream.on(CONSTANTS.STREAM.CHAT_OPS, (data) => {});
 
     await stream.connect();
 
-    stream.on(CONSTANTS.STREAM.DISCONNECT, () => {
-      console.log('Stream Disconnected');
-    });
+    stream.on(CONSTANTS.STREAM.DISCONNECT, () => {});
   };
 
   return {

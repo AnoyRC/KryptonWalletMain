@@ -29,6 +29,9 @@ const setupSlice = createSlice({
     removeGuardian: (state, action) => {
       state.guardians.pop();
     },
+    setGuardians: (state, action) => {
+      state.guardians = action.payload;
+    },
     setName: (state, action) => {
       state.name = action.payload;
     },
@@ -66,6 +69,7 @@ export const {
   setSelectedTwoFactor,
   setTwoFactorAddress,
   handleGuardianWalletDialog,
+  setGuardians,
 } = setupSlice.actions;
 
 export default setupSlice.reducer;
