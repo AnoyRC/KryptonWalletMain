@@ -1,18 +1,22 @@
 'use client';
 
+import React from 'react';
 import { useSelector } from 'react-redux';
 
 const MessageWithDate = ({ message, nextMessage, index }) => {
   const pushSign = useSelector((state) => state.contacts.pushSign);
 
-  const messageDate = new Date(message.timestamp).toLocaleDateString();
-  const messageTime = new Date(message.timestamp).toLocaleTimeString([], {
-    hour: '2-digit',
-    minute: '2-digit',
-  });
+  const messageDate = new Date(Number(message.timestamp)).toLocaleDateString();
+  const messageTime = new Date(Number(message.timestamp)).toLocaleTimeString(
+    [],
+    {
+      hour: '2-digit',
+      minute: '2-digit',
+    }
+  );
 
   const nextMessageDate = nextMessage
-    ? new Date(nextMessage.timestamp).toLocaleDateString()
+    ? new Date(Number(nextMessage.timestamp)).toLocaleDateString()
     : null;
 
   const pubKey = message.fromDID.split(':')[1];
@@ -59,5 +63,4 @@ const MessageWithDate = ({ message, nextMessage, index }) => {
     </div>
   );
 };
-
 export default MessageWithDate;

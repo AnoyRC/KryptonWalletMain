@@ -5,23 +5,18 @@ import { CheckIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
 import Image from 'next/image';
 import toast from 'react-hot-toast';
-import { useDispatch, useSelector } from 'react-redux';
-
-import { setRecentContact } from '@/redux/slice/contactsSlice';
+import { useSelector } from 'react-redux';
 
 const RequestsItem = ({ request, initializeRequests }) => {
-  const dispatch = useDispatch();
   const pubKey = request.did.split(':')[1];
 
   const pushSign = useSelector((state) => state.contacts.pushSign);
 
   const handleAcceptRequest = async () => {
-    const acceptRequest = await pushSign.chat.accept(pubKey);
+    await pushSign.chat.accept(pubKey);
 
     initializeRequests();
     toast.success('Request accepted');
-
-    dispatch(setRecentContact(acceptRequest));
   };
 
   const handleRejectRequest = async () => {

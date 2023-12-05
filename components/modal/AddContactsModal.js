@@ -38,12 +38,15 @@ const AddContactsModal = () => {
 
     dispatch(toggleAddContactModal(false));
     toast.success('Request sent successfully');
+
+    setAddress('');
+    setMessage('');
   };
 
   return (
     <Dialog open={open} size="xs" handler={handleOpen}>
       <DialogHeader className="flex items-center justify-between">
-        <h3 className="mb-1">New message to @ </h3>
+        <h3 className="mb-1">New message to @</h3>
 
         <XMarkIcon
           className="h-6 w-6 cursor-pointer"
@@ -78,7 +81,11 @@ const AddContactsModal = () => {
         <Button
           variant="outlined"
           color="red"
-          onClick={() => dispatch(toggleAddContactModal(false))}
+          onClick={() => {
+            dispatch(toggleAddContactModal(false));
+            setAddress('');
+            setMessage('');
+          }}
         >
           cancel
         </Button>

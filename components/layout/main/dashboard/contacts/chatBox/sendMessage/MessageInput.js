@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { PaperAirplaneIcon } from '@heroicons/react/24/outline';
@@ -25,22 +26,10 @@ const MessageInput = () => {
 
     try {
       setDisabled(true);
-      const messagePush = await pushSign.chat.send(
-        currentContact.did.split(':')[1],
-        {
-          content: `${pubKey}::${message}`,
-          type: 'Text',
-        }
-      );
-
-      const filteredMessage = {
-        fromDID: messagePush.fromDID,
-        timestamp: messagePush.timestamp,
-        messageContent: `${pubKey}::${message}`,
-        messageType: messagePush.messageType,
-      };
-
-      dispatch(updateMessages(filteredMessage));
+      await pushSign.chat.send(currentContact.did.split(':')[1], {
+        content: `${pubKey}::${message}`,
+        type: 'Text',
+      });
 
       setMessage('');
       setDisabled(false);
@@ -62,10 +51,22 @@ const MessageInput = () => {
 
       <button
         type="submit"
-        className="rounded-full flex justify-center items-center bg-[#ffd5b1] py-1.5 pl-2 pr-1"
+        className={`rounded-full flex justify-center items-center bg-[#ffd5b1] ${
+          disabled ? 'p-1.5 cursor-not-allowed' : 'py-1.5 pl-2 pr-1'
+        }`}
         onClick={(e) => sendMessage(e)}
       >
-        <PaperAirplaneIcon className="h-6 w-6" />
+        {disabled ? (
+          <Image
+            src="/images/onboard/setup/loading.svg"
+            alt="Loading spinner"
+            width={20}
+            height={20}
+            className="animate-spin opacity-60"
+          />
+        ) : (
+          <PaperAirplaneIcon className="h-5 w-5 text-primary-white" />
+        )}
       </button>
     </form>
   );
