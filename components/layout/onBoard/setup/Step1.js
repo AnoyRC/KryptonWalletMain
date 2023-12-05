@@ -8,11 +8,14 @@ import {
   PolygonZKChip,
   ScrollChip,
 } from "@/components/ui/chainChips";
+import { ChainConfig } from "@/lib/chainConfig";
 import { setActiveStep, setChain, setName } from "@/redux/slice/setupSlice";
 import { Button, Input, Select, Option, Alert } from "@material-tailwind/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
+import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
 
 function Icon() {
   return (
@@ -36,6 +39,9 @@ export default function Step1() {
   const chain = useSelector((state) => state.setup.chain);
   const name = useSelector((state) => state.setup.name);
   const router = useRouter();
+  const { chain: currentChain } = useNetwork();
+  const { switchNetwork } = useSwitchNetwork();
+  const { isConnected } = useAccount();
 
   return (
     <div className="w-full flex flex-col gap-4">
@@ -69,27 +75,32 @@ export default function Step1() {
         value={chain}
         onChange={(e) => dispatch(setChain(e))}
       >
-        <Option value="137">
-          <PolygonChip />
-        </Option>
         <Option value="80001">
           <MumbaiChip />
         </Option>
+        <Option value="137">
+          <PolygonChip />
+        </Option>
       </Select>
 
-      <Alert variant="gradient" icon={<Icon />} className="mb-2 mr-0">
-        <h6 className="font-bold text-lg mb-2">Change your Wallet Network</h6>
-        <p className="text-sm">
-          You are trying to deploy Krypton on a network that is not selected
-        </p>
-        <Button
-          size="sm"
-          variant="outlined"
-          className="mt-4 border-white text-white mb-1"
-        >
-          Change Network
-        </Button>
-      </Alert>
+      {isConnected && currentChain.id.toString() !== chain && (
+        <Alert variant="gradient" icon={<Icon />} className="mb-2 mr-0">
+          <h6 className="font-bold text-lg mb-2">Change your Wallet Network</h6>
+          <p className="text-sm">
+            You are trying to deploy Krypton on a network that is not selected
+          </p>
+          <Button
+            size="sm"
+            variant="outlined"
+            className="mt-4 border-white text-white mb-1"
+            onClick={() => {
+              switchNetwork(chain);
+            }}
+          >
+            Change Network
+          </Button>
+        </Alert>
+      )}
 
       <div className="flex justify-between">
         <Button
@@ -107,6 +118,22 @@ export default function Step1() {
           size="md"
           className="capitalize font-uni font-bold"
           onClick={() => {
+            if (!ChainConfig.find((c) => c.chainId.toString() === chain)) {
+              toast.error("This Chain is not Currently Supported");
+              return;
+            }
+            if (currentChain.id.toString() !== chain) {
+              toast.error("Switch to the correct network");
+              return;
+            }
+            if (!name) {
+              toast.error("Enter a wallet name");
+              return;
+            }
+            if (!isConnected) {
+              toast.error("Connect your wallet");
+              return;
+            }
             dispatch(setActiveStep(1));
           }}
         >

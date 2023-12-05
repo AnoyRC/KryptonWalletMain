@@ -6,7 +6,7 @@ const setupSlice = createSlice({
     activeStep: 0,
     name: "",
     guardians: [{ name: "", address: "" }],
-    chain: "1",
+    chain: "80001",
     twoFactorAddress: null,
     selectedTwoFactor: 0,
     twoFADrawer: false,

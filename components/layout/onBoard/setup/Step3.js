@@ -3,8 +3,13 @@ import {
   openTwoFADrawer,
   setActiveStep,
   setSelectedTwoFactor,
+  setTwoFactorAddress,
 } from "@/redux/slice/setupSlice";
-import { CreditCardIcon, KeyIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowPathIcon,
+  CreditCardIcon,
+  KeyIcon,
+} from "@heroicons/react/24/outline";
 import { Button, Checkbox, Chip } from "@material-tailwind/react";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,11 +24,23 @@ export default function Step3() {
 
   return (
     <div className="w-full flex flex-col gap-4">
-      <div className="font-uni text-lg font-bold flex gap-2">
-        2FA
-        {twoFactorAddress && <Chip value="enabled"></Chip>}
-        {!twoFactorAddress && <Chip value="disabled"></Chip>}
-        {/* <Chip value="enabled"></Chip> */}
+      <div className="font-uni text-lg font-bold flex justify-between items-center gap-2">
+        <div className="flex gap-2 items-center">
+          2FA
+          {twoFactorAddress && <Chip value="enabled"></Chip>}
+          {!twoFactorAddress && <Chip value="disabled"></Chip>}
+        </div>
+        {twoFactorAddress && (
+          <Button
+            size="sm"
+            className="flex items-center py-[7px] px-3 gap-2  capitalize text-xs font-bold font-uni"
+            onClick={() => {
+              dispatch(setTwoFactorAddress(null));
+            }}
+          >
+            <ArrowPathIcon className="h-4 w-4" />
+          </Button>
+        )}
       </div>
       <Button
         size="lg"

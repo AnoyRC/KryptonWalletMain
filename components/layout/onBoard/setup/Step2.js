@@ -9,6 +9,8 @@ import {
   removeGuardian,
   setActiveStep,
 } from "@/redux/slice/setupSlice";
+import toast from "react-hot-toast";
+import { useAccount } from "wagmi";
 
 function Guardian({ index, name, address }) {
   const dispatch = useDispatch();
@@ -45,6 +47,7 @@ function Guardian({ index, name, address }) {
 
 export default function Step2() {
   const guardians = useSelector((state) => state.setup.guardians);
+  const { address } = useAccount();
   const dispatch = useDispatch();
   return (
     <div className="w-full flex flex-col gap-4">
@@ -93,6 +96,42 @@ export default function Step2() {
           size="md"
           className="capitalize font-uni font-bold"
           onClick={() => {
+            if (guardians[0].name === "" || guardians[0].address === "") {
+              toast.error("Please fill at least one guardian");
+              return;
+            }
+
+            let isFilled = true;
+            let isValid = true;
+            let isOwner = false;
+
+            guardians.map((guardian) => {
+              if (guardian.name === "" || guardian.address === "") {
+                isFilled = false;
+              }
+              if (!guardian.address.match(/^0x[a-fA-F0-9]{40}$/)) {
+                isValid = false;
+              }
+              if (guardian.address === address) {
+                isOwner = true;
+              }
+            });
+
+            if (!isFilled) {
+              toast.error("Please fill all the guardians");
+              return;
+            }
+
+            if (!isValid) {
+              toast.error("Please enter a valid address");
+              return;
+            }
+
+            if (isOwner) {
+              toast.error("You must not be a guardian");
+              return;
+            }
+
             dispatch(setActiveStep(2));
           }}
         >
