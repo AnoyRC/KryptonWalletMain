@@ -1,36 +1,44 @@
 'use client';
 
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useState, useEffect } from 'react';
-import { createSocketConnection } from '@pushprotocol/socket';
 
 import MessageWithDate from './MessageWithDate';
+import toast from 'react-hot-toast';
+import { setMessages } from '@/redux/slice/contactsSlice';
 
 const Chat = () => {
-  const currentContact = useSelector((state) => state.contacts.currentContact);
-  const pushSign = useSelector((state) => state.contacts.pushSign);
+  const dispatch = useDispatch();
 
-  const [messageHistory, setMessageHistory] = useState([]);
+  const pushSign = useSelector((state) => state.contacts.pushSign);
+  const messageHistory = useSelector((state) => state.contacts.messages);
+  const currentContact = useSelector((state) => state.contacts.currentContact);
+
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const initializeChat = async () => {
+  const initializeChat = async () => {
+    try {
       const pastMessages = await pushSign.chat.history(
         currentContact.did.split(':')[1]
       );
 
-      setMessageHistory(pastMessages);
+      const filteredMessages = pastMessages.map(
+        ({ fromDID, timestamp, messageContent, messageType }) => ({
+          fromDID,
+          timestamp,
+          messageContent,
+          messageType,
+        })
+      );
+
+      dispatch(setMessages([...filteredMessages].reverse()));
       setLoading(false);
+    } catch (err) {
+      toast.error('Error fetching chat history');
+    }
+  };
 
-      const pushSDKSocket = createSocketConnection({
-        user: currentContact.did.split(':')[1],
-        env: 'staging',
-        socketType: 'chat',
-        socketOptions: { autoConnect: true, reconnectionAttempts: 3 },
-      });
-      console.log('pushSDKSocket', pushSDKSocket);
-    };
-
+  useEffect(() => {
     if (currentContact && pushSign) {
       setLoading(true);
       initializeChat();
@@ -59,7 +67,7 @@ const Chat = () => {
         </div>
       ) : (
         <div className="flex flex-col gap-1 z-10">
-          {[...messageHistory].reverse().map((message, index, arr) => (
+          {messageHistory.map((message, index, arr) => (
             <MessageWithDate
               key={index}
               message={message}

@@ -1,14 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { PaperAirplaneIcon } from '@heroicons/react/24/outline';
+import { updateMessages } from '@/redux/slice/contactsSlice';
 
 const MessageInput = () => {
+  const dispatch = useDispatch();
   const [message, setMessage] = useState('');
 
-  const currentContact = useSelector((state) => state.contacts.currentContact);
   const pushSign = useSelector((state) => state.contacts.pushSign);
+  const currentContact = useSelector((state) => state.contacts.currentContact);
 
   const pubKey = currentContact.did.split(':')[1];
 
@@ -24,6 +26,15 @@ const MessageInput = () => {
         type: 'Text',
       }
     );
+
+    const filteredMessage = {
+      fromDID: messagePush.fromDID,
+      timestamp: messagePush.timestamp,
+      messageContent: `${pubKey}::${message}`,
+      messageType: messagePush.messageType,
+    };
+
+    dispatch(updateMessages(filteredMessage));
 
     setMessage('');
   };
