@@ -3,10 +3,11 @@ import { createSlice } from '@reduxjs/toolkit';
 const contactsSlice = createSlice({
   name: 'contacts',
   initialState: {
-    pushSign: null,
-    currentContact: null,
-    recentContact: null,
     messages: [],
+    pushSign: null,
+    recentRequest: null,
+    recentContact: null,
+    currentContact: null,
   },
 
   reducers: {
@@ -20,6 +21,10 @@ const contactsSlice = createSlice({
 
     setRecentContact: (state, action) => {
       state.recentContact = action.payload;
+    },
+
+    updateRecentRequest: (state, action) => {
+      state.recentRequest = action.payload;
     },
 
     setMessages: (state, action) => {
@@ -44,6 +49,7 @@ export const {
   resetContacts,
   setMessages,
   updateMessages,
+  updateRecentRequest,
 } = contactsSlice.actions;
 
 export default contactsSlice.reducer;

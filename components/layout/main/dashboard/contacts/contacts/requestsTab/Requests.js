@@ -15,6 +15,7 @@ const Contacts = () => {
   const [requests, setRequests] = useState([]);
 
   const pushSign = useSelector((state) => state.contacts.pushSign);
+  const recentRequest = useSelector((state) => state.contacts.recentRequest);
 
   const initializeRequests = async () => {
     const requestsLists = await pushSign.chat.list('REQUESTS');
@@ -27,7 +28,7 @@ const Contacts = () => {
     if (isConnected && signer && pushSign) {
       initializeRequests();
     }
-  }, [pushSign, isConnected, signer]);
+  }, [pushSign, isConnected, signer, recentRequest]);
 
   return (
     <div className="relative flex-1">
