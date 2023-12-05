@@ -2,6 +2,7 @@
 
 import { ChipsInId } from "@/components/ui/chainChips";
 import useDeployKrypton from "@/hooks/useDeployKrypton";
+import useKrypton from "@/hooks/useKrypton";
 import {
   setActiveStep,
   setGuardians,
@@ -39,6 +40,7 @@ export default function Step4() {
   const [isError, setIsError] = useState(false);
   const { createKrypton, checkWalletCode } = useDeployKrypton();
   const [deployedAddress, setDeployedAddress] = useState(null);
+  const { executeTransaction, prepareEnableTwoFactorAuth } = useKrypton();
 
   const execute = async () => {
     // setTimeout(() => {
@@ -71,6 +73,19 @@ export default function Step4() {
     //2FA
     if (!twoFactorAddress) {
       await new Promise((resolve) => setTimeout(resolve, 1000));
+      setSteps(3);
+    } else {
+      const tx = await prepareEnableTwoFactorAuth(
+        walletAddress,
+        twoFactorAddress
+      );
+      if (!tx) {
+        setIsError(true);
+        setIsDeploying(false);
+        setSteps(0);
+        return;
+      }
+      await executeTransaction(walletAddress, chain, tx, "2FA Enabled");
       setSteps(3);
     }
 
