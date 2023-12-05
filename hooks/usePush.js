@@ -4,7 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEthersSigner } from '@/wagmi/EthersSigner';
 import { PushAPI, CONSTANTS } from '@pushprotocol/restapi';
 
-import { setPushSign } from '@/redux/slice/contactsSlice';
+import {
+  setPushSign,
+  updateMessages,
+  updateRecentRequest,
+} from '@/redux/slice/contactsSlice';
 
 export function usePush() {
   const signer = useEthersSigner();
@@ -34,12 +38,17 @@ export function usePush() {
       console.log('Stream Connected');
     });
 
-    stream.on(CONSTANTS.STREAM.DISCONNECT, () => {
-      console.log('Stream Disconnected');
-    });
-
     stream.on(CONSTANTS.STREAM.CHAT, (data) => {
-      console.log(data);
+      data.event.includes('message')
+        ? dispatch(
+            updateMessages({
+              fromDID: data.from,
+              timestamp: data.timestamp,
+              messageContent: data.message.content,
+              messageType: data.message.type,
+            })
+          )
+        : dispatch(updateRecentRequest(data));
     });
 
     stream.on(CONSTANTS.STREAM.CHAT_OPS, (data) => {
@@ -47,6 +56,10 @@ export function usePush() {
     });
 
     await stream.connect();
+
+    stream.on(CONSTANTS.STREAM.DISCONNECT, () => {
+      console.log('Stream Disconnected');
+    });
   };
 
   return {

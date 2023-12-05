@@ -11,8 +11,8 @@ const Contacts = () => {
   const signer = useEthersSigner();
   const { isConnected } = useAccount();
 
-  const [isLoading, setIsLoading] = useState(true);
   const [chats, setChats] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const pushSign = useSelector((state) => state.contacts.pushSign);
   const recentContact = useSelector((state) => state.contacts.recentContact);
