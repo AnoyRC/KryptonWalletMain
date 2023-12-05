@@ -24,7 +24,7 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
-  font-family: "grotesque", sans-serif;
+  font-family: 'grotesque', sans-serif;
 }
 
 ::-webkit-scrollbar {
@@ -60,4 +60,29 @@ body {
 .hide-scroll {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+.scroll-on-hover {
+  overflow: hidden;
+  position: relative;
+  white-space: nowrap;
+}
+
+.scroll-on-hover p {
+  display: inline-block;
+  transform: translateX(0);
+  animation: scroll 5s linear infinite paused;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.scroll-on-hover:hover p {
+  animation-play-state: running;
 }

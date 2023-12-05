@@ -30,7 +30,7 @@ const ContactsTab = () => {
   return (
     <Tabs value={activeTab}>
       <TabsHeader
-        className="rounded-none border-b border-blue-gray-50 bg-transparent p-0"
+        className="rounded-none border-b border-blue-gray-50 bg-transparent p-0 font-uni"
         indicatorProps={{
           className:
             'bg-transparent border-b-2 border-gray-900 shadow-none rounded-none',
@@ -48,7 +48,7 @@ const ContactsTab = () => {
         ))}
       </TabsHeader>
 
-      <TabsBody className="h-full">
+      <TabsBody className="h-full font-uni">
         {data.map(({ value, body }) => (
           <TabPanel key={value} value={value} className="px-0 h-full">
             {body}

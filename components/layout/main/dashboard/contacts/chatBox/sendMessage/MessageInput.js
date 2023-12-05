@@ -1,13 +1,14 @@
 'use client';
 
+import { PaperAirplaneIcon } from '@heroicons/react/24/outline';
+
 import Image from 'next/image';
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { PaperAirplaneIcon } from '@heroicons/react/24/outline';
-import { updateMessages } from '@/redux/slice/contactsSlice';
+import { useSelector } from 'react-redux';
+import { useSearchParams } from 'next/navigation';
 
 const MessageInput = () => {
-  const dispatch = useDispatch();
+  const searchParams = useSearchParams();
 
   const [message, setMessage] = useState('');
   const [disabled, setDisabled] = useState(false);
@@ -15,7 +16,7 @@ const MessageInput = () => {
   const pushSign = useSelector((state) => state.contacts.pushSign);
   const currentContact = useSelector((state) => state.contacts.currentContact);
 
-  const pubKey = currentContact.did.split(':')[1];
+  const pubKey = searchParams.get('wallet');
 
   const sendMessage = async (e) => {
     e.preventDefault();
@@ -26,6 +27,7 @@ const MessageInput = () => {
 
     try {
       setDisabled(true);
+
       await pushSign.chat.send(currentContact.did.split(':')[1], {
         content: `${pubKey}::${message}`,
         type: 'Text',

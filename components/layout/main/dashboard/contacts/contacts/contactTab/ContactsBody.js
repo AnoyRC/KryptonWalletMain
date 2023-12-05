@@ -7,7 +7,7 @@ import AddContactsBtn from './AddContactsBtn';
 
 const ContactsBody = () => {
   return (
-    <div className="h-full">
+    <div className="h-full font-uni">
       <div className="flex items-center rounded-full bg-[#fffaf9] border border-gray-200 mb-3">
         <div className="flex justify-center items-center rounded-full px-3 py-2">
           <MagnifyingGlassIcon className="h-5 w-5 text-primary-white" />

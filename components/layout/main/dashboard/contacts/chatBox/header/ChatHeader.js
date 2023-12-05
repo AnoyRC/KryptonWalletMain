@@ -1,10 +1,12 @@
 'use client';
 
+import { DocumentDuplicateIcon } from '@heroicons/react/24/outline';
+
+import Image from 'next/image';
+import toast from 'react-hot-toast';
 import { useSelector } from 'react-redux';
 
-import ChatHeaderMenu from './ChatHeaderMenu';
-import Image from 'next/image';
-import { DocumentDuplicateIcon } from '@heroicons/react/24/outline';
+// import ChatHeaderMenu from './ChatHeaderMenu';
 
 const HeaderLoader = () => {
   return (
@@ -53,24 +55,25 @@ const ChatHeader = () => {
                 {status ? 'Active' : 'Not Active'}
               </p> */}
 
-          {/* <div className="text-xs flex items-center gap-2">
-            <p className="font-semibold text-gray-800">Active Wallet: </p>
-
+          <div className="text-xs flex items-center">
             <button
               className={`flex flex-start text-gray-600 text-[12px] hover:cursor-pointer`}
               onClick={() => {
-                navigator.clipboard.writeText(id ? id : '00000000');
-                Info('Copied to clipboard');
+                navigator.clipboard.writeText(
+                  currentContact?.did.split(':')[1]
+                );
+
+                toast.success('Copied to clipboard');
               }}
             >
-              0xfheljlkekljesnklsdjgnkl344
+              Click to Copy
               <DocumentDuplicateIcon className="w-3 h-3 mt-px ml-1 text-gray-600" />
             </button>
-          </div> */}
+          </div>
         </div>
       </div>
 
-      <ChatHeaderMenu />
+      {/* <ChatHeaderMenu /> */}
     </div>
   );
 };

@@ -39,7 +39,7 @@ const ChatContainer = () => {
   }, [isConnected, signer]);
 
   return (
-    <Card className="h-full flex-1">
+    <Card className="h-full flex-1 font-uni">
       {isSigned ? (
         currentContact ? (
           <ChatBox />

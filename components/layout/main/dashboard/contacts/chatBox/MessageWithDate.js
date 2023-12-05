@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useSelector } from 'react-redux';
+import MessageInfo from './MessageInfo';
 
 const MessageWithDate = ({ message, nextMessage, index }) => {
   const pushSign = useSelector((state) => state.contacts.pushSign);
@@ -35,23 +36,33 @@ const MessageWithDate = ({ message, nextMessage, index }) => {
         }`}
       >
         <div
-          className={`text-sm text-primary-black px-4 py-2 rounded-3xl font-medium w-fit ${
+          className={`text-sm text-primary-black px-4 py-2 rounded-3xl font-medium w-fit flex gap-1 ${
             pubKey === pushSign.account
               ? 'bg-[#ffecec] rounded-tr-none'
               : 'bg-gray-200 rounded-tl-none'
           }`}
         >
-          <p className="max-w-[260px] break-all">
-            {message.messageContent.split('::')[1] || message.messageContent}
-          </p>
+          {pubKey !== pushSign.account && (
+            <MessageInfo message={message.messageContent} />
+          )}
 
-          <div
-            className={`text-xs text-gray-500 prevent-select ${
-              pubKey === pushSign.account ? 'text-right' : 'text-left'
-            }`}
-          >
-            {messageTime}
+          <div>
+            <p className="max-w-[260px] break-all">
+              {message.messageContent.split('::')[1] || message.messageContent}
+            </p>
+
+            <div
+              className={`text-xs text-gray-500 prevent-select ${
+                pubKey === pushSign.account ? 'text-right' : 'text-left'
+              }`}
+            >
+              {messageTime}
+            </div>
           </div>
+
+          {pubKey === pushSign.account && (
+            <MessageInfo message={message.messageContent} />
+          )}
         </div>
       </div>
 

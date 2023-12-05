@@ -1,7 +1,7 @@
 'use client';
 
 import toast from 'react-hot-toast';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useEthersSigner } from '@/wagmi/EthersSigner';
 import { PushAPI, CONSTANTS } from '@pushprotocol/restapi';
 
@@ -15,8 +15,6 @@ import {
 export function usePush() {
   const signer = useEthersSigner();
   const dispatch = useDispatch();
-
-  const pushSign = useSelector((state) => state.contacts.pushSign);
 
   const initializePush = async () => {
     const user = await PushAPI.initialize(signer, {
