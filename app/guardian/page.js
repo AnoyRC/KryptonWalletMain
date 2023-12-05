@@ -7,6 +7,7 @@ import { InformationCircleIcon } from "@heroicons/react/24/outline";
 import { Alert, Button, Card, Stepper, Step } from "@material-tailwind/react";
 import Image from "next/image";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 
 const RecoveryRequestsData = [
   {
@@ -33,7 +34,7 @@ export default function Guardian() {
 
   const sampleLink =
     "https://app.spline.design/file/e2cc7718-0c00-4034-b04d-c0c3307f01a3";
-  const status = "Good";
+  const status = useSelector((state) => state.wallet.status);
 
   const demoProcess = () => {
     setIsExecuting(true);

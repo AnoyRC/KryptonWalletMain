@@ -30,12 +30,6 @@ export default function useDeployKrypton() {
 
   const createKrypton = async () => {
     try {
-      const factory = new ethers.Contract(
-        KryptonProxyFactory.address,
-        KryptonProxyFactory.abi,
-        signer
-      );
-
       const ENTRY_POINT_ADDRESS = process.env.NEXT_PUBLIC_ENTRY_POINT_ADDRESS;
       const apiKey = process.env.NEXT_PUBLIC_PIMLICO_APIKEY;
 
@@ -47,6 +41,17 @@ export default function useDeployKrypton() {
 
       const currentConfig = ChainConfig.find(
         (c) => c.chainId.toString() === chain
+      );
+
+      if (!currentConfig) {
+        toast.error("Network not supported");
+        return false;
+      }
+
+      const factory = new ethers.Contract(
+        currentConfig.factory,
+        KryptonProxyFactory.abi,
+        signer
       );
 
       const publicClient = createPublicClient({

@@ -14,7 +14,12 @@ export default function RecoveryRequests({ name, address, proposedOwner }) {
     >
       <div className="flex items-center gap-3">
         <ArrowUpRightIcon className="h-6 w-6 text-black" />
-        {name ? "From " + name : address}
+        {name
+          ? "From " + name
+          : "From " +
+            address.substring(0, 4) +
+            "..." +
+            address.substring(address.length - 4)}
       </div>
       <div className="flex items-center text-sm gap-3">
         <ArrowsRightLeftIcon className="h-6 w-6 text-black" />

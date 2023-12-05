@@ -28,7 +28,7 @@ import { ChainConfig } from "@/lib/chainConfig";
 import TokenButton from "@/components/layout/main/dashboard/tokens/TokenButton";
 
 export default function Home() {
-  const status = "Good";
+  const status = useSelector((state) => state.wallet.status);
   const router = useRouter();
   const searchParams = useSearchParams();
   const [qrCode, setQrCode] = useState(null);

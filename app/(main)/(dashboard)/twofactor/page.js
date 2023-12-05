@@ -14,7 +14,7 @@ import {
   Input,
   Checkbox,
 } from "@material-tailwind/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -23,6 +23,10 @@ import {
   setSelectedTwoFactor,
 } from "@/redux/slice/setupSlice";
 import { openDrawer } from "@/redux/slice/sigManagerSlice";
+import useReadContract from "@/hooks/useReadContract";
+import { useSearchParams } from "next/navigation";
+import Krypton from "@/lib/contracts/Krypton";
+import { useContractEvent } from "wagmi";
 
 export default function General() {
   const [cooldown, setCooldown] = useState(30);
@@ -32,6 +36,22 @@ export default function General() {
     (state) => state.setup.selectedTwoFactor
   );
   const dispatch = useDispatch();
+  const { getTwoFactorCooldown } = useReadContract();
+  const searchParams = useSearchParams();
+
+  useContractEvent({
+    address: searchParams.get("wallet").split(":")[1],
+    abi: Krypton.abi,
+    eventName: "TwoFactorCooldownChanged",
+    listener(log) {
+      getTwoFactorCooldown().then((res) => {
+        setCooldown(Number(res) / 60);
+      });
+    },
+    chainId: Number(searchParams.get("wallet").split(":")[0]),
+  });
+
+  const status = useSelector((state) => state.wallet.status);
 
   const isTwoFactor = true;
 
@@ -42,6 +62,12 @@ export default function General() {
   const substractCooldown = () => {
     setCooldown(cooldown - 10);
   };
+
+  useEffect(() => {
+    getTwoFactorCooldown().then((res) => {
+      setCooldown(Number(res) / 60);
+    });
+  }, []);
 
   return (
     <div className="w-full h-full z-10 flex items-center justify-center">
@@ -54,7 +80,7 @@ export default function General() {
           <h1 className="font-uni text-white text-3xl font-bold">2FA</h1>
         </CardHeader>
 
-        {!isTwoFactor && (
+        {!isTwoFactor && status !== "Recovery" && (
           <>
             {" "}
             <Alert
@@ -66,18 +92,11 @@ export default function General() {
                 to your wallet.
               </p>
             </Alert>
-            <Button
-              className="w-full text-white font-bold bg-black/80"
-              size="lg"
-            >
-              Enable 2FA
-            </Button>
           </>
         )}
 
-        {isTwoFactor && (
+        {isTwoFactor && status !== "Recovery" && (
           <>
-            {" "}
             <h6 className="font-uni text-lg font-bold">2FA Cooldown</h6>
             <div className="flex w-full items-center justify-between ">
               <div className="flex items-center gap-5">
@@ -104,6 +123,11 @@ export default function General() {
                 This is the time between consecutive 2FA requests.
               </p>
             </Alert>
+          </>
+        )}
+
+        {status !== "Recovery" && (
+          <>
             <Button
               size="lg"
               variant="outlined"
@@ -166,15 +190,56 @@ export default function General() {
             </Button>
           </>
         )}
-        <Button
-          className="w-full text-white font-bold -mt-2 bg-black/80"
-          size="lg"
-          onClick={() => {
-            dispatch(openDrawer());
-          }}
-        >
-          Change Two Factor
-        </Button>
+
+        {!isTwoFactor && status !== "Recovery" && (
+          <>
+            <Button
+              className="w-full text-white font-bold bg-black/80"
+              size="lg"
+            >
+              Enable 2FA
+            </Button>
+          </>
+        )}
+
+        {isTwoFactor && status !== "Recovery" && (
+          <Button
+            className="w-full text-white font-bold -mt-2 bg-black/80"
+            size="lg"
+            onClick={() => {
+              dispatch(openDrawer());
+            }}
+          >
+            Change Two Factor
+          </Button>
+        )}
+
+        {status == "Recovery" && (
+          <>
+            {" "}
+            <Alert
+              className="bg-black/80"
+              icon={<InformationCircleIcon className="h-6 w-6" />}
+            >
+              <p className="font-uni">
+                Wallet is in Recovery, You can disable the ongoing recovery if
+                it is not authorized by you.
+              </p>
+            </Alert>
+          </>
+        )}
+
+        {status === "Recovery" && (
+          <Button
+            className="w-full text-white font-bold -mt-2 bg-black/80"
+            size="lg"
+            onClick={() => {
+              dispatch(openDrawer());
+            }}
+          >
+            Stop Recovery
+          </Button>
+        )}
       </Card>
     </div>
   );

@@ -1,4 +1,6 @@
 "use client";
+import useReadContract from "@/hooks/useReadContract";
+import Krypton from "@/lib/contracts/Krypton";
 import {
   InformationCircleIcon,
   MinusIcon,
@@ -11,11 +13,26 @@ import {
   CardHeader,
   Input,
 } from "@material-tailwind/react";
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useContractEvent } from "wagmi";
 
 export default function General() {
   const previousName = "Old-Wallet-Name";
-  const [threshold, setThreshold] = useState(1);
+  const [threshold, setThreshold] = useState(0);
+  const { getThreshold } = useReadContract();
+  const searchParams = useSearchParams();
+  useContractEvent({
+    address: searchParams.get("wallet").split(":")[1],
+    abi: Krypton.abi,
+    eventName: "ThresholdUpdated",
+    listener(log) {
+      getThreshold().then((res) => {
+        setThreshold(Number(res));
+      });
+    },
+    chainId: Number(searchParams.get("wallet").split(":")[0]),
+  });
 
   const addThreshold = () => {
     setThreshold(threshold + 1);
@@ -24,6 +41,12 @@ export default function General() {
   const substractThreshold = () => {
     setThreshold(threshold - 1);
   };
+
+  useEffect(() => {
+    getThreshold().then((res) => {
+      setThreshold(Number(res));
+    });
+  }, []);
 
   return (
     <div className="w-full h-full z-10 flex items-center justify-center">
