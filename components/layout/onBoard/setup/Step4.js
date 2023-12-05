@@ -1,7 +1,13 @@
 "use client";
 
 import { ChipsInId } from "@/components/ui/chainChips";
-import { setActiveStep } from "@/redux/slice/setupSlice";
+import useDeployKrypton from "@/hooks/useDeployKrypton";
+import {
+  setActiveStep,
+  setGuardians,
+  setName,
+  setTwoFactorAddress,
+} from "@/redux/slice/setupSlice";
 import { CheckIcon } from "@heroicons/react/24/outline";
 import {
   Chip,
@@ -31,20 +37,49 @@ export default function Step4() {
   const dispatch = useDispatch();
   const router = useRouter();
   const [isError, setIsError] = useState(false);
+  const { createKrypton, checkWalletCode } = useDeployKrypton();
+  const [deployedAddress, setDeployedAddress] = useState(null);
 
-  const demoProcess = () => {
-    setTimeout(() => {
-      setSteps(1);
-    }, 1000);
-    setTimeout(() => {
-      setSteps(2);
-    }, 3000);
-    setTimeout(() => {
+  const execute = async () => {
+    // setTimeout(() => {
+    //   setSteps(1);
+    // }, 1000);
+    // setTimeout(() => {
+    //   setSteps(2);
+    // }, 3000);
+    // setTimeout(() => {
+    //   setSteps(3);
+    // }, 5000);
+    // setTimeout(() => {
+    //   setIsDeployed(true);
+    // }, 7000);
+    const walletAddress = await createKrypton();
+    if (!walletAddress) {
+      setIsError(true);
+      setIsDeploying(false);
+      setSteps(0);
+      return;
+    }
+
+    await checkWalletCode(walletAddress);
+    setSteps(1);
+
+    //Dataverse OS
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setSteps(2);
+
+    //2FA
+    if (!twoFactorAddress) {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       setSteps(3);
-    }, 5000);
-    setTimeout(() => {
-      setIsDeployed(true);
-    }, 7000);
+    }
+
+    //Add Two Factor Here
+
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setIsDeployed(true);
+    setDeployedAddress(walletAddress);
+    setIsDeploying(false);
   };
 
   return (
@@ -109,7 +144,7 @@ export default function Step4() {
             className=""
             onClick={() => {
               setIsDeploying(true);
-              demoProcess();
+              execute();
             }}
           >
             Create Krypton
@@ -167,7 +202,17 @@ export default function Step4() {
             <CheckIcon className="text-black w-5 h-5 animate-bounce" />
           </div>
 
-          <Button size="lg" className="w-full">
+          <Button
+            size="lg"
+            className="w-full"
+            onClick={() => {
+              router.push(`/home?wallet=${chain}:${deployedAddress}`);
+              dispatch(setActiveStep(0));
+              dispatch(setTwoFactorAddress(null));
+              dispatch(setName(""));
+              dispatch(setGuardians([{ name: "", address: "" }]));
+            }}
+          >
             Step into your Krypton
           </Button>
         </div>
@@ -179,7 +224,15 @@ export default function Step4() {
             Error Deploying Krypton
           </div>
 
-          <Button size="lg" className="w-full">
+          <Button
+            size="lg"
+            className="w-full"
+            onClick={() => {
+              setIsError(false);
+              setIsDeploying(true);
+              execute();
+            }}
+          >
             Try Again
           </Button>
         </div>

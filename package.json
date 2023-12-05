@@ -25,6 +25,7 @@
     "axios": "^1.6.2",
     "ethers": "5.7",
     "next": "14.0.3",
+    "permissionless": "^0.0.13",
     "pino-pretty": "^10.2.3",
     "qrcodejs": "github:danielgjackson/qrcodejs",
     "react": "^18",

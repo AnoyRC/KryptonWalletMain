@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { useDispatch, useSelector } from 'react-redux';
-import { useEthersSigner } from '@/wagmi/EthersSigner';
-import { PushAPI, CONSTANTS } from '@pushprotocol/restapi';
+import { useDispatch, useSelector } from "react-redux";
+import { useEthersSigner } from "@/wagmi/EthersSigner";
+import { PushAPI, CONSTANTS } from "@pushprotocol/restapi";
 
-import { setPushSign } from '@/redux/slice/contactsSlice';
+import { setPushSign } from "@/redux/slice/contactsSlice";
 
 export function usePush() {
   const signer = useEthersSigner();
@@ -31,11 +31,7 @@ export function usePush() {
     );
 
     stream.on(CONSTANTS.STREAM.CONNECT, (a) => {
-      console.log('Stream Connected');
-    });
-
-    stream.on(CONSTANTS.STREAM.DISCONNECT, () => {
-      console.log('Stream Disconnected');
+      console.log("Stream Connected");
     });
 
     stream.on(CONSTANTS.STREAM.CHAT, (data) => {
@@ -47,6 +43,10 @@ export function usePush() {
     });
 
     await stream.connect();
+
+    stream.on(CONSTANTS.STREAM.DISCONNECT, () => {
+      console.log("Stream Disconnected");
+    });
   };
 
   return {
