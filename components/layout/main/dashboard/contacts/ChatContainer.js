@@ -14,10 +14,12 @@ import ChatBox from './chatBox/ChatBox';
 import ChatBackground from './ChatBackground';
 
 const ChatContainer = () => {
-  const currentContact = useSelector((state) => state.contacts.currentContact);
   const signer = useEthersSigner();
   const { isConnected } = useAccount();
   const { initializePush } = usePush();
+
+  const currentContact = useSelector((state) => state.contacts.currentContact);
+  const pushSign = useSelector((state) => state.contacts.pushSign);
 
   const [isSigned, setIsSigned] = useState(null);
 
@@ -31,7 +33,7 @@ const ChatContainer = () => {
       }
     };
 
-    if (isConnected && signer) {
+    if (isConnected && signer && pushSign) {
       initialize();
     }
   }, [isConnected, signer]);

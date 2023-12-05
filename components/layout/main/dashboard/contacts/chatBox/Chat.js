@@ -1,7 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { useState, useEffect } from 'react';
+import { createSocketConnection } from '@pushprotocol/socket';
+
 import MessageWithDate from './MessageWithDate';
 
 const Chat = () => {
@@ -18,11 +20,19 @@ const Chat = () => {
       );
 
       setMessageHistory(pastMessages);
-      console.log(pastMessages);
       setLoading(false);
+
+      const pushSDKSocket = createSocketConnection({
+        user: currentContact.did.split(':')[1],
+        env: 'staging',
+        socketType: 'chat',
+        socketOptions: { autoConnect: true, reconnectionAttempts: 3 },
+      });
+      console.log('pushSDKSocket', pushSDKSocket);
     };
 
     if (currentContact && pushSign) {
+      setLoading(true);
       initializeChat();
     }
   }, [currentContact, pushSign]);
@@ -49,13 +59,12 @@ const Chat = () => {
         </div>
       ) : (
         <div className="flex flex-col gap-1 z-10">
-          {messageHistory.map((message, index) => (
+          {[...messageHistory].reverse().map((message, index, arr) => (
             <MessageWithDate
               key={index}
               message={message}
-              previousMessage={
-                messageHistory[messageHistory.indexOf(message) - 1]
-              }
+              nextMessage={arr[index + 1]}
+              index={index}
             />
           ))}
         </div>
