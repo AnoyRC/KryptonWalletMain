@@ -8,6 +8,7 @@ import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ChainConfig } from "@/lib/chainConfig";
+import { useSelector } from "react-redux";
 
 export default function Tokens() {
   const [amount, setAmount] = useState("0.00");
@@ -19,6 +20,7 @@ export default function Tokens() {
     "Swapping is not available with the same tokens."
   );
   const searchParams = useSearchParams();
+  const isOwner = useSelector((state) => state.wallet.isOwner);
 
   useEffect(() => {
     if (searchParams.get("wallet")) {
@@ -165,18 +167,18 @@ export default function Tokens() {
           </div>
         </Card>
 
-        <Button size="lg" className="bg-black/80">
+        <Button size="lg" className="bg-black/80" disabled={!isOwner}>
           Swap
         </Button>
 
-        <Alert
+        {/* <Alert
           variant="gradient"
           icon={<ExclamationTriangleIcon className="h-8 w-8" />}
           className="mb-2 mr-0"
         >
           <h6 className="font-bold text-lg mb-2">{errorTitle}</h6>
           <p className="text-sm">{errorDescription}</p>
-        </Alert>
+        </Alert> */}
       </Card>
     </div>
   );

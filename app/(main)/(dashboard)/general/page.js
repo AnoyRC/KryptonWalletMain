@@ -18,6 +18,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useContractEvent } from "wagmi";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
 
 export default function General() {
   const previousName = "Old-Wallet-Name";
@@ -26,6 +27,7 @@ export default function General() {
   const { getThreshold } = useReadContract();
   const searchParams = useSearchParams();
   const { initiateTransaction } = useSendTransaction();
+  const isOwner = useSelector((state) => state.wallet.isOwner);
   useContractEvent({
     address: searchParams.get("wallet").split(":")[1],
     abi: Krypton.abi,
@@ -73,7 +75,11 @@ export default function General() {
           }}
         />
 
-        <Button className="w-full text-white font-bold bg-black/80" size="lg">
+        <Button
+          className="w-full text-white font-bold bg-black/80"
+          size="lg"
+          disabled={!isOwner}
+        >
           Update
         </Button>
 
@@ -108,6 +114,7 @@ export default function General() {
                 "Threshold updated"
               );
             }}
+            disabled={!isOwner}
           >
             Update
           </Button>
@@ -137,6 +144,7 @@ export default function General() {
         <Button
           className="w-full text-white font-bold bg-black/80"
           size="lg"
+          disabled={!isOwner}
           onClick={() => {
             if (
               guardianAddress.length !== 42 ||

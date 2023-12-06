@@ -13,6 +13,7 @@ import { createPublicClient, http } from "viem";
 import useSendTransaction from "@/hooks/useSendTransaction";
 import { BigNumber, ethers } from "ethers";
 import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
 
 export default function Tokens() {
   const [amount, setAmount] = useState("0.00");
@@ -30,6 +31,7 @@ export default function Tokens() {
       chain.chainId.toString() === searchParams.get("wallet")?.split(":")[0]
   );
   const { initiateTransaction } = useSendTransaction();
+  const isOwner = useSelector((state) => state.wallet.isOwner);
 
   useEffect(() => {
     if (searchParams.get("wallet")) {
@@ -128,6 +130,7 @@ export default function Tokens() {
         <Button
           size="lg"
           className="bg-black/80"
+          disabled={!isOwner}
           onClick={async () => {
             if (!recipient) {
               setIsError(true);
@@ -182,17 +185,10 @@ export default function Tokens() {
 
               setIsError(false);
 
-              toast.promise(
-                initiateTransaction(
-                  "execute",
-                  [recipient, ethers.utils.parseUnits(amount.toString()), "0x"],
-                  "Transferred Successfully"
-                ),
-                {
-                  loading: "Transferring...",
-                  success: "Transferred Successfully",
-                  error: "Failed to Transfer",
-                }
+              initiateTransaction(
+                "execute",
+                [recipient, ethers.utils.parseUnits(amount.toString()), "0x"],
+                "Transferred Successfully"
               );
             } else {
               const tokenContract = new ethers.Contract(
@@ -224,29 +220,19 @@ export default function Tokens() {
 
               setIsError(false);
 
-              toast.promise(
-                initiateTransaction(
-                  "execute",
-                  [
-                    tokenContract.address,
-                    ethers.constants.Zero,
-                    tokenContract.interface.encodeFunctionData("transfer", [
-                      recipient,
-                      BigNumber.from(
-                        (
-                          Number(amount) *
-                          10 ** selectedToken.decimals
-                        ).toString()
-                      ),
-                    ]),
-                  ],
-                  "Transferred Successfully"
-                ),
-                {
-                  loading: "Transferring...",
-                  success: "Transferred Successfully",
-                  error: "Failed to Transfer",
-                }
+              initiateTransaction(
+                "execute",
+                [
+                  tokenContract.address,
+                  ethers.constants.Zero,
+                  tokenContract.interface.encodeFunctionData("transfer", [
+                    recipient,
+                    BigNumber.from(
+                      (Number(amount) * 10 ** selectedToken.decimals).toString()
+                    ),
+                  ]),
+                ],
+                "Transferred Successfully"
               );
             }
           }}

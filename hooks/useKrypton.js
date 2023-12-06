@@ -22,7 +22,7 @@ export default function useKrypton() {
   const { address } = useAccount();
   const signer = useEthersSigner();
   const { checkWalletCode } = useDeployKrypton();
-  const { getTwoFactorCooldown } = useReadContract();
+  const { getTwoFactorCooldown, getRecentTwoFactor } = useReadContract();
 
   const executeTransaction = async (
     walletAddress,
@@ -150,6 +150,7 @@ export default function useKrypton() {
       toast.success(successMessage);
 
       await getTwoFactorCooldown();
+      await getRecentTwoFactor();
 
       return true;
     } catch (e) {

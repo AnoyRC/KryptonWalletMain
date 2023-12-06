@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@auth0/auth0-spa-js": "^2.1.2",
+    "@covalenthq/client-sdk": "^0.6.7",
     "@dataverse/dataverse-connector": "^1.0.30",
     "@dataverse/dataverse-contracts-sdk": "^1.0.17-alpha.13",
     "@dataverse/hooks": "^1.0.32",

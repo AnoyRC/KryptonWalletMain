@@ -33,12 +33,6 @@ export default function useDeployKrypton() {
       const ENTRY_POINT_ADDRESS = process.env.NEXT_PUBLIC_ENTRY_POINT_ADDRESS;
       const apiKey = process.env.NEXT_PUBLIC_PIMLICO_APIKEY;
 
-      let chainName = "";
-
-      if (chain === "80001") {
-        chainName = "mumbai";
-      }
-
       const currentConfig = ChainConfig.find(
         (c) => c.chainId.toString() === chain
       );
@@ -47,6 +41,8 @@ export default function useDeployKrypton() {
         toast.error("Network not supported");
         return false;
       }
+
+      const chainName = currentConfig.pimlicoChainName;
 
       const factory = new ethers.Contract(
         currentConfig.factory,

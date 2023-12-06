@@ -44,6 +44,7 @@ export default function General() {
   const searchParams = useSearchParams();
   const { initiateTransaction } = useSendTransaction();
   const { prepareEnableTwoFactorAuth, executeTransaction } = useKrypton();
+  const isOwner = useSelector((state) => state.wallet.isOwner);
 
   useContractEvent({
     address: searchParams.get("wallet").split(":")[1],
@@ -128,6 +129,7 @@ export default function General() {
 
                   initiateTransaction("changeTwoFactorCooldown", [cooldown]);
                 }}
+                disabled={!isOwner}
               >
                 Update
               </Button>
@@ -226,6 +228,7 @@ export default function General() {
                 );
                 dispatch(setTwoFactorAddress(""));
               }}
+              disabled={!isOwner}
             >
               Enable 2FA
             </Button>
@@ -245,6 +248,7 @@ export default function General() {
               await initiateTransaction("changeTwoFactor", [twoFactorAddress]);
               dispatch(setTwoFactorAddress(""));
             }}
+            disabled={!isOwner}
           >
             Change Two Factor
           </Button>
@@ -282,6 +286,7 @@ export default function General() {
           <Button
             className="w-full text-white font-bold -mt-2 bg-black/80"
             size="lg"
+            disabled={!isOwner}
             onClick={() => {
               initiateTransaction("cancelRecovery", []);
             }}

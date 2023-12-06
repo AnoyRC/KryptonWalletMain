@@ -1,74 +1,48 @@
-'use client';
-import TransactionButton from '@/components/layout/main/dashboard/transactions/TransactionButton';
-import { Card, CardHeader, CardBody } from '@material-tailwind/react';
-
-const transactions = [
-  {
-    pubKey: '0xeR1pg7TgpQLaiH29ifs9Uz',
-    Amount: '34.1205',
-    type: 'send',
-    date: '1701689239',
-    symbol: 'MATIC',
-  },
-  {
-    pubKey: '0xeR1pg7TgpQLaiH29ifs9Uz',
-    Amount: '34.12',
-    type: 'send',
-    date: '1680237770',
-    symbol: 'MATIC',
-  },
-  {
-    pubKey: '0xeR1pg7TgpQLaiH29ifs9Uz',
-    Amount: '34.1205 ',
-    type: 'receive',
-    date: '1680237770',
-    symbol: 'USDT',
-  },
-  {
-    pubKey: '0xeR1pg7TgpQLaiH29ifs9Uz',
-    Amount: '34.1205',
-    type: 'send',
-    date: '1701689239',
-    symbol: 'MATIC',
-  },
-  {
-    pubKey: '0xeR1pg7TgpQLaiH29ifs9Uz',
-    Amount: '34.12',
-    type: 'send',
-    date: '1680237770',
-    symbol: 'MATIC',
-  },
-  {
-    pubKey: '0xeR1pg7TgpQLaiH29ifs9Uz',
-    Amount: '34.1205 ',
-    type: 'receive',
-    date: '1680237770',
-    symbol: 'USDT',
-  },
-  {
-    pubKey: '0xeR1pg7TgpQLaiH29ifs9Uz',
-    Amount: '34.1205',
-    type: 'send',
-    date: '1701689239',
-    symbol: 'MATIC',
-  },
-  {
-    pubKey: '0xeR1pg7TgpQLaiH29ifs9Uz',
-    Amount: '34.12',
-    type: 'send',
-    date: '1680237770',
-    symbol: 'MATIC',
-  },
-  {
-    pubKey: '0xeR1pg7TgpQLaiH29ifs9Uz',
-    Amount: '34.1205 ',
-    type: 'receive',
-    date: '1680237770',
-    symbol: 'USDT',
-  },
-];
+"use client";
+import TransactionButton from "@/components/layout/main/dashboard/transactions/TransactionButton";
+import { ChainConfig } from "@/lib/chainConfig";
+import { Card, CardHeader, CardBody } from "@material-tailwind/react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { CovalentClient } from "@covalenthq/client-sdk";
 
 export default function Transactions() {
+  const searchParams = useSearchParams();
+  const currentConfig = ChainConfig.find(
+    (c) => c.chainId.toString() === searchParams.get("wallet").split(":")[0]
+  );
+  const [transactions, setTransactions] = useState([]);
+
+  const getTransactions = async () => {
+    if (!currentConfig) {
+      return;
+    }
+
+    const client = new CovalentClient("cqt_rQH3kFYD6MqMJPkwyqJJqmfJbWJx");
+
+    let AllTransactions = [];
+
+    try {
+      for await (const resp of client.TransactionService.getAllTransactionsForAddress(
+        currentConfig.covalentChainName,
+        searchParams.get("wallet").split(":")[1]
+      )) {
+        AllTransactions.push(resp);
+      }
+
+      console.log(AllTransactions);
+      setTransactions(AllTransactions);
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  useEffect(() => {
+    if (searchParams.get("wallet")) {
+      getTransactions();
+    }
+  }, [searchParams]);
+
   return (
     <div className="w-full h-full z-10 flex items-center justify-center">
       <Card className="w-[30rem] p-4 flex flex-col gap-4">
@@ -86,12 +60,16 @@ export default function Transactions() {
           {transactions.map((transaction, index) => {
             return (
               <TransactionButton
-                pubKey={transaction.pubKey}
-                amount={transaction.Amount}
-                symbol={transaction.symbol}
+                pubKey={transaction.from_address}
+                amount={
+                  Number(transaction.value) / 10 ** currentConfig.decimals
+                }
+                symbol={currentConfig.symbol}
                 type={transaction.type}
-                date={transaction.date}
+                date={transaction.block_signed_at.getTime()}
                 key={index}
+                to={transaction.to_address}
+                scanUrl={transaction.explorers[0].url}
               />
             );
           })}

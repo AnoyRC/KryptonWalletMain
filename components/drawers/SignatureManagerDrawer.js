@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
 import {
   CreditCardIcon,
   KeyIcon,
   XMarkIcon,
-} from '@heroicons/react/24/outline';
+} from "@heroicons/react/24/outline";
 import {
   Drawer,
   IconButton,
@@ -13,28 +13,28 @@ import {
   AccordionBody,
   Input,
   Button,
-} from '@material-tailwind/react';
+} from "@material-tailwind/react";
 
-import Image from 'next/image';
-import { useState } from 'react';
-import toast from 'react-hot-toast';
-import { useDispatch, useSelector } from 'react-redux';
-import { LogInWithAnonAadhaar, useAnonAadhaar } from 'anon-aadhaar-react';
+import Image from "next/image";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { LogInWithAnonAadhaar, useAnonAadhaar } from "anon-aadhaar-react";
 
-import useSignPayload from '@/hooks/useSignPayload';
-import useSendTransaction from '@/hooks/useSendTransaction';
+import useSignPayload from "@/hooks/useSignPayload";
+import useSendTransaction from "@/hooks/useSendTransaction";
 
 import {
   setFnArgs,
   setFnName,
   setSuccessMessage,
-} from '@/redux/slice/walletSlice';
-import { closeDrawer, setSignature } from '@/redux/slice/sigManagerSlice';
+} from "@/redux/slice/walletSlice";
+import { closeDrawer, setSignature } from "@/redux/slice/sigManagerSlice";
 
 export default function SignatureManagerDrawer() {
   const dispatch = useDispatch();
 
-  const [passkey, setPasskey] = useState('');
+  const [passkey, setPasskey] = useState("");
   const [activeTab, setActiveTab] = useState(0);
 
   const [anonAadhaar] = useAnonAadhaar();
@@ -48,18 +48,18 @@ export default function SignatureManagerDrawer() {
   const successMessage = useSelector((state) => state.wallet.successMessage);
 
   const handleAnonClick = async () => {
-    console.log('Here');
+    console.log("Here");
     signMessage(`${anonAadhaar.pcd.proof.app_id}:${anonAadhaar.pcd.id}`);
   };
 
   const handleCloseDrawer = () => {
     dispatch(closeDrawer());
-    dispatch(setFnName(''));
+    dispatch(setFnName(""));
     dispatch(setFnArgs([]));
-    dispatch(setSignature(''));
-    dispatch(setSuccessMessage(''));
+    dispatch(setSignature(""));
+    dispatch(setSuccessMessage(""));
 
-    toast.success('Transaction Cancelled');
+    toast.success("Transaction Cancelled");
   };
 
   return (
@@ -117,7 +117,7 @@ export default function SignatureManagerDrawer() {
                   placeholder="XXX-XXX"
                   className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
                   labelProps={{
-                    className: 'before:content-none after:content-none',
+                    className: "before:content-none after:content-none",
                   }}
                   type="password"
                   value={passkey}
@@ -130,12 +130,12 @@ export default function SignatureManagerDrawer() {
                   onClick={() => {
                     if (passkey.length < 6)
                       return toast.error(
-                        'Passkey must be at least 6 characters long'
+                        "Passkey must be at least 6 characters long"
                       );
                     toast.promise(signMessage(passkey), {
-                      loading: 'Signing Message',
-                      success: 'Message Signed',
-                      error: 'Message Signing Failed',
+                      loading: "Signing Message",
+                      success: "Message Signed",
+                      error: "Message Signing Failed",
                     });
                   }}
                 >
@@ -189,7 +189,7 @@ export default function SignatureManagerDrawer() {
                   <LogInWithAnonAadhaar />
                 </div>
 
-                {anonAadhaar.status === 'logged-in' && (
+                {anonAadhaar.status === "logged-in" && (
                   <Button className="mt-1" onClick={handleAnonClick} size="md">
                     Confirm Aadhar Card
                   </Button>
@@ -203,24 +203,22 @@ export default function SignatureManagerDrawer() {
           className="mb-4"
           size="lg"
           onClick={async () => {
-            if (!signature) return toast.error('Please sign the message first');
-
-            toast.success('Executing Transaction');
+            if (!signature) return toast.error("Please sign the message first");
 
             toast.promise(
               use2FAsendWithSig(fnName, fnArgs, successMessage, signature),
               {
-                loading: 'Executing Transaction',
-                success: 'Transaction Executed',
-                error: 'Transaction Failed',
+                loading: "Executing Transaction",
+                success: "Transaction Executed",
+                error: "Transaction Failed",
               }
             );
 
             dispatch(closeDrawer());
-            dispatch(setFnName(''));
+            dispatch(setFnName(""));
             dispatch(setFnArgs([]));
-            dispatch(setSignature(''));
-            dispatch(setSuccessMessage(''));
+            dispatch(setSignature(""));
+            dispatch(setSuccessMessage(""));
           }}
         >
           Execute Transaction
