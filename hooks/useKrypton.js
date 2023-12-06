@@ -14,6 +14,7 @@ import toast from "react-hot-toast";
 import useDeployKrypton from "./useDeployKrypton";
 import { useEthersSigner } from "@/wagmi/EthersSigner";
 import Krypton from "@/lib/contracts/Krypton";
+import useReadContract from "./useReadContract";
 
 export default function useKrypton() {
   const { chain: currentChain } = useNetwork();
@@ -21,6 +22,7 @@ export default function useKrypton() {
   const { address } = useAccount();
   const signer = useEthersSigner();
   const { checkWalletCode } = useDeployKrypton();
+  const { getTwoFactorCooldown } = useReadContract();
 
   const executeTransaction = async (
     walletAddress,
@@ -147,6 +149,8 @@ export default function useKrypton() {
 
       toast.success(successMessage);
 
+      await getTwoFactorCooldown();
+
       return true;
     } catch (e) {
       console.log(e);
@@ -173,8 +177,20 @@ export default function useKrypton() {
     return functionCallData;
   };
 
+  const prepareTransaction = async (fnName, fnArgs = []) => {
+    const KryptonContract = new ethers.Contract(address, Krypton.abi, signer);
+
+    const functionCallData = KryptonContract.interface.encodeFunctionData(
+      fnName,
+      fnArgs
+    );
+
+    return functionCallData;
+  };
+
   return {
     executeTransaction,
     prepareEnableTwoFactorAuth,
+    prepareTransaction,
   };
 }

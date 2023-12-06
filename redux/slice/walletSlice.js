@@ -7,6 +7,12 @@ const walletSlice = createSlice({
     status: "Good",
     isOwner: false,
     isGuardian: false,
+    is2FA: false,
+    fnName: "",
+    fnArgs: [],
+    successMessage: "",
+    twoFactorCooldown: 0,
+    recentTwoFactor: 0,
   },
 
   reducers: {
@@ -19,10 +25,37 @@ const walletSlice = createSlice({
     setIsGuardian: (state, action) => {
       state.isGuardian = action.payload;
     },
+    setIs2FA: (state, action) => {
+      state.is2FA = action.payload;
+    },
+    setFnName: (state, action) => {
+      state.fnName = action.payload;
+    },
+    setFnArgs: (state, action) => {
+      state.fnArgs = action.payload;
+    },
+    setSuccessMessage: (state, action) => {
+      state.successMessage = action.payload;
+    },
+    setTwoFactorCooldown: (state, action) => {
+      state.twoFactorCooldown = action.payload;
+    },
+    setRecentTwoFactor: (state, action) => {
+      state.recentTwoFactor = action.payload;
+    },
   },
 });
 
-export const { setWalletStatus, setIsOwner, setIsGuardian } =
-  walletSlice.actions;
+export const {
+  setWalletStatus,
+  setIsOwner,
+  setIsGuardian,
+  setIs2FA,
+  setFnName,
+  setFnArgs,
+  setSuccessMessage,
+  setTwoFactorCooldown,
+  setRecentTwoFactor,
+} = walletSlice.actions;
 
 export default walletSlice.reducer;

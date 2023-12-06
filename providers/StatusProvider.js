@@ -3,8 +3,10 @@
 import useReadContract from "@/hooks/useReadContract";
 import Krypton from "@/lib/contracts/Krypton";
 import {
+  setIs2FA,
   setIsGuardian,
   setIsOwner,
+  setTwoFactorCooldown,
   setWalletStatus,
 } from "@/redux/slice/walletSlice";
 import { useSearchParams } from "next/navigation";
@@ -14,8 +16,15 @@ import { useAccount, useContractEvent } from "wagmi";
 
 const StatusProvider = ({ children }) => {
   const searchParams = useSearchParams();
-  const { checkRecovery, checkTransfer, isOwner, isGuardian } =
-    useReadContract();
+  const {
+    checkRecovery,
+    checkTransfer,
+    isOwner,
+    isGuardian,
+    is2FA,
+    getTwoFactorCooldown,
+    getRecentTwoFactor,
+  } = useReadContract();
   const dispatch = useDispatch();
   const { address } = useAccount();
 
@@ -101,6 +110,26 @@ const StatusProvider = ({ children }) => {
     chainId: Number(searchParams.get("wallet").split(":")[0]),
   });
 
+  useContractEvent({
+    address: searchParams.get("wallet").split(":")[1],
+    abi: Krypton.abi,
+    eventName: "TwoFactorEnabled",
+    listener(log) {
+      check2FA();
+    },
+    chainId: Number(searchParams.get("wallet").split(":")[0]),
+  });
+
+  useContractEvent({
+    address: searchParams.get("wallet").split(":")[1],
+    abi: Krypton.abi,
+    eventName: "TwoFactorCooldownChanged",
+    listener(log) {
+      handleTwoFactorCooldown();
+    },
+    chainId: Number(searchParams.get("wallet").split(":")[0]),
+  });
+
   useEffect(() => {
     if (searchParams.get("wallet")) {
       setStatus();
@@ -135,10 +164,24 @@ const StatusProvider = ({ children }) => {
     dispatch(setIsGuardian(guardian));
   };
 
+  const check2FA = async () => {
+    const twoFA = await is2FA();
+
+    dispatch(setIs2FA(twoFA));
+  };
+
+  const handleTwoFactorCooldown = async () => {
+    const cooldown = await getTwoFactorCooldown();
+
+    dispatch(setTwoFactorCooldown(Number(cooldown)));
+  };
+
   useEffect(() => {
     if (searchParams.get("wallet")) {
       checkOwner();
       checkGuardian();
+      check2FA();
+      handleTwoFactorCooldown();
     }
   }, [address]);
 

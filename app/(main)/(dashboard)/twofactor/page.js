@@ -53,7 +53,7 @@ export default function General() {
 
   const status = useSelector((state) => state.wallet.status);
 
-  const isTwoFactor = true;
+  const isTwoFactor = useSelector((state) => state.wallet.is2FA);
 
   const addCooldown = () => {
     setCooldown(cooldown + 10);

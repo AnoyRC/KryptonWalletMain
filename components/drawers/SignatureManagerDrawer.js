@@ -1,6 +1,6 @@
 "use client";
 
-import { closeDrawer } from "@/redux/slice/sigManagerSlice";
+import { closeDrawer, setSignature } from "@/redux/slice/sigManagerSlice";
 import {
   CreditCardIcon,
   KeyIcon,
@@ -18,18 +18,28 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import Image from "next/image";
+import { setFnArgs, setFnName } from "@/redux/slice/walletSlice";
+import toast from "react-hot-toast";
 
 export default function SignatureManagerDrawer() {
   const dispatch = useDispatch();
   const open = useSelector((state) => state.sigManager.drawer);
   const [activeTab, setActiveTab] = useState(0);
 
+  const handleCloseDrawer = () => {
+    dispatch(closeDrawer());
+    dispatch(setFnName(""));
+    dispatch(setFnArgs([]));
+    dispatch(setSignature(""));
+    toast.success("Transaction Cancelled");
+  };
+
   return (
     <>
       <Drawer
         open={open}
         onClose={() => {
-          dispatch(closeDrawer());
+          dispatch(handleCloseDrawer());
         }}
         className="px-4 flex flex-col justify-between"
       >
@@ -48,7 +58,7 @@ export default function SignatureManagerDrawer() {
               variant="text"
               color="blue-gray"
               onClick={() => {
-                dispatch(closeDrawer());
+                dispatch(handleCloseDrawer());
               }}
             >
               <XMarkIcon className="w-6 h-6" />
@@ -174,7 +184,7 @@ export default function SignatureManagerDrawer() {
           className="mb-4"
           size="lg"
           onClick={() => {
-            dispatch(closeDrawer());
+            dispatch(handleCloseDrawer());
           }}
         >
           Execute Transaction

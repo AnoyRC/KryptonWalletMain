@@ -2,11 +2,14 @@
 
 import { ChainConfig } from "@/lib/chainConfig";
 import Krypton from "@/lib/contracts/Krypton";
+import { setRecentTwoFactor } from "@/redux/slice/walletSlice";
 import { ethers } from "ethers";
 import { useSearchParams } from "next/navigation";
+import { useDispatch } from "react-redux";
 
 export default function useReadContract() {
   const searchParams = useSearchParams();
+  const dispatch = useDispatch();
 
   const getThreshold = async () => {
     try {
@@ -309,6 +312,61 @@ export default function useReadContract() {
     }
   };
 
+  const is2FA = async () => {
+    try {
+      const walletAddress = searchParams.get("wallet").split(":")[1];
+      const chain = searchParams.get("wallet").split(":")[0];
+      const currentConfig = ChainConfig.find(
+        (c) => c.chainId.toString() === chain
+      );
+
+      if (!currentConfig) {
+        return false;
+      }
+
+      const provider = new ethers.providers.JsonRpcProvider(currentConfig.rpc);
+      const kryptonContract = new ethers.Contract(
+        walletAddress,
+        Krypton.abi,
+        provider
+      );
+
+      const is2FA = await kryptonContract.isTwoFactorEnabled();
+      return is2FA;
+    } catch (e) {
+      console.log(e);
+      return false;
+    }
+  };
+
+  const getRecentTwoFactor = async () => {
+    try {
+      const walletAddress = searchParams.get("wallet").split(":")[1];
+      const chain = searchParams.get("wallet").split(":")[0];
+      const currentConfig = ChainConfig.find(
+        (c) => c.chainId.toString() === chain
+      );
+
+      if (!currentConfig) {
+        return 0;
+      }
+
+      const provider = new ethers.providers.JsonRpcProvider(currentConfig.rpc);
+      const kryptonContract = new ethers.Contract(
+        walletAddress,
+        Krypton.abi,
+        provider
+      );
+
+      const recentTwoFactor = await kryptonContract.recentTwoFactor();
+
+      dispatch(setRecentTwoFactor(Number(recentTwoFactor)));
+    } catch (e) {
+      console.log(e);
+      dispatch(setRecentTwoFactor(0));
+    }
+  };
+
   return {
     getThreshold,
     getTwoFactorCooldown,
@@ -320,5 +378,7 @@ export default function useReadContract() {
     checkTransfer,
     isOwner,
     isGuardian,
+    is2FA,
+    getRecentTwoFactor,
   };
 }
