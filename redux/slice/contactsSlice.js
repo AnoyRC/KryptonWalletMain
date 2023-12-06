@@ -37,7 +37,8 @@ const contactsSlice = createSlice({
 
     resetContacts: (state) => {
       state.currentContact = null;
-      state.pushSign = null;
+      state.recentContact = null;
+      state.messages = [];
     },
   },
 });

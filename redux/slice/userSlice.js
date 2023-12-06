@@ -1,29 +1,19 @@
-// import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 
-// const contactsSlice = createSlice({
-//   name: 'contacts',
-//   initialState: {
-//     pushSign: null,
-//     currentContact: null,
-//   },
+const userSlice = createSlice({
+  name: 'user',
 
-//   reducers: {
-//     setPushSign: (state, action) => {
-//       state.pushSign = action.payload;
-//     },
+  initialState: {
+    pkh: null,
+  },
 
-//     setCurrentContact: (state, action) => {
-//       state.currentContact = action.payload;
-//     },
+  reducers: {
+    setPkh: (state, action) => {
+      state.pkh = action.payload;
+    },
+  },
+});
 
-//     resetContacts: (state) => {
-//       state.currentContact = null;
-//       state.pushSign = null;
-//     },
-//   },
-// });
+export const { setPkh } = userSlice.actions;
 
-// export const { setPushSign, setCurrentContact, resetContacts } =
-//   contactsSlice.actions;
-
-// export default contactsSlice.reducer;
+export default userSlice.reducer;

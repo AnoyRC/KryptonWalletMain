@@ -1,22 +1,28 @@
 'use client';
 
-import { RESOURCE, SYSTEM_CALL } from '@dataverse/dataverse-connector';
+import { useEthersProvider } from '@/wagmi/EthersProvider';
+import { useEthersSigner } from '@/wagmi/EthersSigner';
 import { DataverseConnector } from '@dataverse/dataverse-connector';
+import { RESOURCE, SYSTEM_CALL } from '@dataverse/dataverse-connector';
 
 export function useDataverse() {
+  const provider = useEthersProvider();
   const dataverseConnector = new DataverseConnector();
+
   const appId = process.env.NEXT_PUBLIC_APP_ID;
   const userModalId = process.env.NEXT_PUBLIC_USER_MODAL_ID;
   const guardianModalId = process.env.NEXT_PUBLIC_GUARDIAN_MODAL_ID;
 
   const createCapability = async () => {
+    const res = await dataverseConnector.connectWallet({
+      provider,
+    });
+
     const pkh = await dataverseConnector.runOS({
       method: SYSTEM_CALL.createCapability,
-
       params: {
         appId,
         resource: RESOURCE.CERAMIC,
-        wallet,
       },
     });
 

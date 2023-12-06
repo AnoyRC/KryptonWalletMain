@@ -1,34 +1,40 @@
-"use client";
-import { DataverseConnector } from "@dataverse/dataverse-connector";
-import { ArrowLeftOnRectangleIcon } from "@heroicons/react/24/outline";
+'use client';
+
+import { useDataverse } from '@/hooks/useDataverse';
+import { setPkh } from '@/redux/slice/userSlice';
 import {
   CardHeader,
   CardBody,
   CardFooter,
   Typography,
-  Input,
-  Checkbox,
   Button,
-} from "@material-tailwind/react";
-import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { useAccount, useConnect } from "wagmi";
+} from '@material-tailwind/react';
+import Image from 'next/image';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { useAccount, useConnect } from 'wagmi';
 
 export default function Login() {
-  const { connect, connectors } = useConnect();
-  const { isConnected } = useAccount();
   const router = useRouter();
-  // const dataverseConnector = new DataverseConnector();
+  const dispatch = useDispatch();
+
+  const { isConnected } = useAccount();
+  const { connect, connectors } = useConnect();
+
+  const { createCapability } = useDataverse();
   // const provider = useEthersProvider()
 
   useEffect(() => {
+    const init = async () => {
+      const pkh = await createCapability();
+      dispatch(setPkh(pkh));
+
+      router.push('/wallet');
+    };
+
     if (isConnected) {
-      router.push("/wallet");
-      // const pkh = await dataverseConnector.connectWallet({
-      //   provider,
-      // });
-      // Set pkh to redux
+      init();
     }
   }, [isConnected]);
 
@@ -69,7 +75,7 @@ export default function Login() {
               Sign In with Social
             </Button>
             <div className="flex w-full justify-end items-center text-black -my-2">
-              Powered by{" "}
+              Powered by{' '}
               <Image
                 src="/images/onboard/login/auth0.svg"
                 width={15}
@@ -142,8 +148,8 @@ export default function Login() {
       {!isConnected && (
         <CardFooter className="flex flex-col gap-4 -mt-7 text-center">
           <Typography color="gray">
-            By connecting you agree to our{" "}
-            <span className="text-blue-500">Terms of Service</span> and{" "}
+            By connecting you agree to our{' '}
+            <span className="text-blue-500">Terms of Service</span> and{' '}
             <span className="text-blue-500">Privacy Policy</span>
           </Typography>
         </CardFooter>
