@@ -1,11 +1,12 @@
-"use client";
-import { closeTwoFADrawer } from "@/redux/slice/setupSlice";
-import { XMarkIcon } from "@heroicons/react/24/outline";
-import { Drawer, IconButton } from "@material-tailwind/react";
-import { useDispatch, useSelector } from "react-redux";
-import Passkey from "./twoFactorDrawer/Passkey";
-import PolygonID from "./twoFactorDrawer/PolygonID";
-import Aadhar from "./twoFactorDrawer/Aadhar";
+'use client';
+import { closeTwoFADrawer } from '@/redux/slice/setupSlice';
+import { XMarkIcon } from '@heroicons/react/24/outline';
+import { Drawer, IconButton } from '@material-tailwind/react';
+import { useDispatch, useSelector } from 'react-redux';
+import Passkey from './twoFactorDrawer/Passkey';
+import PolygonID from './twoFactorDrawer/PolygonID';
+import Aadhar from './twoFactorDrawer/Aadhar';
+import Image from 'next/image';
 
 export default function TwoFacterDrawer() {
   const dispatch = useDispatch();
@@ -25,11 +26,12 @@ export default function TwoFacterDrawer() {
       >
         <div className="flex items-center justify-between pb-2">
           <div className="flex flex-col gap-[2px]">
-            <h2 className="text-2xl font-uni text-black text-bold mt-5">
-              {selectedTwoFactor === 0 && "Passkey"}
-              {selectedTwoFactor === 1 && "Polygon ID"}
-              {selectedTwoFactor === 2 && "Anon Aadhar"}
+            <h2 className="text-2xl font-uni text-black text-bold mt-5 font-bold flex gap-2 items-center">
+              {selectedTwoFactor === 0 && 'Passkey'}
+              {selectedTwoFactor === 1 && 'Polygon ID'}
+              {selectedTwoFactor === 2 && 'Anon Aadhar'}
             </h2>
+
             <h2 className="text-md font-uni text-black">
               Two Factor Ecosystem
             </h2>

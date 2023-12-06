@@ -1,10 +1,10 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const sigManagerSlice = createSlice({
-  name: "sigManager",
+  name: 'sigManager',
   initialState: {
     drawer: false,
-    signature: "",
+    signature: '',
   },
 
   reducers: {
