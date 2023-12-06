@@ -24,13 +24,27 @@ export default function useSendTransaction() {
   );
 
   const use2FAsend = (fnName, fnArgs, successMessage) => {
-    const combinedArgs = [...fnArgs, ""];
-
     dispatch(setFnName(fnName));
-    dispatch(setFnArgs(combinedArgs));
+    dispatch(setFnArgs(fnArgs));
 
     dispatch(setSuccessMessage(successMessage));
     dispatch(openDrawer());
+  };
+
+  const use2FAsendWithSig = async (
+    fnName,
+    fnArgs,
+    successMessage,
+    signature
+  ) => {
+    const walletAddress = searchParams.get("wallet").split(":")[1];
+    const chain = searchParams.get("wallet").split(":")[0];
+
+    const combinedArgs = [...fnArgs, signature];
+
+    const callData = await prepareTransaction(fnName, combinedArgs);
+
+    await executeTransaction(walletAddress, chain, callData, successMessage);
   };
 
   const useNo2FAsendWithSig = async (fnName, fnArgs, successMessage) => {
@@ -90,5 +104,6 @@ export default function useSendTransaction() {
     useNo2FAsendWithNoSig,
     useNormalSend,
     initiateTransaction,
+    use2FAsendWithSig,
   };
 }

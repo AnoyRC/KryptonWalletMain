@@ -1,6 +1,7 @@
 "use client";
 import useReadContract from "@/hooks/useReadContract";
 import Krypton from "@/lib/contracts/Krypton";
+import useSendTransaction from "@/hooks/useSendTransaction";
 import {
   InformationCircleIcon,
   MinusIcon,
@@ -16,12 +17,15 @@ import {
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useContractEvent } from "wagmi";
+import toast from "react-hot-toast";
 
 export default function General() {
   const previousName = "Old-Wallet-Name";
   const [threshold, setThreshold] = useState(0);
+  const [guardianAddress, setGuardianAddress] = useState("");
   const { getThreshold } = useReadContract();
   const searchParams = useSearchParams();
+  const { initiateTransaction } = useSendTransaction();
   useContractEvent({
     address: searchParams.get("wallet").split(":")[1],
     abi: Krypton.abi,
@@ -112,8 +116,28 @@ export default function General() {
           labelProps={{
             className: "before:content-none after:content-none",
           }}
+          value={guardianAddress}
+          onChange={(e) => setGuardianAddress(e.target.value)}
         />
-        <Button className="w-full text-white font-bold bg-black/80" size="lg">
+        <Button
+          className="w-full text-white font-bold bg-black/80"
+          size="lg"
+          onClick={() => {
+            if (
+              guardianAddress.length !== 42 ||
+              !guardianAddress.startsWith("0x")
+            ) {
+              toast.error("Invalid address");
+              return;
+            }
+
+            initiateTransaction(
+              "addGuardian",
+              [guardianAddress],
+              "Guardian added"
+            );
+          }}
+        >
           Add Guardian
         </Button>
       </Card>

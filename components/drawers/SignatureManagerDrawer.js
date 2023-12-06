@@ -18,19 +18,33 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import Image from "next/image";
-import { setFnArgs, setFnName } from "@/redux/slice/walletSlice";
+import {
+  setFnArgs,
+  setFnName,
+  setSuccessMessage,
+} from "@/redux/slice/walletSlice";
 import toast from "react-hot-toast";
+import useSignPayload from "@/hooks/useSignPayload";
+import useSendTransaction from "@/hooks/useSendTransaction";
 
 export default function SignatureManagerDrawer() {
   const dispatch = useDispatch();
   const open = useSelector((state) => state.sigManager.drawer);
   const [activeTab, setActiveTab] = useState(0);
+  const { signMessage } = useSignPayload();
+  const [passkey, setPasskey] = useState("");
+  const signature = useSelector((state) => state.sigManager.signature);
+  const fnName = useSelector((state) => state.wallet.fnName);
+  const fnArgs = useSelector((state) => state.wallet.fnArgs);
+  const successMessage = useSelector((state) => state.wallet.successMessage);
+  const { use2FAsendWithSig } = useSendTransaction();
 
   const handleCloseDrawer = () => {
     dispatch(closeDrawer());
     dispatch(setFnName(""));
     dispatch(setFnArgs([]));
     dispatch(setSignature(""));
+    dispatch(setSuccessMessage(""));
     toast.success("Transaction Cancelled");
   };
 
@@ -39,7 +53,7 @@ export default function SignatureManagerDrawer() {
       <Drawer
         open={open}
         onClose={() => {
-          dispatch(handleCloseDrawer());
+          handleCloseDrawer();
         }}
         className="px-4 flex flex-col justify-between"
       >
@@ -58,7 +72,7 @@ export default function SignatureManagerDrawer() {
               variant="text"
               color="blue-gray"
               onClick={() => {
-                dispatch(handleCloseDrawer());
+                handleCloseDrawer();
               }}
             >
               <XMarkIcon className="w-6 h-6" />
@@ -91,9 +105,25 @@ export default function SignatureManagerDrawer() {
                     className: "before:content-none after:content-none",
                   }}
                   type="password"
+                  value={passkey}
+                  onChange={(e) => setPasskey(e.target.value)}
                 />
 
-                <Button className="" size="md">
+                <Button
+                  className=""
+                  size="md"
+                  onClick={() => {
+                    if (passkey.length < 6)
+                      return toast.error(
+                        "Passkey must be at least 6 characters long"
+                      );
+                    toast.promise(signMessage(passkey), {
+                      loading: "Signing Message",
+                      success: "Message Signed",
+                      error: "Message Signing Failed",
+                    });
+                  }}
+                >
                   Sign
                 </Button>
               </AccordionBody>
@@ -183,8 +213,25 @@ export default function SignatureManagerDrawer() {
         <Button
           className="mb-4"
           size="lg"
-          onClick={() => {
-            dispatch(handleCloseDrawer());
+          onClick={async () => {
+            if (!signature) return toast.error("Please sign the message first");
+
+            toast.success("Executing Transaction");
+
+            toast.promise(
+              use2FAsendWithSig(fnName, fnArgs, successMessage, signature),
+              {
+                loading: "Executing Transaction",
+                success: "Transaction Executed",
+                error: "Transaction Failed",
+              }
+            );
+
+            dispatch(closeDrawer());
+            dispatch(setFnName(""));
+            dispatch(setFnArgs([]));
+            dispatch(setSignature(""));
+            dispatch(setSuccessMessage(""));
           }}
         >
           Execute Transaction

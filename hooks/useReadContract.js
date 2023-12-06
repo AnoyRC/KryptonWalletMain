@@ -367,6 +367,62 @@ export default function useReadContract() {
     }
   };
 
+  const getTimeBasedMsg = async () => {
+    try {
+      const walletAddress = searchParams.get("wallet").split(":")[1];
+      const chain = searchParams.get("wallet").split(":")[0];
+      const currentConfig = ChainConfig.find(
+        (c) => c.chainId.toString() === chain
+      );
+
+      if (!currentConfig) {
+        return 0;
+      }
+
+      const provider = new ethers.providers.JsonRpcProvider(currentConfig.rpc);
+      const kryptonContract = new ethers.Contract(
+        walletAddress,
+        Krypton.abi,
+        provider
+      );
+
+      const timeBasedMsg = await kryptonContract.getTimeBasedMsg();
+
+      return timeBasedMsg;
+    } catch (e) {
+      console.log(e);
+      return 0;
+    }
+  };
+
+  const getMessageHash = async (msg) => {
+    try {
+      const walletAddress = searchParams.get("wallet").split(":")[1];
+      const chain = searchParams.get("wallet").split(":")[0];
+      const currentConfig = ChainConfig.find(
+        (c) => c.chainId.toString() === chain
+      );
+
+      if (!currentConfig) {
+        return "";
+      }
+
+      const provider = new ethers.providers.JsonRpcProvider(currentConfig.rpc);
+      const kryptonContract = new ethers.Contract(
+        walletAddress,
+        Krypton.abi,
+        provider
+      );
+
+      const msgHash = await kryptonContract.getMessageHash(msg);
+
+      return msgHash;
+    } catch (e) {
+      console.log(e);
+      return "";
+    }
+  };
+
   return {
     getThreshold,
     getTwoFactorCooldown,
@@ -380,5 +436,7 @@ export default function useReadContract() {
     isGuardian,
     is2FA,
     getRecentTwoFactor,
+    getTimeBasedMsg,
+    getMessageHash,
   };
 }
