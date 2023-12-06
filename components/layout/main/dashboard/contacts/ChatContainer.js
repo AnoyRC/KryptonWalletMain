@@ -1,17 +1,17 @@
-'use client';
+"use client";
 
-import { Card } from '@material-tailwind/react';
+import { Card } from "@material-tailwind/react";
 
-import { useAccount } from 'wagmi';
-import { useSelector } from 'react-redux';
-import { useState, useEffect } from 'react';
-import { useEthersSigner } from '@/wagmi/EthersSigner';
+import { useAccount } from "wagmi";
+import { useSelector } from "react-redux";
+import { useState, useEffect } from "react";
+import { useEthersSigner } from "@/wagmi/EthersSigner";
 
-import { usePush } from '@/hooks/usePush';
+import { usePush } from "@/hooks/usePush";
 
-import PushCard from './PushCard';
-import ChatBox from './chatBox/ChatBox';
-import ChatBackground from './ChatBackground';
+import PushCard from "./PushCard";
+import ChatBox from "./chatBox/ChatBox";
+import ChatBackground from "./ChatBackground";
 
 const ChatContainer = () => {
   const signer = useEthersSigner();
@@ -21,33 +21,22 @@ const ChatContainer = () => {
   const currentContact = useSelector((state) => state.contacts.currentContact);
   const pushSign = useSelector((state) => state.contacts.pushSign);
 
-  const [isSigned, setIsSigned] = useState(null);
-
   useEffect(() => {
-    const initialize = async () => {
-      try {
-        await initializePush();
-        setIsSigned(true);
-      } catch (e) {
-        setIsSigned(false);
-      }
-    };
-
-    if (isConnected && signer && pushSign) {
-      initialize();
+    if (isConnected && signer && !pushSign) {
+      initializePush();
     }
   }, [isConnected, signer]);
 
   return (
     <Card className="h-full flex-1 font-uni">
-      {isSigned ? (
+      {pushSign ? (
         currentContact ? (
           <ChatBox />
         ) : (
           <ChatBackground />
         )
       ) : (
-        <PushCard setIsSigned={setIsSigned} />
+        <PushCard />
       )}
     </Card>
   );

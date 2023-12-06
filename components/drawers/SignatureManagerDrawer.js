@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { closeDrawer } from '@/redux/slice/sigManagerSlice';
+import { closeDrawer, setSignature } from "@/redux/slice/sigManagerSlice";
 import {
   CreditCardIcon,
   KeyIcon,
   XMarkIcon,
-} from '@heroicons/react/24/outline';
+} from "@heroicons/react/24/outline";
 import {
   Drawer,
   IconButton,
@@ -14,19 +14,24 @@ import {
   AccordionBody,
   Input,
   Button,
-} from '@material-tailwind/react';
-import { useDispatch, useSelector } from 'react-redux';
-import { useState } from 'react';
-import Image from 'next/image';
-import useSignPayload from '@/hooks/useSignPayload';
-import useSendTransaction from '@/hooks/useSendTransaction';
+} from "@material-tailwind/react";
+import { useDispatch, useSelector } from "react-redux";
+import { useState } from "react";
+import Image from "next/image";
+import useSignPayload from "@/hooks/useSignPayload";
+import useSendTransaction from "@/hooks/useSendTransaction";
+import {
+  setFnArgs,
+  setFnName,
+  setSuccessMessage,
+} from "@/redux/slice/walletSlice";
 
 export default function SignatureManagerDrawer() {
   const dispatch = useDispatch();
   const open = useSelector((state) => state.sigManager.drawer);
   const [activeTab, setActiveTab] = useState(0);
   const { signMessage } = useSignPayload();
-  const [passkey, setPasskey] = useState('');
+  const [passkey, setPasskey] = useState("");
   const signature = useSelector((state) => state.sigManager.signature);
   const fnName = useSelector((state) => state.wallet.fnName);
   const fnArgs = useSelector((state) => state.wallet.fnArgs);
@@ -35,11 +40,11 @@ export default function SignatureManagerDrawer() {
 
   const handleCloseDrawer = () => {
     dispatch(closeDrawer());
-    dispatch(setFnName(''));
+    dispatch(setFnName(""));
     dispatch(setFnArgs([]));
-    dispatch(setSignature(''));
-    dispatch(setSuccessMessage(''));
-    toast.success('Transaction Cancelled');
+    dispatch(setSignature(""));
+    dispatch(setSuccessMessage(""));
+    toast.success("Transaction Cancelled");
   };
 
   return (
@@ -96,7 +101,7 @@ export default function SignatureManagerDrawer() {
                   placeholder="XXX-XXX"
                   className=" !border-t-blue-gray-200 focus:!border-t-gray-900"
                   labelProps={{
-                    className: 'before:content-none after:content-none',
+                    className: "before:content-none after:content-none",
                   }}
                   type="password"
                   value={passkey}
@@ -109,12 +114,12 @@ export default function SignatureManagerDrawer() {
                   onClick={() => {
                     if (passkey.length < 6)
                       return toast.error(
-                        'Passkey must be at least 6 characters long'
+                        "Passkey must be at least 6 characters long"
                       );
                     toast.promise(signMessage(passkey), {
-                      loading: 'Signing Message',
-                      success: 'Message Signed',
-                      error: 'Message Signing Failed',
+                      loading: "Signing Message",
+                      success: "Message Signed",
+                      error: "Message Signing Failed",
                     });
                   }}
                 >
@@ -171,7 +176,7 @@ export default function SignatureManagerDrawer() {
                   placeholder="XXX-XXX"
                   className=" !border-t-blue-gray-200 focus:!border-t-gray-900 -my-2"
                   labelProps={{
-                    className: 'before:content-none after:content-none',
+                    className: "before:content-none after:content-none",
                   }}
                   type="file"
                 />
@@ -183,7 +188,7 @@ export default function SignatureManagerDrawer() {
                   placeholder="XXX-XXX"
                   className=" !border-t-blue-gray-200 focus:!border-t-gray-900 -my-2 "
                   labelProps={{
-                    className: 'before:content-none after:content-none',
+                    className: "before:content-none after:content-none",
                   }}
                   type="file"
                 />
@@ -191,13 +196,13 @@ export default function SignatureManagerDrawer() {
                 <Button
                   className="-mt-1"
                   onClick={() => {
-                    dispatch(setTwoFactorAddress('0x00'));
+                    dispatch(setTwoFactorAddress("0x00"));
                     dispatch(closeTwoFADrawer());
                   }}
                   size="md"
                 >
-                  {' '}
-                  Confirm Aadhar Card{' '}
+                  {" "}
+                  Confirm Aadhar Card{" "}
                 </Button>
               </AccordionBody>
             </Accordion>
@@ -208,24 +213,24 @@ export default function SignatureManagerDrawer() {
           className="mb-4"
           size="lg"
           onClick={async () => {
-            if (!signature) return toast.error('Please sign the message first');
+            if (!signature) return toast.error("Please sign the message first");
 
-            toast.success('Executing Transaction');
+            toast.success("Executing Transaction");
 
             toast.promise(
               use2FAsendWithSig(fnName, fnArgs, successMessage, signature),
               {
-                loading: 'Executing Transaction',
-                success: 'Transaction Executed',
-                error: 'Transaction Failed',
+                loading: "Executing Transaction",
+                success: "Transaction Executed",
+                error: "Transaction Failed",
               }
             );
 
             dispatch(closeDrawer());
-            dispatch(setFnName(''));
+            dispatch(setFnName(""));
             dispatch(setFnArgs([]));
-            dispatch(setSignature(''));
-            dispatch(setSuccessMessage(''));
+            dispatch(setSignature(""));
+            dispatch(setSuccessMessage(""));
           }}
         >
           Execute Transaction

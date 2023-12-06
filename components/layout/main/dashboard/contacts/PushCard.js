@@ -1,24 +1,15 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import { useSelector } from 'react-redux';
-import { Button } from '@material-tailwind/react';
-import { LockClosedIcon } from '@heroicons/react/24/outline';
+import Image from "next/image";
+import { useSelector } from "react-redux";
+import { Button } from "@material-tailwind/react";
+import { LockClosedIcon } from "@heroicons/react/24/outline";
 
-import { usePush } from '@/hooks/usePush';
+import { usePush } from "@/hooks/usePush";
 
-const PushCard = ({ setIsSigned }) => {
+const PushCard = () => {
   const { initializePush } = usePush();
   const pushSign = useSelector((state) => state.contacts.pushSign);
-
-  const handleClick = async () => {
-    try {
-      await initializePush();
-      setIsSigned(true);
-    } catch (e) {
-      setIsSigned(false);
-    }
-  };
 
   return (
     <div className="flex flex-col justify-between items-center w-full h-full py-6">
@@ -42,7 +33,7 @@ const PushCard = ({ setIsSigned }) => {
           size="lg"
           className="bg-[#dd44b9] font-uni disabled:opacity-50 disabled:cursor-default mt-8"
           disabled={pushSign !== null ? true : false}
-          onClick={handleClick}
+          onClick={initializePush}
         >
           Click to Sign
         </Button>
