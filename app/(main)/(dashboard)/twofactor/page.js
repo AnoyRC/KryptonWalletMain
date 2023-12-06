@@ -21,12 +21,15 @@ import {
   openTwoFADrawer,
   setActiveStep,
   setSelectedTwoFactor,
+  setTwoFactorAddress,
 } from "@/redux/slice/setupSlice";
 import { openDrawer } from "@/redux/slice/sigManagerSlice";
 import useReadContract from "@/hooks/useReadContract";
 import { useSearchParams } from "next/navigation";
 import Krypton from "@/lib/contracts/Krypton";
 import { useContractEvent } from "wagmi";
+import useSendTransaction from "@/hooks/useSendTransaction";
+import toast from "react-hot-toast";
 
 export default function General() {
   const [cooldown, setCooldown] = useState(30);
@@ -38,6 +41,7 @@ export default function General() {
   const dispatch = useDispatch();
   const { getTwoFactorCooldown } = useReadContract();
   const searchParams = useSearchParams();
+  const { initiateTransaction } = useSendTransaction();
 
   useContractEvent({
     address: searchParams.get("wallet").split(":")[1],
@@ -111,7 +115,18 @@ export default function General() {
                   <PlusIcon className="w-6 h-6" />
                 </Button>
               </div>
-              <Button className=" text-white font-bold bg-black/80" size="lg">
+              <Button
+                className=" text-white font-bold bg-black/80"
+                size="lg"
+                onClick={() => {
+                  if (cooldown <= 0) {
+                    toast.error("Cooldown cannot be less than 0");
+                    return;
+                  }
+
+                  initiateTransaction("changeTwoFactorCooldown", [cooldown]);
+                }}
+              >
                 Update
               </Button>
             </div>
@@ -206,11 +221,30 @@ export default function General() {
           <Button
             className="w-full text-white font-bold -mt-2 bg-black/80"
             size="lg"
-            onClick={() => {
-              dispatch(openDrawer());
+            onClick={async () => {
+              if (!twoFactorAddress) {
+                toast.error("No 2FA method selected");
+                return;
+              }
+
+              await initiateTransaction("changeTwoFactor", [twoFactorAddress]);
+              dispatch(setTwoFactorAddress(""));
             }}
           >
             Change Two Factor
+          </Button>
+        )}
+
+        {twoFactorAddress && status !== "Recovery" && (
+          <Button
+            className="w-full text-white font-bold -mt-2 text-black/80"
+            size="lg"
+            variant="outlined"
+            onClick={async () => {
+              dispatch(setTwoFactorAddress(""));
+            }}
+          >
+            Reset
           </Button>
         )}
 

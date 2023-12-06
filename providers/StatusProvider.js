@@ -176,12 +176,19 @@ const StatusProvider = ({ children }) => {
     dispatch(setTwoFactorCooldown(Number(cooldown)));
   };
 
+  const handleRecentTwoFactor = async () => {
+    const recent = await getRecentTwoFactor();
+
+    dispatch(setTwoFactorCooldown(Number(recent)));
+  };
+
   useEffect(() => {
     if (searchParams.get("wallet")) {
       checkOwner();
       checkGuardian();
       check2FA();
       handleTwoFactorCooldown();
+      handleRecentTwoFactor();
     }
   }, [address]);
 

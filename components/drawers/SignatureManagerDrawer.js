@@ -216,8 +216,6 @@ export default function SignatureManagerDrawer() {
           onClick={async () => {
             if (!signature) return toast.error("Please sign the message first");
 
-            toast.success("Executing Transaction");
-
             toast.promise(
               use2FAsendWithSig(fnName, fnArgs, successMessage, signature),
               {

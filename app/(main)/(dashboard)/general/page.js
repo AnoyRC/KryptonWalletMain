@@ -93,7 +93,22 @@ export default function General() {
               <PlusIcon className="w-6 h-6" />
             </Button>
           </div>
-          <Button className=" text-white font-bold bg-black/80" size="lg">
+          <Button
+            className=" text-white font-bold bg-black/80"
+            size="lg"
+            onClick={() => {
+              if (threshold < 1) {
+                toast.error("Threshold must be at least 1");
+                return;
+              }
+
+              initiateTransaction(
+                "editThreshold",
+                [threshold],
+                "Threshold updated"
+              );
+            }}
+          >
             Update
           </Button>
         </div>
