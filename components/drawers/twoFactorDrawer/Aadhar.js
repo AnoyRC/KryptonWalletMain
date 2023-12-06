@@ -1,49 +1,50 @@
-"use client";
+'use client';
+
 import {
   closeTwoFADrawer,
   setTwoFactorAddress,
-} from "@/redux/slice/setupSlice";
-import { Button, Input } from "@material-tailwind/react";
-import { useDispatch } from "react-redux";
+} from '@/redux/slice/setupSlice';
+import { useDispatch } from 'react-redux';
+import { LogInWithAnonAadhaar, useAnonAadhaar } from 'anon-aadhaar-react';
+import { Button } from '@material-tailwind/react';
+import useTwoFactor from '@/hooks/useTwoFactor';
+import { useEffect } from 'react';
 
 export default function Aadhar() {
   const dispatch = useDispatch();
+  const [anonAadhaar] = useAnonAadhaar();
+  const { createWalletFromSeed } = useTwoFactor();
+
+  const handleClick = async () => {
+    const address = await createWalletFromSeed(
+      `${anonAadhaar.pcd.proof.app_id}:${anonAadhaar.pcd.id}`
+    );
+
+    dispatch(setTwoFactorAddress(address));
+    dispatch(closeTwoFADrawer());
+  };
+
   return (
     <>
-      <h6 className="font-uni text-lg font-bold text-black">Upload Aadhar</h6>
-      <Input
-        size="lg"
-        placeholder="XXX-XXX"
-        className=" !border-t-blue-gray-200 focus:!border-t-gray-900 -my-2"
-        labelProps={{
-          className: "before:content-none after:content-none",
-        }}
-        type="file"
-      />
-      <h6 className="font-uni text-lg font-bold text-black">
-        Upload Certificate
-      </h6>
-      <Input
-        size="lg"
-        placeholder="XXX-XXX"
-        className=" !border-t-blue-gray-200 focus:!border-t-gray-900 -my-2 "
-        labelProps={{
-          className: "before:content-none after:content-none",
-        }}
-        type="file"
-      />
+      <div>
+        <h3 className="font-uni text-xl font-bold text-black">
+          Connect Aadhaar
+        </h3>
 
-      <Button
-        className="-mt-1"
-        onClick={() => {
-          dispatch(setTwoFactorAddress("0x00"));
-          dispatch(closeTwoFADrawer());
-        }}
-        size="lg"
-      >
-        {" "}
-        Confirm Aadhar Card{" "}
-      </Button>
+        <p className="text-md font-uni text-black">
+          Connect your Aadhaar to configure 2 factor auth.
+        </p>
+      </div>
+
+      <div className="font-sans">
+        <LogInWithAnonAadhaar />
+      </div>
+
+      {anonAadhaar.status === 'logged-in' && (
+        <Button className="mt-2" onClick={handleClick} size="lg">
+          Confirm Aadhaar
+        </Button>
+      )}
     </>
   );
 }
