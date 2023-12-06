@@ -8,6 +8,11 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { ChainConfig } from "@/lib/chainConfig";
 import { useSearchParams } from "next/navigation";
+import { useAccount, useBalance } from "wagmi";
+import { createPublicClient, http } from "viem";
+import useSendTransaction from "@/hooks/useSendTransaction";
+import { BigNumber, ethers } from "ethers";
+import toast from "react-hot-toast";
 
 export default function Tokens() {
   const [amount, setAmount] = useState("0.00");
@@ -19,6 +24,12 @@ export default function Tokens() {
     "Please check the recipient address and try again."
   );
   const searchParams = useSearchParams();
+  const [isError, setIsError] = useState(false);
+  const currentConfig = ChainConfig.find(
+    (chain) =>
+      chain.chainId.toString() === searchParams.get("wallet")?.split(":")[0]
+  );
+  const { initiateTransaction } = useSendTransaction();
 
   useEffect(() => {
     if (searchParams.get("wallet")) {
@@ -49,7 +60,7 @@ export default function Tokens() {
               height={20}
               alt="fuel"
             />
-            0.004
+            0.000
           </Card>
         </div>
         <Card className="w-full flex flex-col p-6 py-8 gap-3 bg-black/80">
@@ -114,18 +125,145 @@ export default function Tokens() {
           </div>
         </Card>
 
-        <Button size="lg" className="bg-black/80">
+        <Button
+          size="lg"
+          className="bg-black/80"
+          onClick={async () => {
+            if (!recipient) {
+              setIsError(true);
+              setErrorTitle("Invalid Recipient");
+              setErrorDescription(
+                "Please check the recipient address and try again."
+              );
+              return;
+            }
+
+            if (Number(amount) <= 0) {
+              setIsError(true);
+              setErrorTitle("Invalid Amount");
+              setErrorDescription("Please check the amount and try again.");
+              return;
+            }
+
+            const publicClient = createPublicClient({
+              transport: http(
+                ChainConfig.find(
+                  (chain) =>
+                    chain.chainId.toString() ===
+                    searchParams.get("wallet")?.split(":")[0]
+                )?.rpc
+              ),
+              chain: ChainConfig.find(
+                (chain) =>
+                  chain.chainId.toString() ===
+                  searchParams.get("wallet")?.split(":")[0]
+              )?.chainId,
+            });
+
+            const selectedToken = currentConfig.tokens.find(
+              (token) => token.name === selected
+            );
+            if (!selectedToken) return;
+
+            if (selectedToken.isNative) {
+              const balance = await publicClient.getBalance({
+                address: searchParams.get("wallet")?.split(":")[1],
+              });
+
+              if (
+                Number(balance) / 10 ** selectedToken.decimals <
+                Number(amount)
+              ) {
+                setIsError(true);
+                setErrorTitle("Insufficient Balance");
+                setErrorDescription("Please check your balance and try again.");
+                return;
+              }
+
+              setIsError(false);
+
+              toast.promise(
+                initiateTransaction(
+                  "execute",
+                  [recipient, ethers.utils.parseUnits(amount.toString()), "0x"],
+                  "Transferred Successfully"
+                ),
+                {
+                  loading: "Transferring...",
+                  success: "Transferred Successfully",
+                  error: "Failed to Transfer",
+                }
+              );
+            } else {
+              const tokenContract = new ethers.Contract(
+                selectedToken.address,
+                [
+                  "function transfer(address to, uint256 amount) external returns (bool)",
+                  "function balanceOf(address account) external view returns (uint256)",
+                ],
+                new ethers.providers.JsonRpcProvider(publicClient.transport.url)
+              );
+
+              const balance = await tokenContract.balanceOf(
+                searchParams.get("wallet")?.split(":")[1]
+              );
+
+              console.log(
+                (Number(amount) * 10 ** selectedToken.decimals).toString
+              );
+
+              if (
+                Number(balance) / 10 ** selectedToken.decimals <
+                Number(amount)
+              ) {
+                setIsError(true);
+                setErrorTitle("Insufficient Balance");
+                setErrorDescription("Please check your balance and try again.");
+                return;
+              }
+
+              setIsError(false);
+
+              toast.promise(
+                initiateTransaction(
+                  "execute",
+                  [
+                    tokenContract.address,
+                    ethers.constants.Zero,
+                    tokenContract.interface.encodeFunctionData("transfer", [
+                      recipient,
+                      BigNumber.from(
+                        (
+                          Number(amount) *
+                          10 ** selectedToken.decimals
+                        ).toString()
+                      ),
+                    ]),
+                  ],
+                  "Transferred Successfully"
+                ),
+                {
+                  loading: "Transferring...",
+                  success: "Transferred Successfully",
+                  error: "Failed to Transfer",
+                }
+              );
+            }
+          }}
+        >
           Transfer
         </Button>
 
-        <Alert
-          variant="gradient"
-          icon={<ExclamationTriangleIcon className="h-8 w-8" />}
-          className="mb-2 mr-0"
-        >
-          <h6 className="font-bold text-lg mb-2">{errorTitle}</h6>
-          <p className="text-sm">{errorDescription}</p>
-        </Alert>
+        {isError && (
+          <Alert
+            variant="gradient"
+            icon={<ExclamationTriangleIcon className="h-8 w-8" />}
+            className="mb-2 mr-0"
+          >
+            <h6 className="font-bold text-lg mb-2">{errorTitle}</h6>
+            <p className="text-sm">{errorDescription}</p>
+          </Alert>
+        )}
       </Card>
     </div>
   );

@@ -359,7 +359,6 @@ export default function useReadContract() {
       );
 
       const recentTwoFactor = await kryptonContract.recentTwoFactor();
-      console.log(recentTwoFactor);
 
       dispatch(setRecentTwoFactor(Number(recentTwoFactor)));
     } catch (e) {

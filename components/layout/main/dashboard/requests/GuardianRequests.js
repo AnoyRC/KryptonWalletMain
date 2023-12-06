@@ -1,4 +1,5 @@
 "use client";
+import useSendTransaction from "@/hooks/useSendTransaction";
 import {
   ArrowUpRightIcon,
   ArrowsRightLeftIcon,
@@ -13,6 +14,8 @@ export default function GuardianRequests({
   address,
   proposedGuardian,
 }) {
+  const { initiateTransaction } = useSendTransaction();
+
   return (
     <div className="flex flex-row px-6 py-4 items-center border-black border-[1px] rounded-lg text-black font-bold justify-between gap-1 capitalize text-lg font-uni">
       <div className="flex flex-col gap-1">
@@ -38,6 +41,9 @@ export default function GuardianRequests({
           size="sm"
           variant="outlined"
           className="flex items-center justify-center gap-3 capitalize text-lg font-uni"
+          onClick={() => {
+            initiateTransaction("executeGuardianshipTransfer", [from]);
+          }}
         >
           <CheckIcon className="w-6 h-6 text-black" />
           Accept
@@ -46,6 +52,9 @@ export default function GuardianRequests({
           size="sm"
           variant="outlined"
           className="flex items-center justify-center gap-3 capitalize text-lg font-uni"
+          onClick={() => {
+            initiateTransaction("cancelGuardianshipTransfer", []);
+          }}
         >
           <XMarkIcon className="w-6 h-6 text-black" />
         </Button>

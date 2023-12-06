@@ -6,6 +6,7 @@ import {
   setIs2FA,
   setIsGuardian,
   setIsOwner,
+  setRecentTwoFactor,
   setTwoFactorCooldown,
   setWalletStatus,
 } from "@/redux/slice/walletSlice";
@@ -176,19 +177,13 @@ const StatusProvider = ({ children }) => {
     dispatch(setTwoFactorCooldown(Number(cooldown)));
   };
 
-  const handleRecentTwoFactor = async () => {
-    const recent = await getRecentTwoFactor();
-
-    dispatch(setTwoFactorCooldown(Number(recent)));
-  };
-
   useEffect(() => {
     if (searchParams.get("wallet")) {
       checkOwner();
       checkGuardian();
       check2FA();
       handleTwoFactorCooldown();
-      handleRecentTwoFactor();
+      getRecentTwoFactor();
     }
   }, [address]);
 

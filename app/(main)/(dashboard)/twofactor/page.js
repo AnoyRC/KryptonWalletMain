@@ -30,6 +30,7 @@ import Krypton from "@/lib/contracts/Krypton";
 import { useContractEvent } from "wagmi";
 import useSendTransaction from "@/hooks/useSendTransaction";
 import toast from "react-hot-toast";
+import useKrypton from "@/hooks/useKrypton";
 
 export default function General() {
   const [cooldown, setCooldown] = useState(30);
@@ -42,6 +43,7 @@ export default function General() {
   const { getTwoFactorCooldown } = useReadContract();
   const searchParams = useSearchParams();
   const { initiateTransaction } = useSendTransaction();
+  const { prepareEnableTwoFactorAuth, executeTransaction } = useKrypton();
 
   useContractEvent({
     address: searchParams.get("wallet").split(":")[1],
@@ -211,6 +213,19 @@ export default function General() {
             <Button
               className="w-full text-white font-bold bg-black/80"
               size="lg"
+              onClick={async () => {
+                const tx = await prepareEnableTwoFactorAuth(
+                  searchParams.get("wallet").split(":")[1],
+                  twoFactorAddress
+                );
+                await executeTransaction(
+                  searchParams.get("wallet").split(":")[1],
+                  searchParams.get("wallet").split(":")[0],
+                  tx,
+                  "2FA Enabled"
+                );
+                dispatch(setTwoFactorAddress(""));
+              }}
             >
               Enable 2FA
             </Button>
@@ -268,7 +283,7 @@ export default function General() {
             className="w-full text-white font-bold -mt-2 bg-black/80"
             size="lg"
             onClick={() => {
-              dispatch(openDrawer());
+              initiateTransaction("cancelRecovery", []);
             }}
           >
             Stop Recovery
