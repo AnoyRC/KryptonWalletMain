@@ -13,24 +13,6 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useContractEvent } from "wagmi";
 
-const RecoveryRequestsData = [
-  {
-    name: "John Doe",
-    address: "0xDb1d125C9f7faE45d7CeE470d048670a85270f4D",
-    proposedOwner: "0x123456789123456789123456789123456789",
-  },
-  {
-    name: "John Doe",
-    address: "0x01545d12C90464B7075d58952Cad5923a5be0860",
-    proposedOwner: "0x123456789123456789123456789123456789",
-  },
-  {
-    name: "John Doe",
-    address: "0x3C700d88616C9e186aed7dd59B2e7f60819bf863",
-    proposedOwner: "0x123456789123456789123456789123456789",
-  },
-];
-
 export default function Guardian() {
   const [isExecuting, setIsExecuting] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
@@ -43,6 +25,7 @@ export default function Guardian() {
   } = useReadContract();
   const [AllRecoveryRequests, setAllRecoveryRequests] = useState([]);
   const searchParams = useSearchParams();
+  const [link, setLink] = useState("");
 
   useContractEvent({
     address: searchParams.get("wallet").split(":")[1],
@@ -174,6 +157,7 @@ export default function Guardian() {
             RecoveryRequestsData={AllRecoveryRequests}
             setActiveStep={setActiveStep}
             setIsExecuting={setIsExecuting}
+            setLink={setLink}
           />
         )}
 
@@ -193,7 +177,7 @@ export default function Guardian() {
                 <Button
                   className="-mt-2 bg-black/80 w-full mb-2"
                   size="lg"
-                  onClick={() => navigator.clipboard.writeText(sampleLink)}
+                  onClick={() => navigator.clipboard.writeText(link)}
                 >
                   Copy Secret Link
                 </Button>

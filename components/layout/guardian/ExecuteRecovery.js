@@ -10,11 +10,14 @@ import { useSearchParams } from "next/navigation";
 import Krypton from "@/lib/contracts/Krypton";
 import { useAccount, useContractEvent } from "wagmi";
 import toast from "react-hot-toast";
+import { v4 as uuidv4 } from "uuid";
+import { configureAbly } from "@ably-labs/react-hooks";
 
 export default function ExecuteRecovery({
   RecoveryRequestsData,
   setActiveStep,
   setIsExecuting,
+  setLink,
 }) {
   const [selected, setSelected] = useState([]);
   const [threshold, setThreshold] = useState(0);
@@ -33,7 +36,10 @@ export default function ExecuteRecovery({
   const searchParams = useSearchParams();
   const is2FA = useSelector((state) => state.wallet.is2FA);
   const { address } = useAccount();
-  const { executeRecoveryUnsigned } = useGuardian();
+  const { executeRecoveryUnsigned, executeRecoverySigned } = useGuardian();
+  const { getTimeBasedMsg, getMessageHash } = useReadContract();
+  const [currentLink, setCurrentLink] = useState("");
+  const searchParam = useSearchParams();
 
   const setSelectedItem = (address) => {
     if (selected.includes(address)) {
@@ -160,7 +166,7 @@ export default function ExecuteRecovery({
       />
 
       <Button
-        className="-mt-2 mx-2 bg-black/80"
+        className="-mt-2 bg-black/80"
         size="lg"
         onClick={async () => {
           if (!is2FA) {
@@ -193,6 +199,48 @@ export default function ExecuteRecovery({
 
             setIsExecuting(false);
             setActiveStep(0);
+          } else {
+            if (selected.length < Number(threshold)) {
+              toast.error("Please select the required number of guardians");
+              return;
+            }
+
+            if (!recoveryOwner || recoveryOwner === "") {
+              toast.error("Please enter the new owner address");
+              return;
+            }
+
+            setIsExecuting(true);
+
+            const message = await getTimeBasedMsg();
+            const messageHash = await getMessageHash(message);
+
+            setActiveStep(1);
+
+            const id = uuidv4();
+
+            setLink(
+              `${process.env.NEXT_PUBLIC_NEXT_URL}/sign?message=${id}:${
+                searchParam.get("wallet").split(":")[0]
+              }:${searchParam.get("wallet").split(":")[1]}:${messageHash}`
+            );
+
+            const ably = configureAbly({
+              authUrl: `https://eminence.dotcombackend.me/api/ably/auth?id=${address}`,
+            });
+
+            let channel = ably.channels.get(
+              `${id}:${searchParam.get("wallet").split(":")[0]}:${
+                searchParam.get("wallet").split(":")[1]
+              }:${messageHash}`
+            );
+
+            channel.subscribe(async (msg) => {
+              setActiveStep(2);
+              await executeRecoverySigned(recoveryOwner, selected, msg.data);
+              setIsExecuting(false);
+              setActiveStep(0);
+            });
           }
         }}
         disabled={!isGuardian || selected.length < Number(threshold)}
