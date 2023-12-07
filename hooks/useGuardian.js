@@ -140,9 +140,55 @@ export default function useGuardian() {
     }
   };
 
+  const executeRecoveryUnsigned = async (newOwner, guardianList) => {
+    try {
+      const wallet = searchParam.get("wallet");
+
+      if (!wallet) return;
+
+      const walletAddress = wallet.split(":")[1];
+      const chain = wallet.split(":")[0];
+
+      const currentConfig = ChainConfig.find(
+        (config) => config.chainId.toString() === chain
+      );
+
+      if (!currentConfig) return;
+
+      const KryptonContract = new ethers.Contract(
+        walletAddress,
+        Krypton.abi,
+        signer
+      );
+
+      const unsignedTx =
+        await KryptonContract.populateTransaction.executeRecovery(
+          newOwner,
+          guardianList,
+          "0xa15569dd8f8324dbeabf8073fdec36d4b754f53ce5901e283c6de79af177dc94557fa3c9922cd7af2a96ca94402d35c39f266925ee6407aeb32b31d76978d4ba1c"
+        );
+
+      const tx = {
+        to: walletAddress,
+        data: unsignedTx.data,
+        gasLimit: 10000000,
+      };
+
+      const txid = await signer.sendTransaction(tx);
+
+      toast.success("Sucessfully Executed Recovery");
+
+      return txid;
+    } catch (err) {
+      toast.error("Error Executing Recovery");
+      return false;
+    }
+  };
+
   return {
     transferGuardian,
     initiateRecoveryUnsigned,
     supportRecovery,
+    executeRecoveryUnsigned,
   };
 }
