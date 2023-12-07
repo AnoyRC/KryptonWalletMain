@@ -1,8 +1,11 @@
 "use client";
 import { CheckIcon } from "@heroicons/react/24/outline";
-import { Button, List, ListItem } from "@material-tailwind/react";
+import { Button, List, ListItem, Input } from "@material-tailwind/react";
 import { useState } from "react";
 import RecoveryRequests from "../main/dashboard/requests/RecoveryRequests";
+import { useSelector } from "react-redux";
+import useGuardian from "@/hooks/useGuardian";
+import useReadContract from "@/hooks/useReadContract";
 
 export default function ExecuteRecovery({
   RecoveryRequestsData,
@@ -10,6 +13,11 @@ export default function ExecuteRecovery({
 }) {
   const [selected, setSelected] = useState([]);
   const threshold = 3;
+
+  const isGuardian = useSelector((state) => state.wallet.isGuardian);
+  const { isGuardian: checkGuardian, isOwner } = useReadContract();
+  const [proposedOwner, setProposedOwner] = useState("");
+  const { supportRecovery } = useGuardian();
 
   const setSelectedItem = (address) => {
     if (selected.includes(address)) {
@@ -21,6 +29,40 @@ export default function ExecuteRecovery({
 
   return (
     <>
+      <h6 className="font-uni text-lg font-bold">Proposed Owner</h6>
+      <Input
+        size="lg"
+        placeholder="new-owner-address"
+        className=" !border-t-blue-gray-200 focus:!border-t-gray-900 -my-2"
+        labelProps={{
+          className: "before:content-none after:content-none",
+        }}
+        value={proposedOwner}
+        onChange={(e) => setProposedOwner(e.target.value)}
+        disabled={!isGuardian}
+      />
+      <Button
+        className="-mt-2 bg-black/80"
+        disabled={!isGuardian}
+        onClick={async () => {
+          if (!proposedOwner) {
+            toast.error("Please fill all the fields");
+          }
+
+          const isProposedOwner = await isOwner(proposedOwner);
+
+          const isNewGuardian = await checkGuardian(proposedOwner);
+
+          if (isProposedOwner || isNewGuardian) {
+            toast.error("Cannot transfer ownership to an owner or guardian");
+          }
+
+          await supportRecovery(proposedOwner);
+        }}
+      >
+        Support Recovery
+      </Button>
+
       <div className="flex items-center justify-between -my-1 -mb-3 px-2">
         <h6 className="font-uni text-lg font-bold">Select Requests</h6>
         <p>

@@ -30,7 +30,7 @@ const RecoveryRequestsData = [
 export default function Guardian() {
   const [isExecuting, setIsExecuting] = useState(false);
   const [activeStep, setActiveStep] = useState(0);
-  const twoFactor = true;
+  const twoFactor = useSelector((state) => state.wallet.is2FA);
 
   const sampleLink =
     "https://app.spline.design/file/e2cc7718-0c00-4034-b04d-c0c3307f01a3";
