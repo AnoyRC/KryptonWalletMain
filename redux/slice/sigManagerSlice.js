@@ -5,10 +5,10 @@ const sigManagerSlice = createSlice({
   initialState: {
     drawer: false,
     signature: "",
-    signDrawer: false,
     initiateDrawer: false,
     initiateWalletAddress: "",
     intiateChainId: "",
+    messageDrawer: false,
   },
 
   reducers: {
@@ -18,10 +18,6 @@ const sigManagerSlice = createSlice({
 
     closeDrawer: (state) => {
       state.drawer = false;
-    },
-
-    toggleSignDrawer: (state, action) => {
-      state.signDrawer = action.payload;
     },
 
     setSignature: (state, action) => {
@@ -45,6 +41,16 @@ const sigManagerSlice = createSlice({
     setInitiateChainId: (state, action) => {
       state.intiateChainId = action.payload;
     },
+
+    openMessageDrawer: (state) => {
+      state.messageDrawer = true;
+      state.drawer = true;
+    },
+
+    closeMessageDrawer: (state) => {
+      state.messageDrawer = false;
+      state.drawer = false;
+    },
   },
 });
 
@@ -57,6 +63,8 @@ export const {
   closeInitiateDrawer,
   setInitiateWalletAddress,
   setInitiateChainId,
+  openMessageDrawer,
+  closeMessageDrawer,
 } = sigManagerSlice.actions;
 
 export default sigManagerSlice.reducer;

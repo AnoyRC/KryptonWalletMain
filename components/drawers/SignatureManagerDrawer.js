@@ -33,6 +33,7 @@ import {
   closeDrawer,
   setSignature,
   closeInitiateDrawer,
+  closeMessageDrawer,
 } from "@/redux/slice/sigManagerSlice";
 
 export default function SignatureManagerDrawer() {
@@ -42,7 +43,8 @@ export default function SignatureManagerDrawer() {
   const [activeTab, setActiveTab] = useState(0);
 
   const [anonAadhaar] = useAnonAadhaar();
-  const { signMessage, signInitateMessage } = useSignPayload();
+  const { signMessage, signInitateMessage, signRecoveryMessage } =
+    useSignPayload();
   const { use2FAsendWithSig, useNormalSendWithWallet } = useSendTransaction();
 
   const fnArgs = useSelector((state) => state.wallet.fnArgs);
@@ -57,8 +59,23 @@ export default function SignatureManagerDrawer() {
   const initiateChainId = useSelector(
     (state) => state.sigManager.intiateChainId
   );
+  const isMessage = useSelector((state) => state.sigManager.messageDrawer);
 
   const handleAnonClick = async () => {
+    if (isMessage) {
+      toast.promise(
+        signRecoveryMessage(
+          `${anonAadhaar.pcd.proof.app_id}:${anonAadhaar.pcd.id}`
+        ),
+        {
+          loading: "Signing Message",
+          success: "Message Signed",
+          error: "Message Signing Failed",
+        }
+      );
+      return;
+    }
+
     if (!initiate)
       toast.promise(
         signMessage(`${anonAadhaar.pcd.proof.app_id}:${anonAadhaar.pcd.id}`),
@@ -91,7 +108,9 @@ export default function SignatureManagerDrawer() {
     dispatch(setSignature(""));
     dispatch(setSuccessMessage(""));
 
-    toast.success("Transaction Cancelled");
+    if (!isMessage) {
+      toast.success("Transaction Cancelled");
+    }
   };
 
   return (
@@ -164,6 +183,15 @@ export default function SignatureManagerDrawer() {
                       return toast.error(
                         "Passkey must be at least 6 characters long"
                       );
+
+                    if (isMessage) {
+                      toast.promise(signRecoveryMessage(passkey), {
+                        loading: "Signing Message",
+                        success: "Message Signed",
+                        error: "Message Signing Failed",
+                      });
+                      return;
+                    }
 
                     if (!initiate)
                       toast.promise(signMessage(passkey), {
@@ -246,59 +274,61 @@ export default function SignatureManagerDrawer() {
           </div>
         </div>
 
-        <Button
-          className="mb-4"
-          size="lg"
-          onClick={async () => {
-            if (!initiate) {
-              if (!signature)
-                return toast.error("Please sign the message first");
+        {!isMessage && (
+          <Button
+            className="mb-4"
+            size="lg"
+            onClick={async () => {
+              if (!initiate) {
+                if (!signature)
+                  return toast.error("Please sign the message first");
 
-              toast.promise(
-                use2FAsendWithSig(fnName, fnArgs, successMessage, signature),
-                {
-                  loading: "Executing Transaction",
-                  success: "Transaction Executed",
-                  error: "Transaction Failed",
-                }
-              );
+                toast.promise(
+                  use2FAsendWithSig(fnName, fnArgs, successMessage, signature),
+                  {
+                    loading: "Executing Transaction",
+                    success: "Transaction Executed",
+                    error: "Transaction Failed",
+                  }
+                );
 
-              dispatch(closeDrawer());
-              dispatch(setFnName(""));
-              dispatch(setFnArgs([]));
-              dispatch(setSignature(""));
-              dispatch(setSuccessMessage(""));
-            } else {
-              if (!signature)
-                return toast.error("Please sign the message first");
+                dispatch(closeDrawer());
+                dispatch(setFnName(""));
+                dispatch(setFnArgs([]));
+                dispatch(setSignature(""));
+                dispatch(setSuccessMessage(""));
+              } else {
+                if (!signature)
+                  return toast.error("Please sign the message first");
 
-              const combinedArgs = [...fnArgs, signature];
+                const combinedArgs = [...fnArgs, signature];
 
-              toast.promise(
-                useNormalSendWithWallet(
-                  fnName,
-                  combinedArgs,
-                  initiateWalletAddress,
-                  successMessage
-                ),
-                {
-                  loading: "Executing Transaction",
-                  success: "Transaction Executed",
-                  error: "Transaction Failed",
-                }
-              );
+                toast.promise(
+                  useNormalSendWithWallet(
+                    fnName,
+                    combinedArgs,
+                    initiateWalletAddress,
+                    successMessage
+                  ),
+                  {
+                    loading: "Executing Transaction",
+                    success: "Transaction Executed",
+                    error: "Transaction Failed",
+                  }
+                );
 
-              dispatch(closeInitiateDrawer());
-              dispatch(closeDrawer());
-              dispatch(setFnName(""));
-              dispatch(setFnArgs([]));
-              dispatch(setSignature(""));
-              dispatch(setSuccessMessage(""));
-            }
-          }}
-        >
-          Execute Transaction
-        </Button>
+                dispatch(closeInitiateDrawer());
+                dispatch(closeDrawer());
+                dispatch(setFnName(""));
+                dispatch(setFnArgs([]));
+                dispatch(setSignature(""));
+                dispatch(setSuccessMessage(""));
+              }
+            }}
+          >
+            Execute Transaction
+          </Button>
+        )}
       </Drawer>
     </>
   );

@@ -2,6 +2,7 @@
 import {
   openDrawer,
   openInitiateDrawer,
+  openMessageDrawer,
   setInitiateChainId,
   setInitiateWalletAddress,
 } from "@/redux/slice/sigManagerSlice";
@@ -35,22 +36,70 @@ import {
   setFnName,
   setSuccessMessage,
 } from "@/redux/slice/walletSlice";
+import { ethers } from "ethers";
 
 export default function Sign() {
   const dispatch = useDispatch();
   const router = useRouter();
   const { isConnected } = useAccount();
-  const chain = useSelector((state) => state.setup.chain);
-  const [walletAddress, setWalletAddress] = useState("");
-  const { chain: currentChain } = useNetwork();
-  const { switchNetwork } = useSwitchNetwork();
-  const { checkWalletCode } = useDeployKrypton();
   const [client, setClient] = useState(null);
   const searchParams = useSearchParams();
+  const { checkWalletCode } = useDeployKrypton();
+  const [isInvalid, setIsInvalid] = useState(false);
 
   useEffect(() => {
     setClient(true);
   }, []);
+
+  useEffect(() => {
+    if (isConnected) {
+      checkMessage();
+    }
+  }, [searchParams, isConnected]);
+
+  const checkMessage = async () => {
+    setIsInvalid(false);
+
+    const message = searchParams.get("message");
+
+    const id = message.split(":")[0];
+    const chainId = message.split(":")[1];
+    const walletAddress = message.split(":")[2];
+    const payload = message.split(":")[3];
+
+    const currentConfig = ChainConfig.find(
+      (config) => config.chainId.toString() === chainId
+    );
+
+    if (!currentConfig) {
+      toast.error("Invalid Chain Id");
+      setIsInvalid(true);
+      return;
+    }
+
+    const provider = new ethers.providers.JsonRpcProvider(currentConfig.rpc);
+
+    const walletCode = await provider.getCode(walletAddress);
+    const walletExists = walletCode !== "0x";
+
+    if (!walletExists) {
+      toast.error("Invalid Wallet Address");
+      setIsInvalid(true);
+      return;
+    }
+
+    if (!payload) {
+      toast.error("Invalid Payload");
+      setIsInvalid(true);
+      return;
+    }
+
+    if (!id) {
+      toast.error("Invalid Id");
+      setIsInvalid(true);
+      return;
+    }
+  };
 
   return (
     client && (
@@ -67,62 +116,28 @@ export default function Sign() {
         <CardBody className="flex flex-col -mt-2 gap-4">
           {isConnected && (
             <>
-              <Alert
-                variant="gradient"
-                icon={<InformationCircleIcon className="h-7 w-7" />}
-                className="mb-2 mr-0"
-              >
-                Invalid Link: The token may have expired or the link is invalid.
-                Ask the guardian to send a new link.
-              </Alert>
+              {isInvalid && (
+                <Alert
+                  variant="gradient"
+                  icon={<InformationCircleIcon className="h-7 w-7" />}
+                  className="mb-2 mr-0"
+                >
+                  Invalid Link: The token may have expired or the link is
+                  invalid. Ask the guardian to send a new link.
+                </Alert>
+              )}
 
-              <Button
-                size="lg"
-                className="flex items-center justify-center -mt-4 gap-3 mb-1 capitalize text-lg font-uni bg-black/80"
-                onClick={async () => {
-                  if (
-                    !walletAddress ||
-                    !walletAddress.startsWith("0x") ||
-                    walletAddress.length !== 42
-                  ) {
-                    toast.error("Please enter a wallet address");
-                    return;
-                  }
-
-                  const currentConfig = ChainConfig.find(
-                    (c) => c.chainId.toString() === chain
-                  );
-
-                  if (!currentConfig) {
-                    toast.error("Chain not yet Supported");
-                    return;
-                  }
-
-                  const isCorrectChain =
-                    currentChain.id === currentConfig.chainId;
-
-                  if (!isCorrectChain) {
-                    toast.error("Please switch to the correct chain");
-                    return;
-                  }
-
-                  const isValidKrypton = await checkWalletCode(walletAddress);
-
-                  if (!isValidKrypton) {
-                    toast.error("Invalid Krypton Wallet");
-                    return;
-                  }
-
-                  dispatch(openInitiateDrawer());
-                  dispatch(setFnName("initiateRecovery"));
-                  dispatch(setFnArgs([walletAddress]));
-                  dispatch(setInitiateWalletAddress(walletAddress));
-                  dispatch(setInitiateChainId(chain));
-                  dispatch(setSuccessMessage("Recovery Initiated"));
-                }}
-              >
-                Initiate Recovery
-              </Button>
+              {!isInvalid && (
+                <Button
+                  size="lg"
+                  className="flex items-center justify-center -mt-1 gap-3 mb-1 capitalize text-lg font-uni bg-black/80"
+                  onClick={() => {
+                    dispatch(openMessageDrawer());
+                  }}
+                >
+                  Sign Message
+                </Button>
+              )}
 
               <Button
                 size="lg"
