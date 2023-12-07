@@ -36,8 +36,9 @@ export default function Login() {
     // if (isConnected) {
     //   init();
     // }
-
-    router.push("/wallet");
+    if (isConnected) {
+      router.push("/wallet");
+    }
   }, [isConnected]);
 
   // useEffect(() => {
