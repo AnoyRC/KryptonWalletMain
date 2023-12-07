@@ -50,11 +50,11 @@ export default function GuardianTransfer() {
             toast.error("Please fill all the fields");
           }
 
-          const isOwner = await isOwner(newGuardian);
+          const isProposedOwner = await isOwner(newGuardian);
 
-          const isNewGuardian = await checkGuardian(guardianToChange);
+          const isNewGuardian = await checkGuardian(newGuardian);
 
-          if (isOwner || isNewGuardian) {
+          if (isProposedOwner || isNewGuardian) {
             toast.error("Cannot transfer guardianship to an owner or guardian");
           }
 

@@ -1,12 +1,12 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const setupSlice = createSlice({
-  name: 'setup',
+  name: "setup",
   initialState: {
     activeStep: 0,
-    name: '',
-    guardians: [{ name: '', address: '' }],
-    chain: '80001',
+    name: "",
+    guardians: [{ name: "", address: "" }],
+    chain: "80001",
     twoFactorAddress: null,
     selectedTwoFactor: 0,
     twoFADrawer: false,

@@ -9,11 +9,15 @@ import { keccak256 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import Web3 from "web3";
 import useReadContract from "./useReadContract";
+import { ethers } from "ethers";
+import Krypton from "@/lib/contracts/Krypton";
+import { useEthersSigner } from "@/wagmi/EthersSigner";
 
 export default function useSignPayload() {
   const dispatch = useDispatch();
   const searchParams = useSearchParams();
   const { getTimeBasedMsg, getMessageHash } = useReadContract();
+  const signer = useEthersSigner();
 
   const signMessage = async (id) => {
     const message = await getTimeBasedMsg();
@@ -40,5 +44,40 @@ export default function useSignPayload() {
     dispatch(setSignature(signature.signature));
   };
 
-  return { signMessage };
+  const signInitateMessage = async (id, walletAddress, chainId) => {
+    try {
+      const KryptonContract = new ethers.Contract(
+        walletAddress,
+        Krypton.abi,
+        signer
+      );
+
+      const message = await KryptonContract.getTimeBasedMsg();
+      const messageHash = await KryptonContract.getMessageHash(message);
+
+      const inputs = Array.isArray(id) ? id : [id];
+      const hash = inputs.reduce((acc, curr) => acc + curr, "");
+
+      const currentConfig = ChainConfig.find(
+        (c) => c.chainId.toString() === chainId
+      );
+
+      if (!currentConfig) {
+        return;
+      }
+
+      const web3 = new Web3(new Web3.providers.HttpProvider(currentConfig.rpc));
+
+      web3.eth.accounts.wallet.add(keccak256(Buffer.from(hash)));
+      const account = privateKeyToAccount(keccak256(Buffer.from(hash)));
+
+      const signature = await web3.eth.sign(messageHash, account.address);
+
+      dispatch(setSignature(signature.signature));
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  return { signMessage, signInitateMessage };
 }

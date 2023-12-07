@@ -1,6 +1,7 @@
 "use client";
 
 import useKrypton from "@/hooks/useKrypton";
+import Krypton from "@/lib/contracts/Krypton";
 import { openDrawer } from "@/redux/slice/sigManagerSlice";
 import {
   setFnArgs,
@@ -8,6 +9,7 @@ import {
   setSuccessMessage,
 } from "@/redux/slice/walletSlice";
 import { useEthersSigner } from "@/wagmi/EthersSigner";
+import { ethers } from "ethers";
 import { useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
@@ -98,6 +100,36 @@ export default function useSendTransaction() {
     use2FAsend(fnName, fnArgs, successMessage);
   };
 
+  const useNormalSendWithWallet = async (
+    fnName,
+    fnArgs,
+    walletAddress,
+    successMessage
+  ) => {
+    const KryptonContract = new ethers.Contract(
+      walletAddress,
+      Krypton.abi,
+      signer
+    );
+
+    const unSignedTx = KryptonContract.interface.encodeFunctionData(
+      fnName,
+      fnArgs
+    );
+
+    const tx = {
+      to: walletAddress,
+      data: unSignedTx,
+      gasLimit: 1000000,
+    };
+
+    const signedTx = await signer.sendTransaction(tx);
+
+    await signedTx.wait();
+
+    toast.success(successMessage);
+  };
+
   return {
     use2FAsend,
     useNo2FAsendWithSig,
@@ -105,5 +137,6 @@ export default function useSendTransaction() {
     useNormalSend,
     initiateTransaction,
     use2FAsendWithSig,
+    useNormalSendWithWallet,
   };
 }
