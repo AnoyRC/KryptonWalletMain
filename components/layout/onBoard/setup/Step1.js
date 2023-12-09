@@ -78,8 +78,8 @@ export default function Step1() {
         <Option value="80001">
           <MumbaiChip />
         </Option>
-        <Option value="137">
-          <PolygonChip />
+        <Option value="84531">
+          <BaseChip />
         </Option>
       </Select>
 

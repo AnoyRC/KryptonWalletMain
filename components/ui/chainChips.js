@@ -19,7 +19,7 @@ export function CeloChip() {
 }
 
 export function BaseChip() {
-  return <Chip value="Base" color="blue" className="w-fit" />;
+  return <Chip value="Base Goerli" color="blue" className="w-fit" />;
 }
 
 export function ScrollChip() {
@@ -35,7 +35,10 @@ export function ChipsInId({ chain }) {
     <>
       {chain === "137" && <PolygonChip />}
       {chain === "80001" && <MumbaiChip />}
-      {chain !== "137" && chain !== "80001" && <UnsupportedChip />}
+      {chain === "84531" && <BaseChip />}
+      {chain !== "137" && chain !== "80001" && chain !== "84531" && (
+        <UnsupportedChip />
+      )}
     </>
   );
 }

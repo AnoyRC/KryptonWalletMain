@@ -25,7 +25,7 @@ import { useDispatch } from "react-redux";
 import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
 import { useSelector } from "react-redux";
 import { setChain } from "@/redux/slice/setupSlice";
-import { MumbaiChip, PolygonChip } from "@/components/ui/chainChips";
+import { BaseChip, MumbaiChip, PolygonChip } from "@/components/ui/chainChips";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { ChainConfig } from "@/lib/chainConfig";
@@ -99,8 +99,8 @@ export default function Setup() {
                 <Option value="80001">
                   <MumbaiChip />
                 </Option>
-                <Option value="137">
-                  <PolygonChip />
+                <Option value="84531">
+                  <BaseChip />
                 </Option>
               </Select>
 

@@ -70,7 +70,7 @@ export default function Step4() {
 
     //Dataverse OS
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    await createKryptonServer(name, `${chain}:${walletAddress}`, guardians);
+    // await createKryptonServer(name, `${chain}:${walletAddress}`, guardians);
     setSteps(2);
 
     //2FA
