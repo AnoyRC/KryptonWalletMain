@@ -3,6 +3,7 @@
 import { ChipsInId } from "@/components/ui/chainChips";
 import useDeployKrypton from "@/hooks/useDeployKrypton";
 import useKrypton from "@/hooks/useKrypton";
+import useServer from "@/hooks/useServer";
 import {
   setActiveStep,
   setGuardians,
@@ -41,6 +42,7 @@ export default function Step4() {
   const { createKrypton, checkWalletCode } = useDeployKrypton();
   const [deployedAddress, setDeployedAddress] = useState(null);
   const { executeTransaction, prepareEnableTwoFactorAuth } = useKrypton();
+  const { createKrypton: createKryptonServer } = useServer();
 
   const execute = async () => {
     // setTimeout(() => {
@@ -68,6 +70,7 @@ export default function Step4() {
 
     //Dataverse OS
     await new Promise((resolve) => setTimeout(resolve, 1000));
+    await createKryptonServer(name, `${chain}:${walletAddress}`, guardians);
     setSteps(2);
 
     //2FA
