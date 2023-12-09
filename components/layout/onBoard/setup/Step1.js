@@ -81,6 +81,9 @@ export default function Step1() {
         <Option value="84531">
           <BaseChip />
         </Option>
+        <Option value="44787">
+          <CeloChip />
+        </Option>
       </Select>
 
       {isConnected && currentChain.id.toString() !== chain && (

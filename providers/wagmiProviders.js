@@ -4,14 +4,20 @@ import { publicProvider } from "wagmi/providers/public";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
-import { baseGoerli, goerli, polygon, polygonMumbai } from "wagmi/chains";
+import {
+  baseGoerli,
+  celoAlfajores,
+  goerli,
+  polygon,
+  polygonMumbai,
+} from "wagmi/chains";
 
 import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
 import { oAuthConnector } from "@/wagmi/oAuthConnector";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [polygon, polygonMumbai, baseGoerli],
+  [polygon, polygonMumbai, baseGoerli, celoAlfajores],
   [publicProvider()]
 );
 

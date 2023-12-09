@@ -15,7 +15,7 @@ export function ArbitrumChip() {
 }
 
 export function CeloChip() {
-  return <Chip value="Celo" color="lime" className="w-fit" />;
+  return <Chip value="Alfajores" color="lime" className="w-fit" />;
 }
 
 export function BaseChip() {
@@ -36,9 +36,11 @@ export function ChipsInId({ chain }) {
       {chain === "137" && <PolygonChip />}
       {chain === "80001" && <MumbaiChip />}
       {chain === "84531" && <BaseChip />}
-      {chain !== "137" && chain !== "80001" && chain !== "84531" && (
-        <UnsupportedChip />
-      )}
+      {chain === "44787" && <CeloChip />}
+      {chain !== "137" &&
+        chain !== "80001" &&
+        chain !== "84531" &&
+        chain !== "44787" && <UnsupportedChip />}
     </>
   );
 }
