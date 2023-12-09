@@ -26,6 +26,7 @@ import { useAccount, useNetwork, useSwitchNetwork } from "wagmi";
 import { useSelector } from "react-redux";
 import { setChain } from "@/redux/slice/setupSlice";
 import {
+  ArbitrumChip,
   BaseChip,
   CeloChip,
   MumbaiChip,
@@ -113,6 +114,9 @@ export default function Setup() {
                 </Option>
                 <Option value="534351">
                   <ScrollChip />
+                </Option>
+                <Option value="421613">
+                  <ArbitrumChip />
                 </Option>
               </Select>
 

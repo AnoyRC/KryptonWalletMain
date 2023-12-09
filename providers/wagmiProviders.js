@@ -5,6 +5,7 @@ import { InjectedConnector } from "wagmi/connectors/injected";
 import { MetaMaskConnector } from "wagmi/connectors/metaMask";
 import { WalletConnectConnector } from "wagmi/connectors/walletConnect";
 import {
+  arbitrumGoerli,
   baseGoerli,
   celoAlfajores,
   goerli,
@@ -18,7 +19,14 @@ import { oAuthConnector } from "@/wagmi/oAuthConnector";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [polygon, polygonMumbai, baseGoerli, celoAlfajores, scrollSepolia],
+  [
+    polygon,
+    polygonMumbai,
+    baseGoerli,
+    celoAlfajores,
+    scrollSepolia,
+    arbitrumGoerli,
+  ],
   [publicProvider()]
 );
 
