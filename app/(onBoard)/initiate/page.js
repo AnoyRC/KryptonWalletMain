@@ -30,6 +30,7 @@ import {
   CeloChip,
   MumbaiChip,
   PolygonChip,
+  ScrollChip,
 } from "@/components/ui/chainChips";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -109,6 +110,9 @@ export default function Setup() {
                 </Option>
                 <Option value="44787">
                   <CeloChip />
+                </Option>
+                <Option value="534351">
+                  <ScrollChip />
                 </Option>
               </Select>
 

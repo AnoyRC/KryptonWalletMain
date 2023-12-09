@@ -10,6 +10,7 @@ import {
   goerli,
   polygon,
   polygonMumbai,
+  scrollSepolia,
 } from "wagmi/chains";
 
 import { CoinbaseWalletConnector } from "wagmi/connectors/coinbaseWallet";
@@ -17,7 +18,7 @@ import { oAuthConnector } from "@/wagmi/oAuthConnector";
 import { alchemyProvider } from "wagmi/providers/alchemy";
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [polygon, polygonMumbai, baseGoerli, celoAlfajores],
+  [polygon, polygonMumbai, baseGoerli, celoAlfajores, scrollSepolia],
   [publicProvider()]
 );
 

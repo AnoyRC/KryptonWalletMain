@@ -23,7 +23,7 @@ export function BaseChip() {
 }
 
 export function ScrollChip() {
-  return <Chip value="Scroll" color="blue-gray" className="w-fit" />;
+  return <Chip value="Scroll Sepolia" color="blue-gray" className="w-fit" />;
 }
 
 export function UnsupportedChip() {
@@ -37,10 +37,12 @@ export function ChipsInId({ chain }) {
       {chain === "80001" && <MumbaiChip />}
       {chain === "84531" && <BaseChip />}
       {chain === "44787" && <CeloChip />}
+      {chain === "534351" && <ScrollChip />}
       {chain !== "137" &&
         chain !== "80001" &&
         chain !== "84531" &&
-        chain !== "44787" && <UnsupportedChip />}
+        chain !== "44787" &&
+        chain !== "534351" && <UnsupportedChip />}
     </>
   );
 }
