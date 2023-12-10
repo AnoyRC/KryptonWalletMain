@@ -6,6 +6,7 @@ import {
   setIs2FA,
   setIsGuardian,
   setIsOwner,
+  setOwner,
   setRecentTwoFactor,
   setTwoFactorCooldown,
   setWalletStatus,
@@ -25,6 +26,7 @@ const StatusProvider = ({ children }) => {
     is2FA,
     getTwoFactorCooldown,
     getRecentTwoFactor,
+    getOwner,
   } = useReadContract();
   const dispatch = useDispatch();
   const { address } = useAccount();
@@ -36,6 +38,7 @@ const StatusProvider = ({ children }) => {
     listener(log) {
       setStatus();
       checkGuardian();
+      setWalletOwner();
     },
     chainId: Number(searchParams.get("wallet").split(":")[0]),
   });
@@ -46,6 +49,7 @@ const StatusProvider = ({ children }) => {
     eventName: "GuardianAdded",
     listener(log) {
       setStatus();
+      setWalletOwner();
     },
     chainId: Number(searchParams.get("wallet").split(":")[0]),
   });
@@ -56,6 +60,7 @@ const StatusProvider = ({ children }) => {
     eventName: "GuardianshipTransferInitiated",
     listener(log) {
       setStatus();
+      setWalletOwner();
     },
     chainId: Number(searchParams.get("wallet").split(":")[0]),
   });
@@ -66,6 +71,7 @@ const StatusProvider = ({ children }) => {
     eventName: "GuardianshipTransferCancelled",
     listener(log) {
       setStatus();
+      setWalletOwner();
     },
     chainId: Number(searchParams.get("wallet").split(":")[0]),
   });
@@ -76,6 +82,7 @@ const StatusProvider = ({ children }) => {
     eventName: "RecoveryInitiated",
     listener(log) {
       setStatus();
+      setWalletOwner();
     },
     chainId: Number(searchParams.get("wallet").split(":")[0]),
   });
@@ -86,6 +93,7 @@ const StatusProvider = ({ children }) => {
     eventName: "RecoverySupported",
     listener(log) {
       setStatus();
+      setWalletOwner();
     },
     chainId: Number(searchParams.get("wallet").split(":")[0]),
   });
@@ -96,6 +104,7 @@ const StatusProvider = ({ children }) => {
     eventName: "RecoveryCancelled",
     listener(log) {
       setStatus();
+      setWalletOwner();
     },
     chainId: Number(searchParams.get("wallet").split(":")[0]),
   });
@@ -107,6 +116,7 @@ const StatusProvider = ({ children }) => {
     listener(log) {
       setStatus();
       checkOwner();
+      setWalletOwner();
     },
     chainId: Number(searchParams.get("wallet").split(":")[0]),
   });
@@ -117,6 +127,7 @@ const StatusProvider = ({ children }) => {
     eventName: "TwoFactorEnabled",
     listener(log) {
       check2FA();
+      setWalletOwner();
     },
     chainId: Number(searchParams.get("wallet").split(":")[0]),
   });
@@ -127,6 +138,7 @@ const StatusProvider = ({ children }) => {
     eventName: "TwoFactorCooldownChanged",
     listener(log) {
       handleTwoFactorCooldown();
+      setWalletOwner();
     },
     chainId: Number(searchParams.get("wallet").split(":")[0]),
   });
@@ -134,6 +146,7 @@ const StatusProvider = ({ children }) => {
   useEffect(() => {
     if (searchParams.get("wallet")) {
       setStatus();
+      setWalletOwner();
     }
   }, []);
 
@@ -177,6 +190,14 @@ const StatusProvider = ({ children }) => {
     dispatch(setTwoFactorCooldown(Number(cooldown)));
   };
 
+  const setWalletOwner = async () => {
+    const owner = await getOwner();
+
+    dispatch(setOwner(owner));
+
+    return owner;
+  };
+
   useEffect(() => {
     if (searchParams.get("wallet")) {
       checkOwner();
@@ -184,6 +205,7 @@ const StatusProvider = ({ children }) => {
       check2FA();
       handleTwoFactorCooldown();
       getRecentTwoFactor();
+      setWalletOwner();
     }
   }, [address]);
 

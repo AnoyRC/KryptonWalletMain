@@ -5,6 +5,7 @@ const walletSlice = createSlice({
 
   initialState: {
     status: "Good",
+    owner: "",
     isOwner: false,
     isGuardian: false,
     is2FA: false,
@@ -43,6 +44,9 @@ const walletSlice = createSlice({
     setRecentTwoFactor: (state, action) => {
       state.recentTwoFactor = action.payload;
     },
+    setOwner: (state, action) => {
+      state.owner = action.payload;
+    },
   },
 });
 
@@ -56,6 +60,7 @@ export const {
   setSuccessMessage,
   setTwoFactorCooldown,
   setRecentTwoFactor,
+  setOwner,
 } = walletSlice.actions;
 
 export default walletSlice.reducer;

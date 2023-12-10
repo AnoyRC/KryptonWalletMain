@@ -423,6 +423,35 @@ export default function useReadContract() {
     }
   };
 
+  const getOwner = async () => {
+    try {
+      const walletAddress = searchParams.get("wallet").split(":")[1];
+      const chain = searchParams.get("wallet").split(":")[0];
+
+      const currentConfig = ChainConfig.find(
+        (c) => c.chainId.toString() === chain
+      );
+
+      if (!currentConfig) {
+        return "";
+      }
+
+      const provider = new ethers.providers.JsonRpcProvider(currentConfig.rpc);
+      const kryptonContract = new ethers.Contract(
+        walletAddress,
+        Krypton.abi,
+        provider
+      );
+
+      const owner = await kryptonContract.owner();
+
+      return owner;
+    } catch (e) {
+      console.log(e);
+      return "";
+    }
+  };
+
   return {
     getThreshold,
     getTwoFactorCooldown,
@@ -438,5 +467,6 @@ export default function useReadContract() {
     getRecentTwoFactor,
     getTimeBasedMsg,
     getMessageHash,
+    getOwner,
   };
 }
