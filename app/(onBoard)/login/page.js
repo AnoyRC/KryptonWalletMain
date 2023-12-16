@@ -1,7 +1,4 @@
 "use client";
-
-import { useDataverse } from "@/hooks/useDataverse";
-import { setPkh } from "@/redux/slice/userSlice";
 import {
   CardHeader,
   CardBody,
@@ -22,30 +19,11 @@ export default function Login() {
   const { isConnected } = useAccount();
   const { connect, connectors } = useConnect();
 
-  const { createCapability } = useDataverse();
-  // const provider = useEthersProvider()
-
   useEffect(() => {
-    // const init = async () => {
-    //   const pkh = await createCapability();
-    //   dispatch(setPkh(pkh));
-
-    //
-    // };
-
-    // if (isConnected) {
-    //   init();
-    // }
     if (isConnected) {
       router.push("/wallet");
     }
   }, [isConnected]);
-
-  // useEffect(() => {
-  //   if (pkh) {
-  //     router.push("/wallet");
-  //   }
-  // }, [Get pkh from redux]);
 
   return (
     <>
