@@ -25,6 +25,8 @@ export default function Login() {
     }
   }, [isConnected]);
 
+  // Add Connect functionalities for all the wallets with Dataverse OS
+
   return (
     <>
       <CardHeader
@@ -46,6 +48,7 @@ export default function Login() {
                   connector: connectors[4],
                 })
               }
+              disabled
             >
               <Image
                 src="/images/onboard/login/google.svg"
@@ -76,6 +79,7 @@ export default function Login() {
               onClick={async () => {
                 connect({
                   connector: connectors[0],
+                  //Metamask
                 });
               }}
             >
@@ -94,6 +98,7 @@ export default function Login() {
               onClick={() =>
                 connect({
                   connector: connectors[1],
+                  //base wallet
                 })
               }
             >
@@ -112,6 +117,7 @@ export default function Login() {
               onClick={() =>
                 connect({
                   connector: connectors[2],
+                  //Wallet Connect
                 })
               }
             >
@@ -123,6 +129,9 @@ export default function Login() {
               />
               Wallet Connect
             </Button>
+            <div className="flex w-full justify-end items-center text-black -my-2">
+              Powered by Dataverse OS
+            </div>
           </>
         )}
       </CardBody>

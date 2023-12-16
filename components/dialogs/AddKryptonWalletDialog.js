@@ -1,6 +1,9 @@
 "use client";
 
-import { handleGuardianWalletDialog } from "@/redux/slice/setupSlice";
+import {
+  handleGuardianWalletDialog,
+  handleKryptonWalletDialog,
+} from "@/redux/slice/setupSlice";
 import {
   Button,
   Dialog,
@@ -29,9 +32,9 @@ import { useAccount } from "wagmi";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
-export function AddGuardianWalletDialog() {
-  const guardianWalletDialog = useSelector(
-    (state) => state.setup.guardianWalletDialog
+export function AddKryptonWalletDialog() {
+  const kryptonWalletDialog = useSelector(
+    (state) => state.setup.kryptonWalletDialog
   );
   const dispatch = useDispatch();
   const [isVerifying, setIsVerifying] = useState(false);
@@ -40,8 +43,9 @@ export function AddGuardianWalletDialog() {
   const [address, setAddress] = useState("");
   const { address: walletAddress } = useAccount();
   const router = useRouter();
+  const [name, setName] = useState("");
 
-  const verifyGuardian = async () => {
+  const verifyOwner = async () => {
     if (!address || address === "" || address === "0x" || address.length < 42) {
       alert("Please enter a wallet address");
       return;
@@ -65,15 +69,15 @@ export function AddGuardianWalletDialog() {
 
     const krypton = new ethers.Contract(address, Krypton.abi, provider);
 
-    const isGuardian = await krypton.isGuardian(walletAddress);
+    const owner = await krypton.owner();
 
-    if (!isGuardian) {
-      alert("This wallet is not a guardian");
+    if (owner !== walletAddress) {
+      alert("This wallet is not owned by you");
       setIsVerifying(false);
       return;
     }
 
-    //Add Guardian Wallet - Dataverse OS
+    //Add Krypton Wallet - Dataverse OS
 
     setIsVerifying(false);
     setIsVerified(true);
@@ -83,9 +87,9 @@ export function AddGuardianWalletDialog() {
     <>
       <Dialog
         size="xs"
-        open={guardianWalletDialog}
+        open={kryptonWalletDialog}
         handler={() => {
-          dispatch(handleGuardianWalletDialog());
+          dispatch(handleKryptonWalletDialog());
         }}
         className="bg-transparent shadow-none"
       >
@@ -93,10 +97,24 @@ export function AddGuardianWalletDialog() {
           {!isVerifying && !isVerified && (
             <CardBody className="flex flex-col gap-4">
               <h2 className="text-2xl font-bold font-uni">
-                Add Guardian Wallet
+                Add Krypton Wallet
               </h2>
 
-              <h6 className="font-uni text-lg font-bold">Krypton Address</h6>
+              <h6 className="font-uni text-lg font-bold">Name</h6>
+              <Input
+                size="lg"
+                placeholder="0x00"
+                className=" !border-t-blue-gray-200 focus:!border-t-gray-900 -my-2"
+                labelProps={{
+                  className: "before:content-none after:content-none",
+                }}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+
+              <h6 className="font-uni text-lg -mt-3 font-bold">
+                Krypton Address
+              </h6>
               <Input
                 size="lg"
                 placeholder="0x00"
@@ -145,15 +163,35 @@ export function AddGuardianWalletDialog() {
           )}
           <CardFooter className="pt-0 -mt-3">
             {!isVerifying && !isVerified && (
-              <Button
-                size="lg"
-                onClick={() => {
-                  verifyGuardian();
-                }}
-                fullWidth
-              >
-                Verify
-              </Button>
+              <>
+                <Button
+                  size="lg"
+                  onClick={() => {
+                    verifyOwner();
+                  }}
+                  fullWidth
+                  className="mt-2"
+                >
+                  Verify
+                </Button>
+
+                <div className="flex items-center justify-center gap-3 mt-3 font-uni font-bold">
+                  <div className="w-full bg-black h-[1px]" /> or
+                  <div className="w-full bg-black h-[1px]" />
+                </div>
+
+                <Button
+                  size="lg"
+                  onClick={() => {
+                    dispatch(handleKryptonWalletDialog());
+                    router.push("/setup");
+                  }}
+                  fullWidth
+                  className="mt-3"
+                >
+                  Create New Wallet
+                </Button>
+              </>
             )}
 
             {isVerifying && (
@@ -180,10 +218,10 @@ export function AddGuardianWalletDialog() {
                 <Button
                   size="lg"
                   onClick={() => {
-                    dispatch(handleGuardianWalletDialog());
+                    dispatch(handleKryptonWalletDialog());
                     setIsVerified(false);
                     setIsVerifying(false);
-                    router.push(`/guardian?wallet=${chain}:${address}`);
+                    router.push(`/home?wallet=${chain}:${address}`);
                   }}
                   fullWidth
                   className="mt-3"

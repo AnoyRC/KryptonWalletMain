@@ -1,4 +1,5 @@
 import { AddGuardianWalletDialog } from "@/components/dialogs/AddGuardianWalletDialog";
+import { AddKryptonWalletDialog } from "@/components/dialogs/AddKryptonWalletDialog";
 
 export const metadata = {
   title: "Krypton | Wallet",
@@ -8,8 +9,9 @@ export const metadata = {
 export default function LoginLayout({ children }) {
   return (
     <>
-      <AddGuardianWalletDialog />
       {children}
+      <AddGuardianWalletDialog />
+      <AddKryptonWalletDialog />
     </>
   );
 }

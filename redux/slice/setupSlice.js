@@ -11,6 +11,7 @@ const setupSlice = createSlice({
     selectedTwoFactor: 0,
     twoFADrawer: false,
     guardianWalletDialog: false,
+    kryptonWalletDialog: false,
   },
 
   reducers: {
@@ -53,6 +54,9 @@ const setupSlice = createSlice({
     handleGuardianWalletDialog: (state) => {
       state.guardianWalletDialog = !state.guardianWalletDialog;
     },
+    handleKryptonWalletDialog: (state) => {
+      state.kryptonWalletDialog = !state.kryptonWalletDialog;
+    },
   },
 });
 
@@ -70,6 +74,7 @@ export const {
   setTwoFactorAddress,
   handleGuardianWalletDialog,
   setGuardians,
+  handleKryptonWalletDialog,
 } = setupSlice.actions;
 
 export default setupSlice.reducer;

@@ -1,10 +1,14 @@
 "use client";
 import GuardianWalletButton from "@/components/layout/onBoard/wallet/GuardianWalletButton";
 import WalletButton from "@/components/layout/onBoard/wallet/WalletButton";
-import { handleGuardianWalletDialog } from "@/redux/slice/setupSlice";
+import {
+  handleGuardianWalletDialog,
+  handleKryptonWalletDialog,
+} from "@/redux/slice/setupSlice";
 import {
   ArrowLeftOnRectangleIcon,
   PlusIcon,
+  XCircleIcon,
 } from "@heroicons/react/24/outline";
 import {
   CardHeader,
@@ -23,7 +27,17 @@ export default function Setup() {
   const { isConnected } = useAccount();
   const { disconnect } = useDisconnect();
 
-  const demoWallet = [
+  // Fetch all the Krypton Wallets, save it with this name to avoid any conflict
+  const kryptonWallets = [
+    {
+      name: "Another Wallet",
+      address: "0xc8248E8949A4b0B5bB4b11e8ab8CA525a6e232aa",
+      chain: "80001",
+    },
+  ];
+
+  // Fetch all the Guardian Wallets, save it with this name to avoid any conflict
+  const guardianWallets = [
     {
       name: "Another Wallet",
       address: "0xc8248E8949A4b0B5bB4b11e8ab8CA525a6e232aa",
@@ -55,7 +69,7 @@ export default function Setup() {
         {isConnected && (
           <>
             <div className="flex flex-col gap-4">
-              {demoWallet.map((wallet, index) => (
+              {kryptonWallets.map((wallet, index) => (
                 <WalletButton
                   key={index}
                   address={wallet.address}
@@ -63,12 +77,19 @@ export default function Setup() {
                   name={wallet.name}
                 />
               ))}
+
+              {(!kryptonWallets || kryptonWallets.length === 0) && (
+                <div className="flex items-center justify-center gap-3">
+                  <XCircleIcon className="w-6 h-6 text-black" />
+                  No Krypton Wallets Deployed
+                </div>
+              )}
             </div>
             <Button
               size="lg"
               className="flex items-center justify-center gap-3 capitalize text-lg font-uni"
               onClick={() => {
-                router.push("/setup");
+                dispatch(handleKryptonWalletDialog());
               }}
             >
               <PlusIcon className="w-6 h-6 text-white" />
@@ -80,13 +101,20 @@ export default function Setup() {
             </div>
 
             <div className="flex flex-col gap-4">
-              {demoWallet.map((wallet, index) => (
+              {guardianWallets.map((wallet, index) => (
                 <GuardianWalletButton
                   key={index}
                   address={wallet.address}
                   chain={wallet.chain}
                 />
               ))}
+
+              {(!guardianWallets || guardianWallets.length === 0) && (
+                <div className="flex items-center justify-center gap-3">
+                  <XCircleIcon className="w-6 h-6 text-black" />
+                  Are you a Guardian? Add it here
+                </div>
+              )}
             </div>
 
             <Button

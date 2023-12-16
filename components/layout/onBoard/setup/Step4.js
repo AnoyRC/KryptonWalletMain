@@ -45,18 +45,6 @@ export default function Step4() {
   const { createKrypton: createKryptonServer } = useServer();
 
   const execute = async () => {
-    // setTimeout(() => {
-    //   setSteps(1);
-    // }, 1000);
-    // setTimeout(() => {
-    //   setSteps(2);
-    // }, 3000);
-    // setTimeout(() => {
-    //   setSteps(3);
-    // }, 5000);
-    // setTimeout(() => {
-    //   setIsDeployed(true);
-    // }, 7000);
     const walletAddress = await createKrypton();
     if (!walletAddress) {
       setIsError(true);
@@ -68,9 +56,10 @@ export default function Step4() {
     await checkWalletCode(walletAddress);
     setSteps(1);
 
-    //Dataverse OS
+    // Add Krypton Wallet to Dataverse OS
+
     await new Promise((resolve) => setTimeout(resolve, 1000));
-    // await createKryptonServer(name, `${chain}:${walletAddress}`, guardians);
+
     setSteps(2);
 
     //2FA
