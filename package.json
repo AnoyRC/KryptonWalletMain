@@ -12,6 +12,7 @@
     "@ably-labs/react-hooks": "^2.1.2",
     "@auth0/auth0-spa-js": "^2.1.2",
     "@covalenthq/client-sdk": "^0.6.7",
+    "@dataverse/dataverse-connector": "^1.0.33",
     "@heroicons/react": "^2.0.18",
     "@material-tailwind/react": "^2.1.5",
     "@pushprotocol/restapi": "^1.4.45",

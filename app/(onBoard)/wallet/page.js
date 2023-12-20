@@ -20,30 +20,79 @@ import {
 import { useRouter } from "next/navigation";
 import { useDispatch } from "react-redux";
 import { useAccount, useDisconnect } from "wagmi";
+import { useEffect,useState } from "react";
+import { DataverseConnector,RESOURCE,SYSTEM_CALL, WALLET } from "@dataverse/dataverse-connector";
+import { useDataverse } from "@/hooks/useDataverse";
+import { Wallet } from "ethers";
+import { objectToArray } from "@/lib/utils";
+
+const dataverseConnector=new DataverseConnector();
 
 export default function Setup() {
+  const [guardianWallets,setGuardianWallets]=useState([])
+  const [kryptonWallets,setKryptonWallets]=useState([])
   const dispatch = useDispatch();
   const router = useRouter();
   const { isConnected } = useAccount();
   const { disconnect } = useDisconnect();
+  const {createCapability}=useDataverse();
+  const appId=process.env.NEXT_PUBLIC_DATAVERSE_APP_ID;
+  const guardianModelId=process.env.NEXT_PUBLIC_DATAVERSE_GUARDIAN_MODEL_ID;
+  const userModelId=process.env.NEXT_PUBLIC_DATAVERSE_USER_MODEL_ID;
+
+  const getData=async(modelId,pkh)=>{
+    const data=await dataverseConnector.runOS({
+      method:SYSTEM_CALL.loadFilesBy,
+      params:{
+        modelId:modelId,
+        pkh:pkh
+      }
+    })
+    //console.log(data)
+    console.log(objectToArray(data))
+    return objectToArray(data)
+  }
 
   // Fetch all the Krypton Wallets, save it with this name to avoid any conflict
-  const kryptonWallets = [
-    {
-      name: "Another Wallet",
-      address: "0xc8248E8949A4b0B5bB4b11e8ab8CA525a6e232aa",
-      chain: "80001",
-    },
-  ];
+  //let kryptonWallets
+  // const kryptonWallets = [
+  //   {
+  //     name: "Another Wallet",
+  //     address: "0xc8248E8949A4b0B5bB4b11e8ab8CA525a6e232aa",
+  //     chain: "80001",
+  //   },
+  // ];
 
   // Fetch all the Guardian Wallets, save it with this name to avoid any conflict
-  const guardianWallets = [
-    {
-      name: "Another Wallet",
-      address: "0xc8248E8949A4b0B5bB4b11e8ab8CA525a6e232aa",
-      chain: "80001",
-    },
-  ];
+  // const guardianWallets = [
+  //   {
+  //     name: "Another Wallet",
+  //     address: "0xc8248E8949A4b0B5bB4b11e8ab8CA525a6e232aa",
+  //     chain: "80001",
+  //   },
+  // ];
+
+  useEffect(()=>{
+    const getCapabilty=async()=>{
+      console.log(appId)
+      const res=await dataverseConnector.connectWallet({
+        wallet:WALLET.METAMASK
+      })
+      const pkh=await dataverseConnector.runOS({
+        method:SYSTEM_CALL.createCapability,
+        params:{
+          appId,
+          resource:RESOURCE.CERAMIC,
+        }
+      })
+      //console.log(pkh)
+      const guardians=await getData(guardianModelId,pkh)
+      setGuardianWallets(guardians)
+      const users=await getData(userModelId,pkh)
+      setKryptonWallets(users)
+    }
+    getCapabilty();
+  },[])
 
   return (
     <>
@@ -69,12 +118,12 @@ export default function Setup() {
         {isConnected && (
           <>
             <div className="flex flex-col gap-4">
-              {kryptonWallets.map((wallet, index) => (
+              { kryptonWallets.map((wallet, index) => (
                 <WalletButton
                   key={index}
-                  address={wallet.address}
-                  chain={wallet.chain}
-                  name={wallet.name}
+                  address={wallet.kryptonAddress}
+                  chain={wallet.kryptonChainId}
+                  name={wallet.kryptonName}
                 />
               ))}
 
@@ -104,8 +153,8 @@ export default function Setup() {
               {guardianWallets.map((wallet, index) => (
                 <GuardianWalletButton
                   key={index}
-                  address={wallet.address}
-                  chain={wallet.chain}
+                  address={wallet.walletAddress}
+                  chain={wallet.kryptonChainId}
                 />
               ))}
 
