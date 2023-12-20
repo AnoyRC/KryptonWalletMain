@@ -92,9 +92,8 @@ export default function Step4() {
     setSteps(1);
 
     // Add Krypton Wallet to Dataverse OS
-    addKryptonWallet(walletAddress);
+    await addKryptonWallet(walletAddress);
     
-
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     setSteps(2);
