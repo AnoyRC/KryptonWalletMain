@@ -76,6 +76,7 @@ export default function Setup() {
 
   useEffect(() => {
     const getCapabilty = async () => {
+      const dataverseConnector = new DataverseConnector();
       console.log(appId);
       const res = await dataverseConnector.connectWallet({
         wallet: WALLET.METAMASK,
