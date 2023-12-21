@@ -9,8 +9,8 @@ export const metadata = {
 export default function OnBoardLayout({ children }) {
   return (
     <>
-      <TwoFacterDrawer />
       <OnBoardContainer>{children}</OnBoardContainer>
+      <TwoFacterDrawer />
     </>
   );
 }

@@ -8,8 +8,8 @@ export const metadata = {
 export default function LandingLayout({ children }) {
   return (
     <>
-      <TwoFacterDrawer />
       <div className="w-full 2xl:px-[18%] px-5 flex flex-col">{children}</div>
+      <TwoFacterDrawer />
     </>
   );
 }

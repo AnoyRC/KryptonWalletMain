@@ -78,7 +78,7 @@ export default function RootLayout({ children }) {
               />
 
               {children}
-              <SignatureManagerDrawer />
+              {/*  */}
             </AnonProvider>
           </WagmiProvider>
           {/* </DataverseProvider> */}

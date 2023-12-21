@@ -1,15 +1,15 @@
-import AddContactsModal from '@/components/modal/AddContactsModal';
+import AddContactsModal from "@/components/modal/AddContactsModal";
 
 export const metadata = {
-  title: 'Krypton | Contacts',
-  description: 'By Bankless DAO',
+  title: "Krypton | Contacts",
+  description: "By Bankless DAO",
 };
 
 export default function LandingLayout({ children }) {
   return (
     <>
-      <AddContactsModal />
       {children}
+      <AddContactsModal />
     </>
   );
 }
