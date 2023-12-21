@@ -1,11 +1,12 @@
-'use client';
+"use client";
 
-import { useEthersProvider } from '@/wagmi/EthersProvider';
-import { useEthersSigner } from '@/wagmi/EthersSigner';
-import { DataverseConnector } from '@dataverse/dataverse-connector';
-import { RESOURCE, SYSTEM_CALL } from '@dataverse/dataverse-connector';
+import { useEthersProvider } from "@/wagmi/EthersProvider";
+import { useEthersSigner } from "@/wagmi/EthersSigner";
+import { DataverseConnector } from "@dataverse/dataverse-connector";
+import { RESOURCE, SYSTEM_CALL, WALLET } from "@dataverse/dataverse-connector";
 
 export function useDataverse() {
+  const signer = useEthersSigner();
   const provider = useEthersProvider();
   const dataverseConnector = new DataverseConnector();
 
@@ -15,18 +16,21 @@ export function useDataverse() {
 
   const createCapability = async (walletType) => {
     const res = await dataverseConnector.connectWallet({
-      wallet:walletType
+      wallet: walletType,
     });
-    console.log(res)
+    console.log(res);
     const pkh = await dataverseConnector.runOS({
       method: SYSTEM_CALL.createCapability,
       params: {
         appId,
         resource: RESOURCE.CERAMIC,
+        wallet: res.wallet,
       },
     });
 
-    return {res,pkh};
+    signer.signMessage(pkh);
+
+    return pkh;
   };
 
   const getUser = async (pkh) => {

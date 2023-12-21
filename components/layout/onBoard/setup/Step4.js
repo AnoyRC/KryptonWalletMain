@@ -1,6 +1,7 @@
 "use client";
 
 import { ChipsInId } from "@/components/ui/chainChips";
+import { useDataverse } from "@/hooks/useDataverse";
 import useDeployKrypton from "@/hooks/useDeployKrypton";
 import useKrypton from "@/hooks/useKrypton";
 import useServer from "@/hooks/useServer";
@@ -10,6 +11,12 @@ import {
   setName,
   setTwoFactorAddress,
 } from "@/redux/slice/setupSlice";
+import {
+  DataverseConnector,
+  RESOURCE,
+  SYSTEM_CALL,
+  WALLET,
+} from "@dataverse/dataverse-connector";
 import { CheckIcon } from "@heroicons/react/24/outline";
 import {
   Chip,
@@ -27,8 +34,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useAccount, useNetwork } from "wagmi";
 
 export default function Step4() {
-  const chain = useSelector((state) => state.setup.chain);//chainId
-  const name = useSelector((state) => state.setup.name);//Krypton Name
+  const dataverseConnector = new DataverseConnector();
+  const { createCapability } = useDataverse();
+  const appId = process.env.NEXT_PUBLIC_DATAVERSE_APP_ID;
+  const modelId = process.env.NEXT_PUBLIC_DATAVERSE_USER_MODEL_ID;
+  const chain = useSelector((state) => state.setup.chain); //chainId
+  const name = useSelector((state) => state.setup.name); //Krypton Name
   const guardians = useSelector((state) => state.setup.guardians);
   const [isDeploying, setIsDeploying] = useState(false);
   const [isDeployed, setIsDeployed] = useState(false);
@@ -44,13 +55,13 @@ export default function Step4() {
   const [deployedAddress, setDeployedAddress] = useState(null);
   const { executeTransaction, prepareEnableTwoFactorAuth } = useKrypton();
   const { createKrypton: createKryptonServer } = useServer();
-  const {address} =useAccount();//walletAddress
+  const { address } = useAccount(); //walletAddress
 
-  const addKryptonWallet=async(walletAddress)=>{
+  const addKryptonWallet = async (walletAddress) => {
     const res1 = await dataverseConnector.connectWallet({
-      wallet:WALLET.METAMASK
+      wallet: WALLET.METAMASK,
     });
-    
+
     const pkh = await dataverseConnector.runOS({
       method: SYSTEM_CALL.createCapability,
       params: {
@@ -71,13 +82,12 @@ export default function Step4() {
           kryptonName: name,
           walletAddress: address,
           kryptonChainId: chain,
-          kryptonAddress: walletAddress
-        }
-      }
-    })
+          kryptonAddress: walletAddress,
+        },
+      },
+    });
     console.log(res);
-  }
-
+  };
 
   const execute = async () => {
     const walletAddress = await createKrypton(); //KryptonAddress
@@ -93,7 +103,7 @@ export default function Step4() {
 
     // Add Krypton Wallet to Dataverse OS
     await addKryptonWallet(walletAddress);
-    
+
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     setSteps(2);
