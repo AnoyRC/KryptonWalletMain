@@ -24,10 +24,11 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useAccount, useNetwork } from "wagmi";
 
 export default function Step4() {
-  const chain = useSelector((state) => state.setup.chain);
-  const name = useSelector((state) => state.setup.name);
+  const chain = useSelector((state) => state.setup.chain);//chainId
+  const name = useSelector((state) => state.setup.name);//Krypton Name
   const guardians = useSelector((state) => state.setup.guardians);
   const [isDeploying, setIsDeploying] = useState(false);
   const [isDeployed, setIsDeployed] = useState(false);
@@ -43,9 +44,43 @@ export default function Step4() {
   const [deployedAddress, setDeployedAddress] = useState(null);
   const { executeTransaction, prepareEnableTwoFactorAuth } = useKrypton();
   const { createKrypton: createKryptonServer } = useServer();
+  const {address} =useAccount();//walletAddress
+
+  const addKryptonWallet=async(walletAddress)=>{
+    const res1 = await dataverseConnector.connectWallet({
+      wallet:WALLET.METAMASK
+    });
+    
+    const pkh = await dataverseConnector.runOS({
+      method: SYSTEM_CALL.createCapability,
+      params: {
+        appId,
+        resource: RESOURCE.CERAMIC,
+      },
+    });
+
+    console.log(res1);
+
+    const res = await dataverseConnector.runOS({
+      method: SYSTEM_CALL.createIndexFile,
+      params: {
+        modelId,
+        fileName: "file.json",
+        fileContent: {
+          modelVersion: "0.0.1",
+          kryptonName: name,
+          walletAddress: address,
+          kryptonChainId: chain,
+          kryptonAddress: walletAddress
+        }
+      }
+    })
+    console.log(res);
+  }
+
 
   const execute = async () => {
-    const walletAddress = await createKrypton();
+    const walletAddress = await createKrypton(); //KryptonAddress
     if (!walletAddress) {
       setIsError(true);
       setIsDeploying(false);
@@ -57,7 +92,8 @@ export default function Step4() {
     setSteps(1);
 
     // Add Krypton Wallet to Dataverse OS
-
+    await addKryptonWallet(walletAddress);
+    
     await new Promise((resolve) => setTimeout(resolve, 1000));
 
     setSteps(2);

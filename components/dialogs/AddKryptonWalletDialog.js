@@ -31,6 +31,10 @@ import Krypton from "@/lib/contracts/Krypton";
 import { useAccount } from "wagmi";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { useDataverse } from "@/hooks/useDataverse";
+import { DataverseConnector,WALLET,RESOURCE,SYSTEM_CALL } from "@dataverse/dataverse-connector";
+
+const dataverseConnector=new DataverseConnector();
 
 export function AddKryptonWalletDialog() {
   const kryptonWalletDialog = useSelector(
@@ -44,6 +48,41 @@ export function AddKryptonWalletDialog() {
   const { address: walletAddress } = useAccount();
   const router = useRouter();
   const [name, setName] = useState("");
+  const {createCapability}=useDataverse();
+  const appId=process.env.NEXT_PUBLIC_DATAVERSE_APP_ID;
+  const modelId=process.env.NEXT_PUBLIC_DATAVERSE_USER_MODEL_ID;
+
+  const addKryptonWallet=async()=>{
+    const res1 = await dataverseConnector.connectWallet({
+      wallet:WALLET.METAMASK
+    });
+    
+    const pkh = await dataverseConnector.runOS({
+      method: SYSTEM_CALL.createCapability,
+      params: {
+        appId,
+        resource: RESOURCE.CERAMIC,
+      },
+    });
+
+    console.log(res1);
+
+    const res = await dataverseConnector.runOS({
+      method: SYSTEM_CALL.createIndexFile,
+      params: {
+        modelId,
+        fileName: "file.json",
+        fileContent: {
+          modelVersion: "0.0.1",
+          kryptonName: name,
+          walletAddress: walletAddress,
+          kryptonChainId: chain,
+          kryptonAddress: address
+        }
+      }
+    })
+    console.log(res);
+  }
 
   const verifyOwner = async () => {
     if (!address || address === "" || address === "0x" || address.length < 42) {
@@ -78,6 +117,7 @@ export function AddKryptonWalletDialog() {
     }
 
     //Add Krypton Wallet - Dataverse OS
+    await addKryptonWallet();
 
     setIsVerifying(false);
     setIsVerified(true);
@@ -173,6 +213,16 @@ export function AddKryptonWalletDialog() {
                   className="mt-2"
                 >
                   Verify
+                </Button>
+                <Button
+                  size="lg"
+                  onClick={() => {
+                    addKryptonWallet()
+                  }}
+                  fullWidth
+                  className="mt-2"
+                >
+                  Add Krypton Wallet
                 </Button>
 
                 <div className="flex items-center justify-center gap-3 mt-3 font-uni font-bold">

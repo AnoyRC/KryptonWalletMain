@@ -12,7 +12,7 @@ import {
   Option,
 } from "@material-tailwind/react";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { CheckIcon } from "@heroicons/react/24/outline";
 import {
@@ -26,9 +26,11 @@ import { ethers } from "ethers";
 import { ChainConfig } from "@/lib/chainConfig";
 import Krypton from "@/lib/contracts/Krypton";
 import { useAccount } from "wagmi";
-import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { DataverseConnector, SYSTEM_CALL, WALLET,RESOURCE } from "@dataverse/dataverse-connector";
+import { useDataverse } from "@/hooks/useDataverse";
 
+const dataverseConnector = new DataverseConnector();
 export function AddGuardianWalletDialog() {
   const guardianWalletDialog = useSelector(
     (state) => state.setup.guardianWalletDialog
@@ -40,6 +42,62 @@ export function AddGuardianWalletDialog() {
   const [address, setAddress] = useState("");
   const { address: walletAddress } = useAccount();
   const router = useRouter();
+  const modelId = process.env.NEXT_PUBLIC_DATAVERSE_GUARDIAN_MODEL_ID;
+  const appId=process.env.NEXT_PUBLIC_DATAVERSE_APP_ID;
+  const {createCapability}=useDataverse();
+  
+  const addGuardianWallet = async () => {
+    const res1 = await dataverseConnector.connectWallet({
+      wallet:WALLET.METAMASK
+    });
+    
+    const pkh = await dataverseConnector.runOS({
+      method: SYSTEM_CALL.createCapability,
+      params: {
+        appId,
+        resource: RESOURCE.CERAMIC,
+      },
+    });
+
+    console.log(res1)
+    const res = await dataverseConnector.runOS({
+      method: SYSTEM_CALL.createIndexFile,
+      params: {
+        modelId,
+        fileName: "file.json",
+        fileContent: {
+          modelVersion: "0.0.1",
+          name: "Guardian1",
+          walletAddress: walletAddress,
+          kryptonChainId: chain,
+          kryptonGuardianId: address
+        }
+      }
+    })
+    console.log(res);
+  }
+
+  const getData=async()=>{
+    const res1 = await dataverseConnector.connectWallet({
+      wallet:WALLET.METAMASK
+    });
+    
+    const pkh = await dataverseConnector.runOS({
+      method: SYSTEM_CALL.createCapability,
+      params: {
+        appId,
+        resource: RESOURCE.CERAMIC,
+      },
+    });
+    const res=await dataverseConnector.runOS({
+      method:SYSTEM_CALL.loadFilesBy,
+      params:{
+        modelId:modelId,
+        pkh:pkh
+      }
+    })
+    console.log(res)
+  }
 
   const verifyGuardian = async () => {
     if (!address || address === "" || address === "0x" || address.length < 42) {
@@ -74,6 +132,7 @@ export function AddGuardianWalletDialog() {
     }
 
     //Add Guardian Wallet - Dataverse OS
+    await addGuardianWallet();
 
     setIsVerifying(false);
     setIsVerified(true);
@@ -145,15 +204,37 @@ export function AddGuardianWalletDialog() {
           )}
           <CardFooter className="pt-0 -mt-3">
             {!isVerifying && !isVerified && (
-              <Button
-                size="lg"
-                onClick={() => {
-                  verifyGuardian();
-                }}
-                fullWidth
-              >
-                Verify
-              </Button>
+              <>
+                <Button
+                  size="lg"
+                  onClick={() => {
+                    verifyGuardian();
+                  }}
+                  fullWidth
+                >
+                  Verify
+                </Button>
+                <Button
+                  size="lg"
+                  onClick={() => {
+                    addGuardianWallet();
+                  }}
+                  fullWidth
+                >
+                  Add Guardian Wallet
+                </Button>
+                <Button
+                  size="lg"
+                  onClick={() => {
+                    getData();
+                  }}
+                  fullWidth
+                >
+                  Get Data
+                </Button>
+              </>
+
+
             )}
 
             {isVerifying && (

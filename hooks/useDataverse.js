@@ -9,15 +9,15 @@ export function useDataverse() {
   const provider = useEthersProvider();
   const dataverseConnector = new DataverseConnector();
 
-  const appId = process.env.NEXT_PUBLIC_APP_ID;
+  const appId = process.env.NEXT_PUBLIC_DATAVERSE_APP_ID;
   const userModalId = process.env.NEXT_PUBLIC_USER_MODAL_ID;
   const guardianModalId = process.env.NEXT_PUBLIC_GUARDIAN_MODAL_ID;
 
-  const createCapability = async () => {
+  const createCapability = async (walletType) => {
     const res = await dataverseConnector.connectWallet({
-      provider,
+      wallet:walletType
     });
-
+    console.log(res)
     const pkh = await dataverseConnector.runOS({
       method: SYSTEM_CALL.createCapability,
       params: {
@@ -26,7 +26,7 @@ export function useDataverse() {
       },
     });
 
-    return pkh;
+    return {res,pkh};
   };
 
   const getUser = async (pkh) => {

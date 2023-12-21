@@ -8,9 +8,20 @@ import {
 } from "@material-tailwind/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useAccount, useConnect } from "wagmi";
+import {
+  DataverseConnector,
+  WALLET,
+  RESOURCE,
+  SYSTEM_CALL
+} from "@dataverse/dataverse-connector";
+import { useEthersProvider } from "@/wagmi/EthersProvider";
+
+
+
+const dataverseConnector=new DataverseConnector();
 
 export default function Login() {
   const router = useRouter();
@@ -18,14 +29,44 @@ export default function Login() {
 
   const { isConnected } = useAccount();
   const { connect, connectors } = useConnect();
+  const [wallet,setWallet]=useState();
+  const provider=useEthersProvider();
+
 
   useEffect(() => {
     if (isConnected) {
+      //connectWallet();
       router.push("/wallet");
     }
   }, [isConnected]);
 
   // Add Connect functionalities for all the wallets with Dataverse OS
+  const connectWallet=async(walletType,index)=>{
+    try {
+      const appId="26f3b853-ce3b-4f38-a885-e1b61e4b79fc"
+      const res=await dataverseConnector.connectWallet({
+        wallet:walletType
+      })
+      const pkh=await dataverseConnector.runOS({
+        method:SYSTEM_CALL.createCapability,
+        params:{
+          appId,
+          resource:RESOURCE.CERAMIC,
+        }
+      })
+      console.log(pkh);
+      connect({
+          connector: connectors[index],
+          //Metamask
+      });
+      
+      
+      setWallet(res.wallet)
+      return(res.address);
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   return (
     <>
@@ -77,10 +118,12 @@ export default function Login() {
               variant="outlined"
               className="flex items-center gap-3 capitalize text-lg font-uni"
               onClick={async () => {
-                connect({
-                  connector: connectors[0],
-                  //Metamask
-                });
+                connectWallet(WALLET.METAMASK,0);
+                // connect({
+                //   connector: connectors[0],
+                //   //Metamask
+                // });
+                
               }}
             >
               <Image
@@ -95,12 +138,13 @@ export default function Login() {
               size="lg"
               variant="outlined"
               className="flex items-center gap-3 capitalize text-lg font-uni"
-              onClick={() =>
-                connect({
-                  connector: connectors[1],
-                  //base wallet
-                })
-              }
+              onClick={() =>{
+                // connect({
+                //   connector: connectors[1],
+                //   //base wallet
+                // })
+                connectWallet(WALLET.COINBASE,1)
+              }}
             >
               <Image
                 src="/images/onboard/login/coinbase.svg"
@@ -114,12 +158,13 @@ export default function Login() {
               size="lg"
               variant="outlined"
               className="flex items-center gap-3 capitalize text-lg font-uni"
-              onClick={() =>
-                connect({
-                  connector: connectors[2],
-                  //Wallet Connect
-                })
-              }
+              onClick={() =>{
+                // connect({
+                //   connector: connectors[2],
+                //   //Wallet Connect
+                // })
+                connectWallet(WALLET.WALLETCONNECT,2)
+              }}
             >
               <Image
                 src="/images/onboard/login/walletconnect.svg"
