@@ -3,7 +3,6 @@ import localFont from "next/font/local";
 import ReduxProvider from "@/providers/ReduxProvider";
 import { WagmiProvider } from "@/providers/wagmiProviders";
 import "./globals.css";
-import SignatureManagerDrawer from "@/components/drawers/SignatureManagerDrawer";
 import { Toaster } from "react-hot-toast";
 import AnonProvider from "@/providers/AnonProvider";
 // import DataverseProvider from '@/providers/DataverseProvider';
