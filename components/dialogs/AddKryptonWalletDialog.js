@@ -50,7 +50,7 @@ export function AddKryptonWalletDialog() {
   const { address: walletAddress } = useAccount();
   const router = useRouter();
   const [name, setName] = useState("");
-  const appId = "26f3b853-ce3b-4f38-a885-e1b61e4b79fc";
+  const appId = process.env.NEXT_PUBLIC_DATAVERSE_APP_ID;
   const modelId = process.env.NEXT_PUBLIC_DATAVERSE_USER_MODEL_ID;
 
   const addKryptonWallet = async () => {

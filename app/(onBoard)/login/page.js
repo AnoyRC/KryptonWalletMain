@@ -39,8 +39,7 @@ export default function Login() {
   const connectWallet = async (walletType, index) => {
     const dataverseConnector = new DataverseConnector();
     try {
-      const appId = "26f3b853-ce3b-4f38-a885-e1b61e4b79fc";
-      console.log(appId);
+      const appId = process.env.NEXT_PUBLIC_DATAVERSE_APP_ID;
       const res = await dataverseConnector.connectWallet({
         wallet: walletType,
       });

@@ -33,7 +33,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useAccount, useNetwork } from "wagmi";
 
 export default function Step4() {
-  const appId = "26f3b853-ce3b-4f38-a885-e1b61e4b79fc";
+  const appId = process.env.NEXT_PUBLIC_DATAVERSE_APP_ID;
   const modelId = process.env.NEXT_PUBLIC_DATAVERSE_USER_MODEL_ID;
   const chain = useSelector((state) => state.setup.chain); //chainId
   const name = useSelector((state) => state.setup.name); //Krypton Name
