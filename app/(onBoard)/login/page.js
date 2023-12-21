@@ -40,13 +40,15 @@ export default function Login() {
     const dataverseConnector = new DataverseConnector();
     try {
       const appId = "26f3b853-ce3b-4f38-a885-e1b61e4b79fc";
+      console.log(appId);
       const res = await dataverseConnector.connectWallet({
         wallet: walletType,
       });
+      console.log(res);
       const pkh = await dataverseConnector.runOS({
         method: SYSTEM_CALL.createCapability,
         params: {
-          appId,
+          appId: appId,
           resource: RESOURCE.CERAMIC,
         },
       });
