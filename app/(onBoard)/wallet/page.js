@@ -37,7 +37,7 @@ export default function Setup() {
   const router = useRouter();
   const { isConnected } = useAccount();
   const { disconnect } = useDisconnect();
-  const appId = process.env.NEXT_PUBLIC_DATAVERSE_APP_ID;
+  const appId = "26f3b853-ce3b-4f38-a885-e1b61e4b79fc";
   const guardianModelId = process.env.NEXT_PUBLIC_DATAVERSE_GUARDIAN_MODEL_ID;
   const userModelId = process.env.NEXT_PUBLIC_DATAVERSE_USER_MODEL_ID;
 
