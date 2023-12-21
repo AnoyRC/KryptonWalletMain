@@ -27,7 +27,12 @@ import { ChainConfig } from "@/lib/chainConfig";
 import Krypton from "@/lib/contracts/Krypton";
 import { useAccount } from "wagmi";
 import { useRouter } from "next/navigation";
-import { DataverseConnector, SYSTEM_CALL, WALLET,RESOURCE } from "@dataverse/dataverse-connector";
+import {
+  DataverseConnector,
+  SYSTEM_CALL,
+  WALLET,
+  RESOURCE,
+} from "@dataverse/dataverse-connector";
 import { useDataverse } from "@/hooks/useDataverse";
 
 const dataverseConnector = new DataverseConnector();
@@ -43,14 +48,14 @@ export function AddGuardianWalletDialog() {
   const { address: walletAddress } = useAccount();
   const router = useRouter();
   const modelId = process.env.NEXT_PUBLIC_DATAVERSE_GUARDIAN_MODEL_ID;
-  const appId=process.env.NEXT_PUBLIC_DATAVERSE_APP_ID;
-  const {createCapability}=useDataverse();
-  
+  const appId = process.env.NEXT_PUBLIC_DATAVERSE_APP_ID;
+  const { createCapability } = useDataverse();
+
   const addGuardianWallet = async () => {
     const res1 = await dataverseConnector.connectWallet({
-      wallet:WALLET.METAMASK
+      wallet: WALLET.METAMASK,
     });
-    
+
     const pkh = await dataverseConnector.runOS({
       method: SYSTEM_CALL.createCapability,
       params: {
@@ -59,7 +64,7 @@ export function AddGuardianWalletDialog() {
       },
     });
 
-    console.log(res1)
+    console.log(res1);
     const res = await dataverseConnector.runOS({
       method: SYSTEM_CALL.createIndexFile,
       params: {
@@ -70,18 +75,18 @@ export function AddGuardianWalletDialog() {
           name: "Guardian1",
           walletAddress: walletAddress,
           kryptonChainId: chain,
-          kryptonGuardianId: address
-        }
-      }
-    })
-    console.log(res);
-  }
-
-  const getData=async()=>{
-    const res1 = await dataverseConnector.connectWallet({
-      wallet:WALLET.METAMASK
+          kryptonGuardianId: address,
+        },
+      },
     });
-    
+    console.log(res);
+  };
+
+  const getData = async () => {
+    const res1 = await dataverseConnector.connectWallet({
+      wallet: WALLET.METAMASK,
+    });
+
     const pkh = await dataverseConnector.runOS({
       method: SYSTEM_CALL.createCapability,
       params: {
@@ -89,15 +94,15 @@ export function AddGuardianWalletDialog() {
         resource: RESOURCE.CERAMIC,
       },
     });
-    const res=await dataverseConnector.runOS({
-      method:SYSTEM_CALL.loadFilesBy,
-      params:{
-        modelId:modelId,
-        pkh:pkh
-      }
-    })
-    console.log(res)
-  }
+    const res = await dataverseConnector.runOS({
+      method: SYSTEM_CALL.loadFilesBy,
+      params: {
+        modelId: modelId,
+        pkh: pkh,
+      },
+    });
+    console.log(res);
+  };
 
   const verifyGuardian = async () => {
     if (!address || address === "" || address === "0x" || address.length < 42) {
@@ -214,27 +219,7 @@ export function AddGuardianWalletDialog() {
                 >
                   Verify
                 </Button>
-                <Button
-                  size="lg"
-                  onClick={() => {
-                    addGuardianWallet();
-                  }}
-                  fullWidth
-                >
-                  Add Guardian Wallet
-                </Button>
-                <Button
-                  size="lg"
-                  onClick={() => {
-                    getData();
-                  }}
-                  fullWidth
-                >
-                  Get Data
-                </Button>
               </>
-
-
             )}
 
             {isVerifying && (

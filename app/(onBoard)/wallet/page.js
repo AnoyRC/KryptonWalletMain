@@ -130,6 +130,7 @@ export default function Setup() {
                   address={wallet.kryptonAddress}
                   chain={wallet.kryptonChainId}
                   name={wallet.kryptonName}
+                  walletAddress={wallet.walletAddress}
                 />
               ))}
 
@@ -159,8 +160,9 @@ export default function Setup() {
               {guardianWallets.map((wallet, index) => (
                 <GuardianWalletButton
                   key={index}
-                  address={wallet.walletAddress}
+                  address={wallet.kryptonGuardianId}
                   chain={wallet.kryptonChainId}
+                  walletAddress={wallet.walletAddress}
                 />
               ))}
 
