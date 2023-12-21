@@ -15,13 +15,9 @@ import {
   DataverseConnector,
   WALLET,
   RESOURCE,
-  SYSTEM_CALL
+  SYSTEM_CALL,
 } from "@dataverse/dataverse-connector";
 import { useEthersProvider } from "@/wagmi/EthersProvider";
-
-
-
-const dataverseConnector=new DataverseConnector();
 
 export default function Login() {
   const router = useRouter();
@@ -29,9 +25,8 @@ export default function Login() {
 
   const { isConnected } = useAccount();
   const { connect, connectors } = useConnect();
-  const [wallet,setWallet]=useState();
-  const provider=useEthersProvider();
-
+  const [wallet, setWallet] = useState();
+  const provider = useEthersProvider();
 
   useEffect(() => {
     if (isConnected) {
@@ -41,32 +36,32 @@ export default function Login() {
   }, [isConnected]);
 
   // Add Connect functionalities for all the wallets with Dataverse OS
-  const connectWallet=async(walletType,index)=>{
+  const connectWallet = async (walletType, index) => {
+    const dataverseConnector = new DataverseConnector();
     try {
-      const appId="26f3b853-ce3b-4f38-a885-e1b61e4b79fc"
-      const res=await dataverseConnector.connectWallet({
-        wallet:walletType
-      })
-      const pkh=await dataverseConnector.runOS({
-        method:SYSTEM_CALL.createCapability,
-        params:{
+      const appId = process.env.NEXT_PUBLIC_DATAVERSE_APP_ID;
+      const res = await dataverseConnector.connectWallet({
+        wallet: walletType,
+      });
+      const pkh = await dataverseConnector.runOS({
+        method: SYSTEM_CALL.createCapability,
+        params: {
           appId,
-          resource:RESOURCE.CERAMIC,
-        }
-      })
+          resource: RESOURCE.CERAMIC,
+        },
+      });
       console.log(pkh);
       connect({
-          connector: connectors[index],
-          //Metamask
+        connector: connectors[index],
+        //Metamask
       });
-      
-      
-      setWallet(res.wallet)
-      return(res.address);
+
+      setWallet(res.wallet);
+      return res.address;
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }
+  };
 
   return (
     <>
@@ -118,12 +113,11 @@ export default function Login() {
               variant="outlined"
               className="flex items-center gap-3 capitalize text-lg font-uni"
               onClick={async () => {
-                connectWallet(WALLET.METAMASK,0);
+                connectWallet(WALLET.METAMASK, 0);
                 // connect({
                 //   connector: connectors[0],
                 //   //Metamask
                 // });
-                
               }}
             >
               <Image
@@ -134,16 +128,16 @@ export default function Login() {
               />
               Metamask
             </Button>
-            <Button
+            {/* <Button
               size="lg"
               variant="outlined"
               className="flex items-center gap-3 capitalize text-lg font-uni"
-              onClick={() =>{
+              onClick={() => {
                 // connect({
                 //   connector: connectors[1],
                 //   //base wallet
                 // })
-                connectWallet(WALLET.COINBASE,1)
+                connectWallet(WALLET.COINBASE, 1);
               }}
             >
               <Image
@@ -158,12 +152,12 @@ export default function Login() {
               size="lg"
               variant="outlined"
               className="flex items-center gap-3 capitalize text-lg font-uni"
-              onClick={() =>{
+              onClick={() => {
                 // connect({
                 //   connector: connectors[2],
                 //   //Wallet Connect
                 // })
-                connectWallet(WALLET.WALLETCONNECT,2)
+                connectWallet(WALLET.WALLETCONNECT, 2);
               }}
             >
               <Image
@@ -173,7 +167,7 @@ export default function Login() {
                 alt="wallet connect"
               />
               Wallet Connect
-            </Button>
+            </Button> */}
             <div className="flex w-full justify-end items-center text-black -my-2">
               Powered by Dataverse OS
             </div>

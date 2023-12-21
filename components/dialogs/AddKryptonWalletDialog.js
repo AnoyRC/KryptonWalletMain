@@ -31,15 +31,12 @@ import Krypton from "@/lib/contracts/Krypton";
 import { useAccount } from "wagmi";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
-import { useDataverse } from "@/hooks/useDataverse";
 import {
   DataverseConnector,
   WALLET,
   RESOURCE,
   SYSTEM_CALL,
 } from "@dataverse/dataverse-connector";
-
-const dataverseConnector = new DataverseConnector();
 
 export function AddKryptonWalletDialog() {
   const kryptonWalletDialog = useSelector(
@@ -53,11 +50,11 @@ export function AddKryptonWalletDialog() {
   const { address: walletAddress } = useAccount();
   const router = useRouter();
   const [name, setName] = useState("");
-  const { createCapability } = useDataverse();
   const appId = process.env.NEXT_PUBLIC_DATAVERSE_APP_ID;
   const modelId = process.env.NEXT_PUBLIC_DATAVERSE_USER_MODEL_ID;
 
   const addKryptonWallet = async () => {
+    const dataverseConnector = new DataverseConnector();
     const res1 = await dataverseConnector.connectWallet({
       wallet: WALLET.METAMASK,
     });

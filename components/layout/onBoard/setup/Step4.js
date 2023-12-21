@@ -1,7 +1,6 @@
 "use client";
 
 import { ChipsInId } from "@/components/ui/chainChips";
-import { useDataverse } from "@/hooks/useDataverse";
 import useDeployKrypton from "@/hooks/useDeployKrypton";
 import useKrypton from "@/hooks/useKrypton";
 import useServer from "@/hooks/useServer";
@@ -34,8 +33,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { useAccount, useNetwork } from "wagmi";
 
 export default function Step4() {
-  const dataverseConnector = new DataverseConnector();
-  const { createCapability } = useDataverse();
   const appId = process.env.NEXT_PUBLIC_DATAVERSE_APP_ID;
   const modelId = process.env.NEXT_PUBLIC_DATAVERSE_USER_MODEL_ID;
   const chain = useSelector((state) => state.setup.chain); //chainId
@@ -58,6 +55,7 @@ export default function Step4() {
   const { address } = useAccount(); //walletAddress
 
   const addKryptonWallet = async (walletAddress) => {
+    const dataverseConnector = new DataverseConnector();
     const res1 = await dataverseConnector.connectWallet({
       wallet: WALLET.METAMASK,
     });

@@ -27,11 +27,8 @@ import {
   SYSTEM_CALL,
   WALLET,
 } from "@dataverse/dataverse-connector";
-import { useDataverse } from "@/hooks/useDataverse";
 import { Wallet } from "ethers";
 import { objectToArray } from "@/lib/utils";
-
-const dataverseConnector = new DataverseConnector();
 
 export default function Setup() {
   const [guardianWallets, setGuardianWallets] = useState([]);
@@ -40,12 +37,12 @@ export default function Setup() {
   const router = useRouter();
   const { isConnected } = useAccount();
   const { disconnect } = useDisconnect();
-  const { createCapability } = useDataverse();
   const appId = process.env.NEXT_PUBLIC_DATAVERSE_APP_ID;
   const guardianModelId = process.env.NEXT_PUBLIC_DATAVERSE_GUARDIAN_MODEL_ID;
   const userModelId = process.env.NEXT_PUBLIC_DATAVERSE_USER_MODEL_ID;
 
   const getData = async (modelId, pkh) => {
+    const dataverseConnector = new DataverseConnector();
     const data = await dataverseConnector.runOS({
       method: SYSTEM_CALL.loadFilesBy,
       params: {

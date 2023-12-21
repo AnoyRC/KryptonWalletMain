@@ -33,9 +33,7 @@ import {
   WALLET,
   RESOURCE,
 } from "@dataverse/dataverse-connector";
-import { useDataverse } from "@/hooks/useDataverse";
 
-const dataverseConnector = new DataverseConnector();
 export function AddGuardianWalletDialog() {
   const guardianWalletDialog = useSelector(
     (state) => state.setup.guardianWalletDialog
@@ -49,9 +47,9 @@ export function AddGuardianWalletDialog() {
   const router = useRouter();
   const modelId = process.env.NEXT_PUBLIC_DATAVERSE_GUARDIAN_MODEL_ID;
   const appId = process.env.NEXT_PUBLIC_DATAVERSE_APP_ID;
-  const { createCapability } = useDataverse();
 
   const addGuardianWallet = async () => {
+    const dataverseConnector = new DataverseConnector();
     const res1 = await dataverseConnector.connectWallet({
       wallet: WALLET.METAMASK,
     });
@@ -83,6 +81,7 @@ export function AddGuardianWalletDialog() {
   };
 
   const getData = async () => {
+    const dataverseConnector = new DataverseConnector();
     const res1 = await dataverseConnector.connectWallet({
       wallet: WALLET.METAMASK,
     });
